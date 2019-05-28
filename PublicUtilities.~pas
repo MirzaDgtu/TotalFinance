@@ -1,0 +1,632 @@
+unit PublicUtilities;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, DB, ADODB, Menus, StdCtrls, Grids, ComCtrls, Buttons, ExtCtrls, ComObj;
+
+type
+  TPublicUtilitiesForm = class(TForm)
+    Panel1: TPanel;
+    SaveBtn: TBitBtn;
+    DeleteBtn: TBitBtn;
+    AddBtn: TBitBtn;
+    PrintBtn: TBitBtn;
+    Panel2: TPanel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Picker: TDateTimePicker;
+    NumDocEdit: TEdit;
+    PrimechEdit: TEdit;
+    Bar: TStatusBar;
+    PublicUtilitesStringGrid: TStringGrid;
+    TypeEnergyCombo: TComboBox;
+    PopupSaveMenu: TPopupMenu;
+    SavePop: TMenuItem;
+    SaveNoPop: TMenuItem;
+    TypeEnergySet: TADODataSet;
+    PopupRowMenu: TPopupMenu;
+    AddPopup: TMenuItem;
+    DeletePopup: TMenuItem;
+    SuppliersCombo: TComboBox;
+    SuppliersSet: TADODataSet;
+    SuppliersSetUID: TIntegerField;
+    SuppliersSetsName: TStringField;
+    TypeEnergySetName: TStringField;
+    TypeEnergySetUID: TIntegerField;
+    procedure SuppliersComboChange(Sender: TObject);
+    procedure SuppliersComboExit(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure PublicUtilitesStringGridSelectCell(Sender: TObject; ACol,
+      ARow: Integer; var CanSelect: Boolean);
+    procedure TypeEnergyComboChange(Sender: TObject);
+    procedure TypeEnergyComboExit(Sender: TObject);
+    procedure PublicUtilitesStringGridKeyPress(Sender: TObject;
+      var Key: Char);
+    procedure AddPopupClick(Sender: TObject);
+    procedure DeletePopupClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure SaveBtnClick(Sender: TObject);
+    procedure SaveNoPopClick(Sender: TObject);
+    procedure SavePopClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure GetSuppliers;
+    procedure GetTypeEnergy;
+    procedure DeleteRow(StringGrid: TStringGrid; ARow: integer);
+    procedure SaveNewPublicUtilitiesDoc;
+    procedure SaveCorrPublicUtilitiesDoc;
+    procedure SavePublicUtilitiesDoc(TypeSavePU: integer);
+    function   CalcValueCellsVB(StringCalc: string): string;    
+  public
+    { Public declarations }
+    procedure SettingPublicUtilitiesForm(TypePublicUtilities: integer);
+  end;
+
+var
+  PublicUtilitiesForm: TPublicUtilitiesForm;
+
+implementation
+
+uses Main, sConst, Globals, ModuleData, TypeEnergy, Shop;
+
+{$R *.dfm}
+
+{ TPublicUtilitiesForm }
+
+procedure TPublicUtilitiesForm.GetSuppliers;
+begin
+    SuppliersSet.Active := False;
+    SuppliersSet.CommandText := Format(SSQLGetSupplier, [0]);
+    SuppliersSet.Active := True;
+
+    SuppliersCombo.Items.Clear;
+    SuppliersSet.First;
+     while not SuppliersSet.Eof do
+       Begin
+          SuppliersCombo.Items.Add(SuppliersSet.FieldbyName('sName').AsString);
+          SuppliersSet.Next;
+       end;
+end;
+
+procedure TPublicUtilitiesForm.SettingPublicUtilitiesForm(
+  TypePublicUtilities: integer);
+begin
+  case TypePublicUtilities of
+    g_CreateDoc: Begin// Создание
+                        with PublicUtilitesStringGrid do
+                        Begin
+                          ColCount := 9;
+                          Cells[0,0] := 'NN';
+                          Cells[1,0] := 'Код';
+                          Cells[2,0] := 'Название';
+                          Cells[3,0] := 'Адрес';
+                          Cells[4,0] := 'Поставщик';
+                          Cells[5,0] := 'Вид энергии';
+                          Cells[6,0] := 'Сумма (нал)';
+                          Cells[7,0] := 'Сумма (безнал)';
+                          Cells[8,0] := 'Примечание';
+
+                          ColWidths[0] := 25;
+                          ColWidths[1] := 50;
+                          ColWidths[2] := 110;
+                          ColWidths[3] := 200;
+                          ColWidths[4] := 120;
+                          ColWidths[5] := 120;
+                          ColWidths[6] := 80;
+                          ColWidths[7] := 83;
+                          ColWidths[8] := 200;
+                        end;
+
+                        Caption := 'Создать -> Коммунальные услуги';
+                        Width := 1018;
+                        NumDocEdit.Text := EmptyStr;
+                        PrimechEdit.Text := EmptyStr;
+                        Picker.Date := Now();
+
+                        PrimechEdit.Enabled := True;
+                        Picker.Enabled := True;
+
+                        SaveBtn.Enabled := True;
+                        SavePop.Enabled := True;
+                        SaveNoPop.Enabled := True;
+                        AddBtn.Enabled := True;
+                        AddPopup.Enabled := True;
+                        DeleteBtn.Enabled := True;
+                        DeletePopup.Enabled := True;
+                        PrintBtn.Enabled := False;
+
+                        PublicUtilitesStringGrid.Options := PublicUtilitesStringGrid.Options + [goEditing];
+
+                 end;
+
+    g_CorrDoc:   Begin// Корректировка
+                    with PublicUtilitesStringGrid do
+                    Begin
+                      ColCount := 9;
+                      Cells[0,0] := 'NN';
+                      Cells[1,0] := 'Код';
+                      Cells[2,0] := 'Название';
+                      Cells[3,0] := 'Адрес';
+                      Cells[4,0] := 'Поставщик';
+                      Cells[5,0] := 'Вид энергии';
+                      Cells[6,0] := 'Сумма (нал)';
+                      Cells[7,0] := 'Сумма (безнал)';
+                      Cells[8,0] := 'Примечание';
+
+                      ColWidths[0] := 25;
+                      ColWidths[1] := 50;
+                      ColWidths[2] := 110;
+                      ColWidths[3] := 200;
+                      ColWidths[4] := 120;
+                      ColWidths[5] := 120;
+                      ColWidths[6] := 80;
+                      ColWidths[7] := 83;
+                      ColWidths[8] := 200;
+                    end;
+
+                    Caption := 'Корректировать -> Коммунальные услуги';
+                    Width := 1018;
+
+                    PrimechEdit.Enabled := True;
+                    Picker.Enabled := True;
+
+                    SaveBtn.Enabled := True;
+                    SavePop.Enabled := True;
+                    SaveNoPop.Enabled := True;
+                    AddBtn.Enabled := True;
+                    AddPopup.Enabled := True;
+                    DeleteBtn.Enabled := True;
+                    DeletePopup.Enabled := True;
+                    PrintBtn.Enabled := True;
+
+                    PublicUtilitesStringGrid.Options := PublicUtilitesStringGrid.Options + [goEditing];
+                 end;
+
+    g_Preview:   Begin// Просмотр
+                        with PublicUtilitesStringGrid do
+                        Begin
+                          ColCount := 9;
+                          Cells[0,0] := 'NN';
+                          Cells[1,0] := 'Код';
+                          Cells[2,0] := 'Название';
+                          Cells[3,0] := 'Адрес';
+                          Cells[4,0] := 'Поставщик';
+                          Cells[5,0] := 'Вид энергии';
+                          Cells[6,0] := 'Сумма (нал)';
+                          Cells[7,0] := 'Сумма (безнал)';
+                          Cells[8,0] := 'Примечание';
+
+                          ColWidths[0] := 25;
+                          ColWidths[1] := 50;
+                          ColWidths[2] := 110;
+                          ColWidths[3] := 200;
+                          ColWidths[4] := 120;
+                          ColWidths[5] := 120;
+                          ColWidths[6] := 80;
+                          ColWidths[7] := 83;
+                          ColWidths[8] := 200;
+                        end;
+
+                        Caption := 'Просмотр -> Коммунальные услуги';
+                        Width := 1018;
+
+                        PrimechEdit.Enabled := False;
+                        Picker.Enabled := False;
+
+                        SaveBtn.Enabled := False;
+                        SavePop.Enabled := False;
+                        SaveNoPop.Enabled := False;
+                        AddBtn.Enabled := False;
+                        AddPopup.Enabled := False;
+                        DeleteBtn.Enabled := False;
+                        DeletePopup.Enabled := False;
+                        PrintBtn.Enabled := True;
+
+                        PublicUtilitesStringGrid.Options := PublicUtilitesStringGrid.Options - [goEditing];
+
+                 end;
+  end;
+end;
+
+procedure TPublicUtilitiesForm.SuppliersComboChange(Sender: TObject);
+begin
+  PublicUtilitesStringGrid.Cells[PublicUtilitesStringGrid.Col, PublicUtilitesStringGrid.Row] := SuppliersCombo.Items[SuppliersCombo.ItemIndex];
+  SuppliersCombo.Visible := False;
+end;
+
+procedure TPublicUtilitiesForm.SuppliersComboExit(Sender: TObject);
+begin
+  PublicUtilitesStringGrid.Cells[PublicUtilitesStringGrid.Col, PublicUtilitesStringGrid.Row] := SuppliersCombo.Items[SuppliersCombo.ItemIndex];
+  SuppliersCombo.Visible := False;
+end;
+
+procedure TPublicUtilitiesForm.FormCreate(Sender: TObject);
+begin
+  PublicUtilitesStringGrid.DefaultRowHeight := SuppliersCombo.Height;
+  GetSuppliers();
+  GetTypeEnergy();
+end;
+
+procedure TPublicUtilitiesForm.PublicUtilitesStringGridSelectCell(
+  Sender: TObject; ACol, ARow: Integer; var CanSelect: Boolean);
+var
+    R: TRECT;
+begin
+ if TypeSavePublicUtilities <> g_Preview then
+   Begin
+    If ACol in [4,5,6,7,8] then
+        PublicUtilitesStringGrid.Options := PublicUtilitesStringGrid.Options  + [goEditing]
+    else
+        PublicUtilitesStringGrid.Options := PublicUtilitesStringGrid.Options  - [goEditing];
+
+    if ((ACol = 4) and (ARow <> 0)) then
+      Begin
+
+        SuppliersCombo.ItemIndex :=  SuppliersCombo.Items.IndexOf(PublicUtilitesStringGrid.Cells[ACol, ARow]);
+        R:= PublicUtilitesStringGrid.CellRect(ACol, ARow);
+        R.Left  := R.Left + PublicUtilitesStringGrid.Left;
+        R.Right := R.Right + PublicUtilitesStringGrid.Left;
+        R.Top   := R.Top + PublicUtilitesStringGrid.Top;
+        R.Bottom := R.Bottom + PublicUtilitesStringGrid.Top;
+        SuppliersCombo.Left := R.Left +1;
+        SuppliersCombo.Top  := R.Top + 1;
+        SuppliersCombo.Width := (R.Right + 1) - R.Left;
+        SuppliersCombo.Height := (R.Bottom + 1) - R.Top;
+
+        SuppliersCombo.Visible := True;
+        SuppliersCombo.SetFocus;
+      end;
+
+     if ((ACol = 5) and (ARow <> 0)) then
+      Begin
+        TypeEnergyCombo.ItemIndex :=  TypeEnergyCombo.Items.IndexOf(PublicUtilitesStringGrid.Cells[ACol, ARow]);
+        R:= PublicUtilitesStringGrid.CellRect(ACol, ARow);
+        R.Left  := R.Left + PublicUtilitesStringGrid.Left;
+        R.Right := R.Right + PublicUtilitesStringGrid.Left;
+        R.Top   := R.Top + PublicUtilitesStringGrid.Top;
+        R.Bottom := R.Bottom + PublicUtilitesStringGrid.Top;
+        TypeEnergyCombo.Left := R.Left +1;
+        TypeEnergyCombo.Top  := R.Top + 1;
+        TypeEnergyCombo.Width := (R.Right + 1) - R.Left;
+        TypeEnergyCombo.Height := (R.Bottom + 1) - R.Top;
+        TypeEnergyCombo.Visible := True;
+        TypeEnergyCombo.SetFocus;
+      end;
+    CanSelect := True;
+   end;
+end;
+
+procedure TPublicUtilitiesForm.TypeEnergyComboChange(Sender: TObject);
+begin
+  PublicUtilitesStringGrid.Cells[PublicUtilitesStringGrid.Col, PublicUtilitesStringGrid.Row] := TypeEnergyCombo.Items[TypeEnergyCombo.ItemIndex];
+  TypeEnergyCombo.Visible := False;
+end;
+
+procedure TPublicUtilitiesForm.TypeEnergyComboExit(Sender: TObject);
+begin
+  PublicUtilitesStringGrid.Cells[PublicUtilitesStringGrid.Col, PublicUtilitesStringGrid.Row] := TypeEnergyCombo.Items[TypeEnergyCombo.ItemIndex];
+  TypeEnergyCombo.Visible := False;
+end;
+
+procedure TPublicUtilitiesForm.GetTypeEnergy;
+begin
+  TypeEnergySet.Active := False;
+  TypeEnergySet.CommandText := Format(SSQLGetTypeEnergy, [i_ReserveWithNo]);
+  TypeEnergySet.Active := True;
+
+  TypeEnergyCombo.Items.Clear;
+  TypeEnergySet.First;
+  while not TypeEnergySet.Eof do
+   Begin
+      TypeEnergyCombo.Items.Add(TypeEnergySet.FieldbyName('Name').AsString);
+      TypeEnergySet.Next;
+   end;
+
+end;
+
+procedure TPublicUtilitiesForm.PublicUtilitesStringGridKeyPress(
+  Sender: TObject; var Key: Char);
+var
+  vrPos, vrLength: byte;
+begin
+    with Sender as TStringGrid do
+        Begin
+
+             vrLength := Length(Cells[Col, Row]);
+             vrPos := Pos(',',Cells[Col,Row]);
+
+          if (Col = 6) or (Col = 7) then
+          Begin
+        //  Ограничение по допустимым символам
+            case Key of
+              '0'..'9','+','-','*','/':  ;
+              '=':  Begin
+                      if Pos('=', Cells[Col, Row]) > 0 then
+                          Key := #0;
+                    end;
+              '.',',' :  Begin
+                            if (vrPos >0) or (vrLength = 0) then
+                               Key := #0
+                            else
+                               Key := DecimalSeparator;
+                         end;
+              #8      :  ;
+              // При ESC будет отрабатывать Ctrl+z
+              #27     : begin
+                          keybd_event(VK_LCONTROL, 0, 0, 0);               // Нажатие клавищи Ctrl
+                          keybd_event(Ord('Z'), 0, 0, 0);                  // Нажатие клавищи Z
+                          keybd_event(Ord('Z'), 0, KEYEVENTF_KEYUP, 0);    // Отпускание клавищи Ctrl
+                          keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0); // Отпускание клавищи Z
+                        end;
+              #26     :  ;  
+              #13     :  Begin
+                           with Sender as TStringGrid do
+                           Begin
+                              if PublicUtilitesStringGrid.Col in [6,7] then
+                                Begin
+                                  try
+                                    if Pos('=', Cells[Col, Row]) <> 0 then
+                                       PublicUtilitesStringGrid.Cells[Col, Row] :=  CalcValueCellsVB(PublicUtilitesStringGrid.Cells[Col, Row]);
+                                  except
+                                    MessageBox(Handle, PChar('Введены некорректные данные!'), PChar(PublicUtilitiesForm.Caption), MB_ICONERROR+MB_OK);
+                                  end;
+                                end;
+                           end;
+                         end;
+              else
+              Key := chr(0);
+             end;
+          end;
+    end;
+end;
+
+procedure TPublicUtilitiesForm.AddPopupClick(Sender: TObject);
+begin
+  fl_ShopInDoc := 9;
+  ShopForm.SettingShopForm(1);
+  ShopForm.ShowModal();
+end;
+
+procedure TPublicUtilitiesForm.DeleteRow(StringGrid: TStringGrid;
+  ARow: integer);
+var i, j: Integer;
+begin
+  with PublicUtilitesStringGrid do
+  begin
+    for i:=ARow+1 to RowCount-1 do
+      for j:=0 to ColCount-1 do
+        Cells[j, i-1]:=Cells[j, i];
+    for i:=1 to ColCount-1 do
+      Cells[i, RowCount-1]:='';
+    RowCount:=RowCount-1;
+  end;
+end;
+
+procedure TPublicUtilitiesForm.DeletePopupClick(Sender: TObject);
+var
+    i:integer;
+begin
+      If PublicUtilitesStringGrid.Row <> 0 then
+         Begin
+            DeleteRow(PublicUtilitesStringGrid, PublicUtilitesStringGrid.Row);
+            For i:= 1 to PublicUtilitesStringGrid.RowCount do
+              PublicUtilitesStringGrid.Cells[0,i] := IntToStr(i);
+            PublicUtilitesStringGrid.Cells[0,0] := 'NN';
+         end
+      else
+           Exit;
+end;
+
+procedure TPublicUtilitiesForm.FormActivate(Sender: TObject);
+begin
+  GetSuppliers();
+  GetTypeEnergy();
+end;
+
+procedure TPublicUtilitiesForm.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+var
+    i: integer;
+begin
+  for i := 0 to PublicUtilitesStringGrid.ColCount - 1 do
+     PublicUtilitesStringGrid.Cols[i].Clear;
+
+  for i := 0 to PublicUtilitesStringGrid.RowCount - 1 do
+     PublicUtilitesStringGrid.Rows[i].Clear;
+
+  if TypeSavePublicUtilities = g_CorrDoc then
+    Begin
+       AppData.AdoCmd.CommandText := Format(SSQLUpdatePublicUtilitiesStatusCorrDoc, [MainForm.ReestrPublicUtilities.FieldByName('UNICUM_NUM').AsInteger, 0]);
+       AppData.AdoCmd.Execute;
+       MainForm.ReestrPublicUtilities.Active := False;
+       MainForm.ReestrPublicUtilities.Active := True;
+    end;
+end;
+
+// Сохранение нового документа (Коммунальные услуги)
+procedure TPublicUtilitiesForm.SaveNewPublicUtilitiesDoc;
+var
+    I, UID_Supplier, UID_TypeEnergy: integer;
+    Sum_Nal, Sum_Not_nal: real;
+begin
+{ DONE 1 -opmp -cMondey : Процедура сохранения нового документа (Коммунальные услуги) }
+
+ Sum_Nal := 0;
+ Sum_Not_Nal := 0;
+
+ for i := 1 to PublicUtilitesStringGrid.RowCount-1 do
+  Begin
+    if PublicUtilitesStringGrid.Cells[6,i] <> EmptyStr then
+      Sum_Nal     := Sum_Nal +  StrToFloat(StringReplace(PublicUtilitesStringGrid.Cells[6,i],  '.', ',', [rfReplaceAll, rfIgnoreCase]));
+    if PublicUtilitesStringGrid.Cells[7,i] <> EmptyStr then
+      Sum_Not_Nal := Sum_Not_Nal +StrToFloat(StringReplace(PublicUtilitesStringGrid.Cells[7,i], '.', ',',  [rfReplaceAll, rfIgnoreCase]));
+  end;
+
+
+  AppData.PublicUtilitiesHeadDoc.Active := False;
+  AppData.PublicUtilitiesHeadDoc.CommandText := Format(SSQLCreatePublicUtilitiesHeadDoc,[FormatDateTime('yyyy-mm-dd', Picker.Date),
+                                                                         PrimechEdit.Text,
+                                                                         g_User,
+                                                                         StringReplace(FloatToStr(Sum_Nal), ',', '.', [rfReplaceAll, rfIgnoreCase]),
+                                                                         StringReplace(FloatToStr(Sum_Not_Nal), ',', '.', [rfReplaceAll, rfIgnoreCase])]);
+  AppData.PublicUtilitiesHeadDoc.Active := True;
+
+
+  for i := 1 to PublicUtilitesStringGrid.RowCount-1 do
+  Begin
+    if PublicUtilitesStringGrid.Cells[4,i] = EmptyStr then
+      UID_Supplier := -1
+    else
+      Begin
+        SuppliersSet.Locate('sName', PublicUtilitesStringGrid.Cells[4,i], [loCaseInsensitive, loPartialKey]);
+        UID_Supplier := SuppliersSet.FieldByName('UID').AsInteger;
+      end;
+
+    if PublicUtilitesStringGrid.Cells[5,i] = EmptyStr then
+        UID_TypeEnergy := -1
+    else
+      Begin
+        TypeEnergySet.Locate('Name', PublicUtilitesStringGrid.Cells[5,i], [loCaseInsensitive, loPartialKey]);
+        UID_TypeEnergy := TypeEnergySet.FieldByName('UID').AsInteger;
+      end;
+
+    AppData.PublicUtilitiesDetailDoc.Active := False;
+    AppData.PublicUtilitiesDetailDoc.CommandText := Format(SSQLCreatePublicUtilitiesDetailDoc, [AppData.PublicUtilitiesHeadDoc.FieldByName('UNICUM_NUM').AsInteger,
+                                                                                                AppData.PublicUtilitiesHeadDoc.FieldByName('NUMDOC').AsInteger,
+                                                                                                FormatDateTime('yyyy-mm-dd',Picker.Date),
+                                                                                                StrToInt(PublicUtilitesStringGrid.Cells[0,i]),
+                                                                                                StrToInt(PublicUtilitesStringGrid.Cells[1,i]),
+                                                                                                UID_Supplier,
+                                                                                                UID_TypeEnergy,
+                                                                                                StringReplace(PublicUtilitesStringGrid.Cells[6,i], ',', '.', [rfReplaceAll, rfIgnoreCase]),
+                                                                                                StringReplace(PublicUtilitesStringGrid.Cells[7,i], ',', '.', [rfReplaceAll, rfIgnoreCase]),
+                                                                                                g_User,
+                                                                                                AppData.PublicUtilitiesHeadDoc.FieldByName('CREATE_DATE').AsString,
+                                                                                                PublicUtilitesStringGrid.Cells[8,i]
+                                                                                                ]);
+    AppData.PublicUtilitiesDetailDoc.Active := True;
+  end;
+end;
+
+procedure TPublicUtilitiesForm.SaveCorrPublicUtilitiesDoc;
+var
+    I, UID_Supplier, UID_TypeEnergy: integer;
+    Sum_Nal, Sum_Not_nal: real;
+begin
+{ DONE 2 -opmp -cMondey : Процедура сохранения откорректированного документа (Коммунальные услуги) }
+
+ Sum_Nal := 0;
+ Sum_Not_Nal := 0;
+
+ for i := 1 to PublicUtilitesStringGrid.RowCount-1 do
+  Begin
+    if PublicUtilitesStringGrid.Cells[6,i] <> EmptyStr then
+      Sum_Nal     := Sum_Nal +  StrToFloat(StringReplace(PublicUtilitesStringGrid.Cells[6,i],  '.', ',', [rfReplaceAll, rfIgnoreCase]));
+    if PublicUtilitesStringGrid.Cells[7,i] <> EmptyStr then
+      Sum_Not_Nal := Sum_Not_Nal +StrToFloat(StringReplace(PublicUtilitesStringGrid.Cells[7,i], '.', ',',  [rfReplaceAll, rfIgnoreCase]));
+  end;
+
+  AppData.DeletePublicUtilitiesDoc.Active := False;
+  AppData.DeletePublicUtilitiesDoc.CommandText := Format(SSQLDeletePublicUtilitiesDoc, [MainForm.ReestrPublicUtilities.FieldByName('UNICUM_NUM').AsInteger]);
+  AppData.DeletePublicUtilitiesDoc.Active := True;
+
+
+  AppData.PublicUtilitiesHeadDoc.Active := False;
+  AppData.PublicUtilitiesHeadDoc.CommandText := Format(SSQLCorrPublicUtilitiesDoc_h,  [StrToInt(NumDocEdit.Text),
+                                                                                       FormatDateTime('yyyy-mm-dd', Picker.Date),
+                                                                                       PrimechEdit.Text,
+                                                                                       MainForm.ReestrPublicUtilities.FieldByName('FAMILY').AsString,
+                                                                                       FormatDateTime('yyyy-mm-dd hh:mm:ss.zzz', MainForm.ReestrPublicUtilities.FieldByName('CREATE_DATE').AsDateTime),
+                                                                                       StringReplace(FloatToStr(Sum_Nal), ',', '.', [rfReplaceAll, rfIgnoreCase]),
+                                                                                       StringReplace(FloatToStr(Sum_Not_Nal), ',', '.', [rfReplaceAll, rfIgnoreCase]),
+                                                                                       g_User]);
+  AppData.PublicUtilitiesHeadDoc.Active := True;
+
+
+  for i := 1 to PublicUtilitesStringGrid.RowCount-1 do
+  Begin
+    if PublicUtilitesStringGrid.Cells[4,i] = EmptyStr then
+      UID_Supplier := -1
+    else
+      Begin
+        SuppliersSet.Locate('sName', PublicUtilitesStringGrid.Cells[4,i], [loCaseInsensitive, loPartialKey]);
+        UID_Supplier := SuppliersSet.FieldByName('UID').AsInteger;
+      end;
+
+    if PublicUtilitesStringGrid.Cells[5,i] = EmptyStr then
+        UID_TypeEnergy := -1
+    else
+      Begin
+        TypeEnergySet.Locate('Name', PublicUtilitesStringGrid.Cells[5,i], [loCaseInsensitive, loPartialKey]);
+        UID_TypeEnergy := TypeEnergySet.FieldByName('UID').AsInteger;
+      end;
+
+    AppData.PublicUtilitiesDetailDoc.Active := False;
+    AppData.PublicUtilitiesDetailDoc.CommandText := Format(SSQLCreatePublicUtilitiesDetailDoc, [AppData.PublicUtilitiesHeadDoc.FieldByName('UNICUM_NUM').AsInteger,
+                                                                                                AppData.PublicUtilitiesHeadDoc.FieldByName('NUMDOC').AsInteger,
+                                                                                                FormatDateTime('yyyy-mm-dd',Picker.Date),
+                                                                                                StrToInt(PublicUtilitesStringGrid.Cells[0,i]),
+                                                                                                StrToInt(PublicUtilitesStringGrid.Cells[1,i]),
+                                                                                                UID_Supplier,
+                                                                                                UID_TypeEnergy,
+                                                                                                StringReplace(PublicUtilitesStringGrid.Cells[6,i], ',', '.', [rfReplaceAll, rfIgnoreCase]),
+                                                                                                StringReplace(PublicUtilitesStringGrid.Cells[7,i], ',', '.', [rfReplaceAll, rfIgnoreCase]),
+                                                                                                g_User,
+                                                                                                AppData.PublicUtilitiesHeadDoc.FieldByName('CREATE_DATE').AsString,
+                                                                                                PublicUtilitesStringGrid.Cells[8,i]
+                                                                                                ]);
+    AppData.PublicUtilitiesDetailDoc.Active := True;
+  end;
+end;
+
+procedure TPublicUtilitiesForm.SavePublicUtilitiesDoc(TypeSavePU: integer);
+begin
+  { DONE 2 -opmp -cMondey : Общая процедура сохранения коммунального документа }
+
+  case TypeSavePU of
+    g_CreateDoc:  SaveNewPublicUtilitiesDoc();
+    g_CorrDoc:    SaveCorrPublicUtilitiesDoc();
+  end;
+
+  MessageBox(Handle,PChar('Документ успешно сохранен!'),PChar('Коммунальные услуги'), MB_ICONINFORMATION+MB_OK);
+  MainForm.ReestrPublicUtilities.Active := False;
+  MainForm.ReestrPublicUtilities.Active := True;
+  MainForm.Tabs.TabIndex := TAB_PublicUtilities;
+  MainForm.BarCalc(TAB_PublicUtilities);
+  Close();
+end;
+
+procedure TPublicUtilitiesForm.SaveBtnClick(Sender: TObject);
+begin
+  PopupSaveMenu.Popup(SaveBtn.ClientOrigin.X, SaveBtn.ClientOrigin.Y);
+end;
+
+procedure TPublicUtilitiesForm.SaveNoPopClick(Sender: TObject);
+begin
+  Close();
+end;
+
+procedure TPublicUtilitiesForm.SavePopClick(Sender: TObject);
+begin
+  SavePublicUtilitiesDoc(TypeSavePublicUtilities);
+end;
+
+function TPublicUtilitiesForm.CalcValueCellsVB(StringCalc: string): string;
+var
+    msc: Variant;
+begin
+
+  try
+      msc := CreateOleObject('MSScriptControl.ScriptControl');
+      msc.Language := 'VBScript';
+      Result := msc.Eval(Copy(StringReplace(StringCalc, ',', '.', [rfReplaceAll, rfIgnoreCase]), 2, Length(StringCalc)));
+  except
+      FreeAndNil(msc);
+  end; 
+end;
+
+end.

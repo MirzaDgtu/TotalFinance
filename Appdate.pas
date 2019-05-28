@@ -1,0 +1,55 @@
+unit Appdate;
+
+interface
+
+uses
+  SysUtils, Classes, DB, ADODB;
+
+type
+  TAppData = class(TDataModule)
+    Connection: TADOConnection;
+    User: TADODataSet;
+    Module: TADODataSet;
+    DetailHeaderInc: TADODataSet;
+    DetailMoveInc: TADODataSet;
+    DS_User: TDataSource;
+    DS_Module: TDataSource;
+    UserUID: TIntegerField;
+    UserLOGIN: TStringField;
+    UserEmployeeName: TStringField;
+    Organiz: TADODataSet;
+    DS_Organiz: TDataSource;
+    OrganizUID: TIntegerField;
+    OrganizName: TStringField;
+    OrganizAdress: TStringField;
+    InsertNewShop: TADODataSet;
+    DeleteShop: TADODataSet;
+    Insert: TADODataSet;
+    procedure UserBeforeOpen(DataSet: TDataSet);
+    procedure OrganizBeforeOpen(DataSet: TDataSet);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  AppData: TAppData;
+
+implementation
+
+uses sConst;
+
+{$R *.dfm}
+
+procedure TAppData.UserBeforeOpen(DataSet: TDataSet);
+begin
+  User.CommandText := SSQLGetUser;
+end;
+
+procedure TAppData.OrganizBeforeOpen(DataSet: TDataSet);
+begin
+  Organiz.CommandText := SSQLGetOrganiz;
+end;
+
+end.

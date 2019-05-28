@@ -1,0 +1,30 @@
+unit StatNaznachenie;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, DB, ADODB, ExtCtrls;
+
+type
+  TNaznachenieDialog = class(TForm)
+    GroupBox1: TGroupBox;
+    Bevel1: TBevel;
+    NaznachenieEdit: TEdit;
+    AddBtn: TBitBtn;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  NaznachenieDialog: TNaznachenieDialog;
+
+implementation
+
+uses ModuleData, sConst, Globals;
+
+{$R *.dfm}
+
+end.

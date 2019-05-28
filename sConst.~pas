@@ -1,0 +1,322 @@
+unit sConst;
+
+interface
+resourcestring
+
+{$I SEAST.INC}
+
+  SRegTotalFinanceKey  = '\Software\EastTrade\TotalFinance';
+  SPrintServerKey  = 'PrintServer';
+
+
+// Вход в  программу
+  SSQLGetAllUser             = 'EXEC FINANCE..D_GetAllUser';                                      // Получение всех пользователей
+  SSQLGetUserAccessModule    = 'EXEC FINANCE..D_GetUserAccessModule %d';                          // Получение доступных модулей для пользователя
+  SSQLGetAllUserNaznachenie  = 'EXEC FINANCE..D_GetAllUserNaznachenie';                           // Получение всех статей назначений для пользователя
+
+
+
+
+// Пользователи
+  SSQLGetUser                = 'EXEC FINANCE..D_GetUser %d';                                      // Вывод пользователей
+  SSQLTransferUserToReserve  = 'EXEC FINANCE..D_TransferUserToReserve %d, %d';                    // Перед пользователя в резерв
+  SSQLAddUser                = 'EXEC FINANCE..D_AddUser %d, ''%s''';                              // Добавление пользователя
+  SSQLDeleteUser             = 'EXEC FINANCE..D_DeleteUser %d';                                   // Удаление пользователя
+  SSQLGetEmployees           = 'EXEC FINANCE..D_GetEmployees';                                    // Сотрудники
+  SSQLSetAdmin               = 'EXEC FINANCE..D_SetAdmin %d, %d';                                 // Назначение прав администратора
+
+
+  SUserNotRegistered     = 'Пользователь ''%s'' не зарегистрирован.'#13#10 +
+                           'Обратитесь к администратору задачи';
+  SModuleError = 'Доступных модулей для ''%s'' нет.' + #13#10 +
+                 'Обратитесь к администратору';
+// Назначения
+  SSQLGetNaznachenie               = 'EXEC FINANCE..D_GetNaznachenie %d';                         // Вывод всех статей назначений
+  SSQLAddStatNaznachenie           = 'EXEC FINANCE..D_AddStatNaznachenie ''%s'', %d';             // Добавление новой статьи назначений
+  SSQLCorrStatNaznachenie          = 'EXEC FINANCE..D_CorrStatNaznachenie %d, ''%s''';            // Корректировка статьи назначений
+  SSQTransferNaznachenieToReserve  = 'EXEC FINANCE..D_TransferNaznachenieToReserve %d, %d';       // Резерв (перевод, возврат)
+  SSQLDeleteStatNaznachenie        = 'EXEC FINANCE..D_DeleteStatNaznachenie %d';                  // Удаление назначения
+  SSQLGetUserNaznachenieAccess     = 'EXEC FINANCE..D_GetUserNaznachenieAccess %d';               // Получение статей назначения доступных пользователю
+  
+
+// Поставщики
+  SSQLGetSupplier = 'EXEC FINANCE..D_GetSupplier %d';                                              // Получение списка поставщиков (0 - Без резерва, с резервом)
+  SSQLAddSupplier = 'EXEC FINANCE..D_AddSupplier ''%s'', %d';                                      // Добавление нового поставщика
+  SSQLCorrSupplier = 'EXEC FINANCE..D_CorrSupplier %d, ''%s''';                                    // Изменение имени поставщика
+  SSQLTransferSupplierToReserve = 'EXEC FINANCE..D_TransferSupplierToReserve %d, %d';              // Перевод в резерв и из резерва поставщика
+  SSQLDeleteSupplier = 'EXEC FINANCE..D_DeleteSupplier %d';                                        // Удаление поставщика
+
+  
+// Магазины
+  SSQLGetOrganiz              = 'EXEC FINANCE..D_GetOrganiz %d';                                      // Вывод магазинов
+  SSQLInsertNewShop           = 'EXEC FINANCE..D_InsertNewShop ''%s'', ''%s'', ''%s'', ''%s'', %d';   // Добавление нового магазина
+  SSQLDeleteShop              = 'EXEC FINANCE..D_DeleteShop %d';                                      // Удаление магазина
+  SSQLTransferClientToReserve = 'EXEC FINANCE..D_TransferClientToReserve %d, %d';                     // Перевод магазина в резерв
+  SSQLCorrShop                = 'EXEC FINANCE..D_CorrShop %d, ''%s'', ''%s'', ''%s'', ''%s'', %d';    // Корректировка магазина
+
+
+// Модули
+  SSQlGetModule               = 'EXEC FINANCE..D_GetModule';                                          // Вывод всех модулей
+  SSQLAddModule               = 'EXEC FINANCE..D_AddModule ''%s''';                                   // Добавление нового модуля
+  SSQLCorrModule              = 'EXEC FINANCE..D_CorrModule %d, ''%s''';                              // Корректировка модуля
+  SSQLDeleteModule            = 'EXEC FINANCE..D_DeleteModule %d';                                    // Удаление модуля
+
+
+// Доступ
+  SSQLGetUserModuls            = 'EXEC FINANCE..D_GetUserModuls %d';                                   // Получение списка модулей пользователя
+  SSQLUpdModuleUserAccess      = 'EXEC FINANCE..D_UpdModuleUserAccess %d, %d, %d';                     // Назначение прав на модули
+  SSQLGetUserNaznachenie       = 'EXEC FINANCE..D_GetUserNaznachenie %d';                              // Получение списка статей назначений пользователя
+  SSQLUpdNaznachenieUserAccess = 'EXEC FINANCE..D_UpdNaznachenieUserAccess %d, %d, %d';                // Назначения прав на статьи назначений
+  SSQLGetInfoAccess            = 'EXEC FINANCE..D_GetInfoAccess %d';                                   // Получение информации о количестве доступных модулей и статей назначений
+
+
+// Отметка
+  SSQLSetOtmetkaDoc            = 'EXEC FINANCE..D_SetOtmetkaDoc %d, %d, %d';                            // Установка (снятие) отметки
+
+
+// Касса
+  SSQLCorrCashBoxSum           = 'EXEC FINANCE..D_CorrCashBoxSum ''%s'', ''%s''';                      // Корректировка суммы в кассе
+  SSQLGetHeaderDocCashBox      = 'EXEC FINANCE..D_GetHeaderDocCashBox ''%s'', ''%s''';                 // Получение накладных на основаниеии которых вычислялась разница(выручка - расход) за день
+  SSQLCashActualeSumCashBox    = 'EXEC FINANCE..D_CashActualeSumCashBox';                              // Получение актуальной суммы с кассы
+  SSQLGetOperCashBox           = 'EXEC FINANCE..D_GetOperCashBox ''%s'', ''%s''';                      // Получение приозведенных операций над суммой в кассе
+
+
+// Выручка
+  SSQLD_InsertHeaderIncome    = 'EXEC FINANCE..D_InsertHeaderIncome ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';     // Сохранение шапки документа (Выручка)
+  SSQLD_InsertIncomeDetail    = 'EXEC FINANCE..D_InsertIncomeDetail %d, %d, %d, %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';           // Сохранение элементов документа (Выручка)
+  SSQLGetMaxUnicumNumInc      = 'EXEC FINANCE..D_GetMaxUnicumNumInc';                                                                  // Получение максимального номера документа
+  SSQLD_DeleteIncomeDocum     = 'EXEC FINANCE..D_DeleteIncomeDocum %d, %d';                                                            // Удаление документа (Выручка)
+  SSQLGetIncomeDetail         = 'EXEC FINANCE..D_GetIncomeDetail %d';                                                                  // Просмотр и корректировка документа (Выручка)
+  SSQLCorrIncomeDoc_h         = 'EXEC FINANCE..D_CorrIncomeDoc_h %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';  // Корректировка шапки документа (Выручка)
+  SSQLUpdateIncStatusCorrDoc  = 'EXEC FINANCE..D_UpdateIncStatusCorrDoc %d, %d';                                                    // Обновление статуса документа при открытии для корректировки
+  SSQLIncomeDifference        = 'EXEC FINANCE..D_IncomeDifference ''%s'', ''%s''';                                                     // Разница сумм между Выручка <-> Выручка (Касса)
+
+
+// Расходы
+  SSQLCreateExpenseDocHead   = 'EXEC FINANCE..D_CreateExpenseDocHead ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                                     // Сохранение шапки документа (Расходы)
+  SSQLCreateExpenseDocDetail = 'EXEC FINANCE..D_CreateExpenseDocDetail %d, %d, ''%s'', %d, %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';   // Сохранение элементов документа (Расходы)
+  SSQLGetMaxUnicumNumExpense = 'EXEC FINANCE..D_GetMaxUnicumNumExpense';                                                                                  // Получение максимального номера документа
+  SSQLGetExpenceDetail       = 'EXEC FINANCE..D_GetExpenceDetail %d';                                                                                     // Просмотр и корректировка расходного документа
+  SSQLCorrExpenceDoc_h       = 'EXEC FINANCE..D_CorrExpenceDoc_h %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                     // Корректировка шапки расходного документа
+  SSQLGetExpenceZPDetail     = 'EXEC FINANCE..D_GetExpenceZPDetail %d';                                                                                   // Просмотр и корректировка расходного (ЗП) документа
+  SSQLDeleteExpenceDocum     = 'EXEC FINANCE..D_DeleteExpenceDocum %d';                                                                                   // Удаление расходного документа
+  SSQLGetExpenceOtherDetail  = 'EXEC FINANCE..D_GetExpenceOtherDetail %d';                                                                                // Просмотр элементов расходного (прочие) документа (для печати)
+  SSQLUpdateExpStatusCorrDoc = 'EXEC FINANCE..D_UpdateExpStatusCorrDoc %d, %d';                                                                           // Обновление статуса документа при открытии для корректировки
+
+
+// ЗП АУП
+  SSQLGetNaznachenieZpAup   = 'EXEC FINANCE..D_GetNaznachenieZpAup';                                                                              // Получение списка статей назначений для документов (ЗП АУП)
+  SSQLGetMaxUnicumNumZpAup  = 'EXEC FINANCE..D_GetMaxUnicumNumZpAup';                                                                             // Получение максимального номера документа (ЗП АУП)
+  SSQLCreateZpAupDocHead    = 'EXEC FINANCE..D_CreateZpAupDocHead ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                                // Сохранение шапки документа (ЗП АУП)
+  SSQLCorrZpAupDoc_h        = 'EXEC FINANCE..D_CorrZpAupDoc_h %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                // Сохранение откорректированной шапки документа (ЗП АУП)
+  SSQLCreateZpAupDocDetail  = 'EXEC FINANCE..D_CreateZpAupDocDetail %d, %d, ''%s'', %d, %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';      // Сохранение элементов документа (ЗП АУП)
+  SSQLDeleteZpAupDocum      = 'EXEC FINANCE..D_DeleteZpAupDocum %d';                                                                              // Удаление документа (ЗП АУП)
+  SSQLGetZpAupDocDetail     = 'EXEC FINANCE..D_GetZpAupDocDetail %d';                                                                             // Просмотр содержимого документа (ЗП АУП)
+  SSQLUpdateZpAupStatusCorrDoc = 'EXEC FINANCE..D_UpdateZpAupStatusCorrDoc %d, %d';                                                               // Обновление статуса документа при открытии для корректировки
+
+
+  // Налоги по ЗП
+  SSQLCreateTaxToZpDocHead   = 'EXEC FINANCE..D_CreateTaxToZpDocHead ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                              //  Сохранение шапки документа (Налог по ЗП)
+  SSQLCreateTaxToZpDocDetail = 'EXEC FINANCE..D_CreateTaxToZpDocDetail %d, %d, ''%s'', %d, %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';    //  Сохранение элементов документа (Налог по ЗП)
+  SSQLGetTaxToZpDocDetail    = 'EXEC FINANCE..D_GetTaxToZpDocDetail %d';                                                                           //  Получение элементов документа (Налог по ЗП)
+  SSQLCorrTaxToZpDoc_h       = 'EXEC FINANCE..D_CorrTaxToZpDoc_h %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';              //  Шапка откорректированной накладной (Налог по ЗП)
+
+
+
+  // Проценты от терминала
+  SSQLCreatePercentOfTerminalHead = 'EXEC FINANCE..D_CreatePercentOfTerminalHead ''%s'', ''%s'', ''%s'', ''%s''';                                  // Сохранение нового документа (Процент по терминалу)
+  SSQLCreatePercentOfTerminalDocDetail  = 'EXEC FINANCE..D_CreatePercentOfTerminalDocDetail %d, %d, ''%s'', %d, %d, ''%s'', ''%s'', ''%s''';       // Сохранение элементов документа (Процент по терминалу)
+  SSQLDeletePercentOfTerminalDocum      = 'EXEC FINANCE..D_DeletePercentOfTerminalDocum %d';                                                       // Удаление документа (Процент по терминалу)
+  SSQLGetPercentOfTerminalDocDetail     = 'EXEC FINANCE..D_GetPercentOfTerminalDocDetail %d';                                                      // Просмотр элементов документа  (Процент по терминалу)
+  SSQLGetMaxUnicumNumPercentOfTerminal  = 'EXEC FINANCE..D_GetMaxUnicumNumPercentOfTerminal';                                                      // Получение максимального номера документа (Процент по терминалу)
+  SSQLCorrPercentOfTerminalDoc_h        =  'EXEC FINANCE..D_CorrPercentOfTerminalDoc_h %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';        // Сохранение шапки откорректированного документа (Процент по терминалу)
+  SSQLUpdatePercentOfTerminalStatusCorrDoc = 'EXEC FINANCE..D_UpdatePercentOfTerminalStatusCorrDoc %d, %d';                                        // Изменение статуса документа (корректируемого)
+
+
+  // Отгрузка (Восток), (Прочие)
+  SSQLCreateShipmentHeader = 'EXEC FINANCE..D_CreateShipmentHeader  ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                               //  Сохранение нового документа (Отгрузка (Восток)(Прочие))
+  SSQLCreateShipmentDetail = 'EXEC FINANCE..D_CreateShipmentDetail %d, %d, ''%s'', %d, %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';        //  Сохранение элементов документа (Отгрузка (Прочие)(Восток))
+  SSQLCorrShipmentDoc_h = 'EXEC FINANCE..D_CorrShipmentDoc_h  %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                                 //  Сохранение шапки откорректированного документа (Отгрузка (Прочие)(Восток))
+  SSQLGetMaxUnicumNumShipment = 'EXEC FINANCE..D_GetMaxUnicumNumShipment';                                                                         //  Получение максимального номера документа (Отгрузка (Прочие)(Восток))
+  SSQLGetShipmentDetail = 'EXEC FINANCE..D_GetShipmentDetail %d';                                                                                  //  Получение элементов документа (Отгрузка (Прочие)(Восток))
+  SSQLUpdateShipmentStatusCorrDoc = 'EXEC FINANCE..D_UpdateShipmentStatusCorrDoc %d, %d';                                                          //  Изменение статуса документа (при коррекции)  (Отгрузка (Прочие)(Восток))
+  SSQLDeleteShipmentDocum = 'EXEC FINANCE..D_DeleteShipmentDocum %d';                                                                              //  Удаление документа (Отгрузка(Восток),(Прочие) и сохранение документа в архив)
+
+
+  // Списание, // Возврат
+  SSQLCreateOffsHeader = 'EXEC FINANCE..D_CreateOffsHeader ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                                //  Сохранение нового документа (Списание)
+  SSQLCreateOffsDetail  = 'EXEC FINANCE..D_CreateOffsDetail %d, %d, %d, %d, ''%s'', ''%s'', ''%s'', ''%s''';                                       //  Сохранение элементов документа (Списание)
+  SSQLGetMaxUnicumNumOffs = 'EXEC FINANCE..D_GetMaxUnicumNumOffs';                                                                                 //  Получение последнего номера сохраненного документа 'Списание'
+  SSQLDeleteOffsDocum  = 'EXEC FINANCE..D_DeleteOffsDocum %d';                                                                                 //  Удаление документа (Списание)
+  SSQLGetOffsDetail = 'EXEC FINANCE..D_GetOffsDetail %d';                                                                                          //  Получение элементов документа (Списание)
+  SSQLCorrOffsDoc_h = 'EXEC FINANCE..D_CorrOffsDoc_h %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                                  //  Сохранение откорректировочного (шапки) документа (Списание)
+  SSQLUpdateOffsStatusCorrDoc = 'EXEC FINANCE..D_UpdateOffsStatusCorrDoc %d, %d';                                                                  //  Изменение статуса корректируемого документа (Списание)
+
+
+  // ЕНВД
+  SSQLCreateEnvdHeader = 'EXEC FINANCE..D_CreateEnvdHeader ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                                // Сохранение нового документа (ЕНВД)
+  SSQLCreateEnvdDetail = 'EXEC FINANCE..D_CreateEnvdDetail %d, %d, %d, %d, ''%s'', ''%s'', ''%s'', ''%s''';                                        // Сохранение элементов документа (ЕНВД)
+  SSQLCorrEnvdDoc_h = 'EXEC FINANCE..D_CorrEnvdDoc_h %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                                  // Сохранение откорректированного документа (ЕНВД)
+
+
+  // Коммунальные услуги
+    SSQLCreatePublicUtilitiesHeadDoc  = 'EXEC FINANCE..D_CreatePublicUtilitiesHeadDoc ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                                        // Сохранение шапки документа (Коммунальные услуги)
+    SSQLCreatePublicUtilitiesDetailDoc  = 'EXEC FINANCE..D_CreatePublicUtilitiesDetailDoc %d, %d, ''%s'', %d, %d, %d, %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';    // Сохранение элементов документа (Коммунальные услуги)
+    SSQLUpdatePublicUtilitiesStatusCorrDoc  = 'EXEC FINANCE..D_UpdatePublicUtilitiesStatusCorrDoc %d, %d';                                                            // Изменение статуса документа (Коммунальные услуги)
+    SSQLGetPublicUtilitiesDetail  = 'EXEC FINANCE..D_GetPublicUtilitiesDetail %d';                                                                                    // Получение элементов документа (Коммунальные услуги)
+    SSQLDeletePublicUtilitiesDoc  = 'EXEC FINANCE..D_DeletePublicUtilitiesDoc %d';                                                                                    // Удаление документа (Коммунальные услуги)
+    SSQLCorrPublicUtilitiesDoc_h  = 'EXEC FINANCE..D_CorrPublicUtilitiesDoc_h %d, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s''';                            // Сохранение откорректированного шапки документа (Коммунальные услуги)
+
+
+  // Виды энергии
+
+  SSQLGetTypeEnergy = 'EXEC FINANCE..D_GetTypeEnergy %d';                                                                                          // Получение списка видов энергии (1 - все, 0 - без резерва)
+  SSQLCreateTypeEnergy = 'EXEC FINANCE..D_CreateTypeEnergy ''%s'', %d';                                                                            // Создание новой статьи "Виды энергии"
+  SSQLCorrTypeEnergy = 'EXEC FINANCE..D_CorrTypeEnergy %d, ''%s''';                                                                                // Корректировка статьи "Виды энергии"
+  SSQLTransferTypeEnergyToReserve = 'EXEC FINANCE..D_TransferTypeEnergyToReserve %d, %d';                                                          // Перевод в резерв (из резерва)
+  SSQLDeleteTypeEnergy  = 'EXEC FINANCE..D_DeleteTypeEnergy %d';                                                                                   // Удаление статьи "Виды энергии"
+
+
+
+  // Реестры
+  SSQLGetReestrincome       = 'EXEC FINANCE..D_GetReestrincome ''%s'', ''%s''';             // Реестр документов (Выручка)
+  SSQLGetReestrExpense      = 'EXEC FINANCE..D_GetReestrExpense ''%s'', ''%s''';            // Реестр документов (Расходы)
+  SSQLGetReestrExpenseZP    = 'EXEC FINANCE..D_GetReestrExpenseZP ''%s'', ''%s''';          // Реестр документов (Расходы ЗП)
+  SSQLGetReestrExpenseOther = 'EXEC FINANCE..D_GetReestrExpenseOther ''%s'', ''%s''';       // Реестр документов (Расходы (Прочее))
+  SSQLGetReestrZpAUP        = 'EXEC FINANCE..D_GetReestrZpAUP ''%s'', ''%s''';              // Реестр документов (ЗП АУП)
+  SSQLGetReestrIncomeCach   = 'EXEC FINANCE..D_GetReestrIncomeCach ''%s'', ''%s''';         // Реестр документов (Выручка (Касса))
+  SSQLGetReestrTaxToZp      = 'EXEC FINANCE..D_GetReestrTaxToZp ''%s'', ''%s''';            // Реестр документов (Налоги по ЗП)
+  SSQLGetReestrPercentOfTerminal  = 'EXEC FINANCE..D_GetReestrPercentOfTerminal ''%s'', ''%s''';    //  Реестр документов (Процент по терминалу)
+  SSQLGetReestrShipmentVostok = 'EXEC FINANCE..D_GetReestrShipmentVostok ''%s'', ''%s''';           //  Реестр документов (Отгрузка(Восток))
+  SSQLGetReestrShipmentOther  = 'EXEC FINANCE..D_GetReestrShipmentOther ''%s'', ''%s''';            //  Реестр документов (Отгрузка(Прочие))
+  SSQLGetReestrOffs = 'EXEC FINANCE..D_GetReestrOffs  ''%s'', ''%s''';                              //  Реестр документов (Списание)
+  SSQLGetReestrReturn = 'EXEC FINANCE..D_GetReestrReturn ''%s'', ''%s''';                           //  Реестр документов (Возвраты)
+  SSQLGetReestrEnvd ='EXEC FINANCE..D_GetReestrEnvd ''%s'', ''%s''';                                //  Реестр документов (ЕНВД)
+  SSQLGetReestrPublicUtilities  = 'EXEC FINANCE..D_GetReestrPublicUtilities ''%s'', ''%s''';        //  Реестр документов (Коммунальные услуги)
+
+
+ // Отчет (печать документов) -> За месяц
+  SSQlIncomeShopReport      = 'EXEC FINANCE..D_Get_IncomeShopReport %d, %d, %d';             // Выручка -> за месяц
+  SSQlIncomeCashShopReport  = 'EXEC FINANCE..D_Get_IncomeCashShopReport %d, %d, %d';         // Выручка (Касса) -> за месяц
+  SSQLExpenseTotalShop      = 'EXEC FINANCE..D_Get_ExpenseTotalShop %d, %d, %d';             // Расходы -> за месяц
+  SSQLExpenseZPTotalShop    = 'EXEC FINANCE..D_Get_ExpenseZPTotalShop %d, %d, %d';           // Расходы ЗП -> за месяц
+  SSQLExpenseOtherTotalShop = 'EXEC FINANCE..D_Get_ExpenseOtherTotalShop %d, %d, %d';        // Расходы прочие -> за месяц
+  SSQLZpAupTotalShop        = 'EXEC FINANCE..D_Get_ZpAupTotalShop %d, %d, %d';               // ЗП АУП -> за месяц
+  SSQLTaxToZpTotalShop      = 'EXEC FINANCE..D_Get_TaxToZpTotalShop %d, %d, %d';             // Налоги по ЗП -> за месяц 
+  SSQLPercentOfTerminalTotalShop  = 'EXEC FINANCE..D_Get_PercentOfTerminalTotalShop %d, %d, %d'; // Процент по терминалу -> за месяц
+  SSQLShipmentVostokTotalShop = 'EXEC FINANCE..D_Get_ShipmentVostokTotalShop %d, %d, %d';    // Отгрузка(Восток) -> за месяц
+  SSQLShipmentOtherTotalShop  = 'EXEC FINANCE..D_Get_ShipmentOtherTotalShop %d, %d, %d';     // Отгрузка(Прочие) -> за месяц
+  SSQLOffsShopReport          = 'EXEC FINANCE..D_Get_OffsShopReport %d, %d, %d';             // Списание -> за месяц
+  SSQLReturnShopReport        = 'EXEC FINANCE..D_Get_ReturnShopReport %d, %d, %d';           // Возврат -> за месяц
+  SSQLEnvdShopReport          = 'EXEC FINANCE..D_Get_EnvdShopReport %d, %d, %d';             // ЕНВД -> за месяц
+  SSQLPublicUtilitiesTotalShop  = 'EXEC FINANCE..D_Get_PublicUtilitiesTotalShop %d, %d, %d'; // Коммунальные услуги -> за месяц
+
+  
+ // Отчет (печать документов) -> За день
+  SSQLIncomeDayShopReport  = 'EXEC FINANCE..D_Get_IncomeDayShopReport %d, ''%s'', ''%s''';           // Выручка -> За день
+  SSQLIncomeCashDayShopReport = 'EXEC FINANCE..D_Get_IncomeCashDayShopReport %d, ''%s'', ''%s''';    // Выручка (Касса) -> За день
+  SSQLDExpenseDayTotalShop  = 'EXEC FINANCE..D_Get_ExpenseDayTotalShop %d, ''%s'', ''%s''';          // Расходы -> За день
+  SSQLExpenseZPDayTotalShop = 'EXEC FINANCE..D_Get_ExpenseZPDayTotalShop %d, ''%s'', ''%s''';        // Расходы ЗП -> За день
+  SSQLExpenseOtherDayTotalShop  = 'EXEC FINANCE..D_Get_ExpenseOtherDayTotalShop %d, ''%s'', ''%s'''; // Расходы прочие -> За день
+  SSQLZpAupDayTotalShop = 'EXEC FINANCE..D_Get_ZpAupDayTotalShop %d, ''%s'', ''%s''';                // ЗП АУП -> За день
+  SSQLTaxToZpDayTotalShop = 'EXEC FINANCE..D_Get_TaxToZpDayTotalShop %d, ''%s'', ''%s''';            // Налоги по ЗП -> За день
+  SSQLPercentOfTerminalDayTotalShop = 'EXEC FINANCE..D_Get_PercentOfTerminalDayTotalShop %d, ''%s'', ''%s''';  // Процент по терминалу -> За день
+  SSQLShipmentVostokDayTotalShop  = 'EXEC FINANCE..D_Get_ShipmentVostokDayTotalShop %d, ''%s'', ''%s'''; // Отгрузка(Восток) -> За день
+  SSQLShipmentOtherDayTotalShop = 'EXEC FINANCE..D_Get_ShipmentOtherDayTotalShop %d, ''%s'', ''%s''';    // Отгрузка(Прочие) -> За день
+  SSQLOffsDayShopReport = 'EXEC FINANCE..D_Get_OffsDayShopReport %d, ''%s'', ''%s''';                    // Списание  ->  За день
+  SSQLReturnDayShopReport = 'EXEC FINANCE..D_Get_ReturnDayShopReport %d, ''%s'', ''%s''';                // Возврат -> За день
+  SSQLEnvdDayShopReport = 'EXEC FINANCE..D_Get_EnvdDayShopReport %d, ''%s'', ''%s''';                    // ЕНВД -> За день
+  SSQLPublicUtilitiesDayTotalShop = 'EXEC FINANCE..D_Get_PublicUtilitiesDayTotalShop  %d, ''%s'', ''%s'''; // Коммунальные услуги -> За день
+
+
+                              // - Модуль поиска - //
+
+  SSQLGetColumnName = 'EXEC FINANCE..D_GetColumnName ''%s''';                                             // Получение наименований полей по имени таблицы
+  SSQLExecSql = 'EXEC FINANCE..D_ExecSql ''%s''';
+
+
+                              // - Статьи бухгалтерии - //
+
+  SSQLCreateStateBuh  = 'EXEC FINANCE..D_CreateStateBuh ''%s''';                                         // Добавление новой статьи бухгалтерии
+  SSQLCorrStateBuh  = 'EXEC FINANCE..D_CorrStateBuh %d, ''%s''';                                         // Корректировка статьи бухгалтерии
+  SSQLDeleteStatBuh = 'EXEC FINANCE..D_DeleteStatBuh %d';                                                // Удаление статьи бухгалтерии
+  SSQLTransferStateBuhToReserve = 'EXEC FINANCE..D_TransferStateBuhToReserve %d, %d';                    // Перевод в(из) резерв(а)
+  SSQLGetStateBuh = 'EXEC FINANCE..D_GetStateBuh %d';                                                    // Получение статей бухгалтерии
+
+
+
+                                  // - Печать - //
+
+ // Реестры
+  SIncomeReestr        = 'Report\IncomeReestr';                                   // Реест  (Выручка)
+  SIncomeCashReestr    = 'Report\IncomeCashReestr';                               // Реестр (Выручка (Касса))
+  SExpenseReestr       = 'Report\ExpenseReestr';                                  // Реестр (Расходы)
+  SExpenseReestrZp     = 'Report\ExpenseReestrZp';                                // Реестр (Расходы (ЗП))
+  SExpenseReestrOther  = 'Report\ExpenseReestrOther';                             // Реестр (Расходы (прочие))
+  SZpAupReestr         = 'Report\ZpAupReestr';                                    // Реестр (ЗП АУП)
+  STaxToZpReestr       = 'Report\TaxToZpReestr';                                  // Реестр (Налоги по ЗП)
+  SPercentOfTerminalReestr = 'Report\PercentOfTerminalReestr';                    // Реестр (Проценты по терминалу)
+  SShipmentVostokReestr = 'Report\ShipmentVostokReestr';                          // Реестр (Отгрузка (Восток))
+  SShipmentOtherReestr  = 'Report\ShipmentOtherReestr';                           // Реестр (Отгрузка (Прочие))
+  SOffsReestr           = 'Report\OffsReestr';                                    // Реестр (Списание)
+  SReturReestr          = 'Report\ReturReestr';                                   // Реестр (Возврат)
+  SEnvdReestr           = 'Report\EnvdReestr';                                    // Реестр (ЕНВД)
+  SPublicUtilitiesReestr  = 'Report\PublicUtilitiesReestr';                       // Реестр (Коммунальные услуги)
+
+ // Документа
+  SIncomeTotalDoc       = 'Report\IncomeTotalDoc';                                 // Документ (Выручка)
+  SIncomeCashTotalDoc   = 'Report\IncomeCashTotalDoc';                             // Документ (Выручка (Касса))
+  SExpenseTotalDoc      = 'Report\ExpenseTotalDoc';                                // Документ (Расходы)
+  SExpenseTotalDocZp    = 'Report\ExpenseTotalDocZp';                              // Документ (Расходы (ЗП))
+  SExpenseOtherTotalDoc = 'Report\ExpenseOtherTotalDoc';                           // Документ (Расходы (прочие))
+  SZpAupTotalDoc        = 'Report\ZpAupTotalDoc';                                  // Документ (ЗП АУП)
+  STaxToZpTotalDoc      = 'Report\TaxToZpTotalDoc';                                // Документ (Налоги по ЗП)
+  SPercentOfTerminalTotalDoc = 'Report\PercentOfTerminalTotalDoc';                 // Документ (Проценты по терминалу)
+  SShipmentVostokTotalDoc = 'Report\ShipmentVostokTotalDoc';                       // Документ (Отгрузка (Восток))
+  SShipmentOtherTotalDoc  = 'Report\ShipmentOtherTotalDoc';                        // Документ (Отгрузка (Прочие))
+  SOffsTotalDoc           = 'Report\OffsTotalDoc';                                 // Документ (Списание)
+  SReturnTotalDoc         = 'Report\ReturnTotalDoc';                               // Документ (Возврат)
+  SEnvdTotalDoc           = 'Report\EnvdTotalDoc';                                 // Документ (ЕНВД)
+  SPublicUtilitiesTotalDoc  = 'Report\PublicUtilitiesTotalDoc';                    // Документ (Коммунальные услуги)
+
+// Отчет по магазину
+  SIncomeTotalShop       = 'Report\IncomeTotalShop';                                // Отчет (Выручка)
+  SIncomeCashTotalShop   = 'Report\IncomeCashTotalShop';                            // Отчет (Выручка (Касса))
+  SExpenseTotalShop      = 'Report\ExpenseTotalShop';                               // Отчет (Расходы)
+  SExpenseTotalShopZp    = 'Report\ExpenseTotalShopZp';                             // Отчет (Расходы (ЗП))
+  SExpenseOtherTotalShop = 'Report\ExpenseOtherTotalShop';                          // Отчет (Расходы (Прочие))
+  SZpAUPTotalShop        = 'Report\ZpAUPTotalShop';                                 // Отчет (ЗП АУП)
+  STaxToZpTotalShop      = 'Report\TaxToZpTotalShop';                               // Отчет (Налоги по ЗП)
+  SPercentOfTerminalTotalShop = 'Report\PercentOfTerminalTotalShop';                // Отчет (Проценты по терминалу)
+  SShipmentVostokTotalShop = 'Report\ShipmentVostokTotalShop';                      // Отчет (Отгрузка (Восток))
+  SShipmentOtherTotalShop  = 'Report\ShipmentOtherTotalShop';                       // Отчет (Отгрузка (Прочие))
+  SOffsTotalShop  = 'Report\OffsTotalShop';                                         // Отчет (Списание)
+  SReturnTotalShop = 'Report\ReturnTotalShop';                                      // Отчет (Возврат)
+  SEnvdTotalShop = 'Report\EnvdTotalShop';                                          // Отчет (ЕНВД)
+  SPublicUtilitiesTotalShop = 'Report\PublicUtilitiesTotalShop';                    // Отчет (Коммунальные услуги)
+
+
+              // -- Результаты поиска --//
+  SSearchHeader                      = 'Report\ReportSearch\SearchHeader';                         // Отчет по результатам поиска (По накладным)
+  SSearchIncomeDetail                = 'Report\ReportSearch\SearchIncomeDetail';                   // Отчет по элементам накладной (Выручка)
+  SSearchOffsDetail                  = 'Report\ReportSearch\SearchOffsDetail';                     // Отчет по элементам накладной (Списание)
+  SSearchReturnDetail                = 'Report\ReportSearch\SearchReturnDetail';                   // Отчет по элементам накладной (Возврат)
+  SSearchEnvdDetail                  = 'Report\ReportSearch\SearchEnvdDetail';                     // Отчет по элементам накладной (ЕНВД)
+  SSearchExpenseDetail               = 'Report\ReportSearch\SearchExpenseDetail';                  // Отчет по элементам накладной (Расходы, Расходы (прочие))
+  SSearchExpenseZpDetail             = 'Report\ReportSearch\SearchExpenseZpDetail';                // Отчет по элементам накладной (Расходы ЗП)
+  SSearchZpAupDetail                 = 'Report\ReportSearch\SearchZpAupDetail';                    // Отчет по элементам накладной (ЗП АУП)
+  SSearchTaxToZpDetail               = 'Report\ReportSearch\SearchTaxToZpDetail';                  // Отчет по элементам накладной (Налоги по ЗП)
+  SSearchPercentOfTerminalDetail     = 'Report\ReportSearch\SearchPercentOfTerminalDetail';        // Отчет по элементам накладной (Процент по терминалу)
+  SSearchShipmentDetail              = 'Report\ReportSearch\SearchShipmentDetail';                 // Отчет по элементам накладной (Отгрузка)
+  SSearchPublicUtilitiesDetail       = 'Report\ReportSearch\SearchPublicUtilitiesDetail';          // Отчет по элементам накладной (Коммунальные услуги)
+
+           // -- Касса -- //
+
+  SOperationsCashBox                 = 'Report\OperationsCashBox';                                 // Операции по кассе
+
+
+implementation
+
+uses AddModule, Globals, Main;
+
+end.

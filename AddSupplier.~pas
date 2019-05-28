@@ -1,0 +1,38 @@
+unit AddSupplier;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, ExtCtrls, DB, ADODB;
+
+type
+  TAddSupplierForm = class(TForm)
+    GroupBox1: TGroupBox;
+    Bevel1: TBevel;
+    SupplierEdit: TEdit;
+    AddSupplierBtn: TBitBtn;
+    procedure SupplierEditChange(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  AddSupplierForm: TAddSupplierForm;
+
+implementation
+
+uses ModuleData, Supplier, Globals, sConst;
+
+{$R *.dfm}
+
+
+procedure TAddSupplierForm.SupplierEditChange(Sender: TObject);
+begin
+  if Trim(SupplierEdit.Text) <> EmptyStr then
+     AddSupplierBtn.Default := True;
+end;
+
+end.

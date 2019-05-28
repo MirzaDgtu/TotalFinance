@@ -76,10 +76,6 @@ type
     procedure DetailGridTitleClick(Column: TColumn);
     procedure KassaSumGridTitleClick(Column: TColumn);
     procedure PageControlChange(Sender: TObject);
-    procedure BegKassaPickerChange(Sender: TObject);
-    procedure EndKassaPickerChange(Sender: TObject);
-    procedure DTBegPickerChange(Sender: TObject);
-    procedure DTEndPickerChange(Sender: TObject);
     procedure KassaSumGridDrawColumnCell(Sender: TObject;
       const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
@@ -92,8 +88,6 @@ type
     procedure PreviewPopClick(Sender: TObject);
   private
     { Private declarations }
-    FBegDate: variant;
-    FEndDate: variant;
     FColDoc: integer;
     FSum_Nal: real;
     FSum_Nal_Actuale: real;
@@ -104,8 +98,6 @@ type
     procedure BarSumValues;
     procedure KassaDetailBarValues;
     procedure DetailReestrBar;
-    procedure SetBegDate(const Value: variant);
-    procedure SetEndDate(const Value: variant);
     procedure SetColDoc(const Value: integer);
     procedure SetSum_Nal(const Value: real);
     procedure SetSum_Nal_Actuale(const Value: real);
@@ -119,16 +111,13 @@ type
   public
     { Public declarations }
 
-    property BegDate: variant read FBegDate write SetBegDate;
-    property EndDate: variant read FEndDate write SetEndDate;
     property ColDoc:  integer read FColDoc write SetColDoc;
     property Sum_Nal: real read FSum_Nal write SetSum_Nal;
     property Sum_Nal_Actuale: real read FSum_Nal_Actuale write SetSum_Nal_Actuale;
 
   published
-    property BDate: variant read FBegDate;
-    property EDate: variant read FEndDate;
-    property A: variant read GetDate;
+    //property BDate: variant read ;
+   // property EDate: variant read ;
 
   end;
 
@@ -143,10 +132,10 @@ uses Main, ModuleData, sConst, Globals, CreateDoc, Expenses, Module;
 
 procedure TKassaSumForm.GetSumBtnClick(Sender: TObject);
 begin
- if CheckDate(BegDate, EndDate) then
+ if CheckDate(BegKassaPicker.Date,  EndKassaPicker.Date) then
     Begin
         TotalSummSet.Active := False;
-        TotalSummSet.CommandText := Format(SSQLGetOperCashBox, [FormatDateTime('yyyy-mm-dd', BegDate), FormatDateTime('yyyy-mm-dd', EndDate)]);
+        TotalSummSet.CommandText := Format(SSQLGetOperCashBox, [FormatDateTime('yyyy-mm-dd', BegKassaPicker.Date), FormatDateTime('yyyy-mm-dd', EndKassaPicker.Date)]);
         TotalSummSet.Active := True;
 
         ColDoc := TotalSummSet.RecordCount;
@@ -168,17 +157,17 @@ end;
 procedure TKassaSumForm.KassaDetailBarValues;
 begin
     KassaDetailBar.Panels[0].Text := 'ќпераций: '  + IntToStr(ColDoc);
-    KassaDetailBar.Panels[1].Text :=  FormatDateTime('dd.mm.yyyy', BegDate) + ' г.' + ' - ' + FormatDateTime('dd.mm.yyyy', EndDate) + ' г.';
+    KassaDetailBar.Panels[1].Text :=  FormatDateTime('dd.mm.yyyy', BegKassaPicker.Date) + ' г.' + ' - ' + FormatDateTime('dd.mm.yyyy', EndKassaPicker.Date) + ' г.';
    // KassaDetailBar.Panels[2].Text := '—умма: ' + FormatFloat('#,###,###.###', Sum_Nal);
 end;
 
 procedure TKassaSumForm.DetailBtnClick(Sender: TObject);
 begin
-  if CheckDate(BegDate, EndDate) then
+  if CheckDate(BegKassaPicker.Date, EndKassaPicker.Date) then
     Begin
         ReestrHeadDoc.Active := False;
-        ReestrHeadDoc.CommandText := Format(SSQLGetHeaderDocCashBox, [FormatDateTime('yyyy-mm-dd', BegKassaPicker.Date),
-                                                                       FormatDateTime('yyyy-mm-dd', EndKassaPicker.Date)]);
+        ReestrHeadDoc.CommandText := Format(SSQLGetHeaderDocCashBox, [FormatDateTime('yyyy-mm-dd', DTBegPicker.Date),
+                                                                       FormatDateTime('yyyy-mm-dd', DTEndPicker.Date)]);
         ReestrHeadDoc.Active := True;
         DetailReestrBar();
     end
@@ -267,55 +256,16 @@ begin
     end;
 end;
 
-procedure TKassaSumForm.SetBegDate(const Value: variant);
-begin
-  FBegDate := Value;
-end;
-
-procedure TKassaSumForm.SetEndDate(const Value: variant);
-begin
-  FEndDate := Value;
-end;
 
 procedure TKassaSumForm.PageControlChange(Sender: TObject);
 begin
-    BegKassaPicker.Date := BegDate;
-    EndKassaPicker.Date := EndDate;
-
-    DTBegPicker.Date := BegDate;
-    DTEndPicker.Date := EndDate;
-end;
-
-procedure TKassaSumForm.BegKassaPickerChange(Sender: TObject);
-begin
-    BegDate := BegKassaPicker.Date;
-end;
-
-procedure TKassaSumForm.EndKassaPickerChange(Sender: TObject);
-begin
-  EndDate := EndKassaPicker.Date;
-end;
-
-procedure TKassaSumForm.DTBegPickerChange(Sender: TObject);
-begin
-  if CheckDate(BegDate, EndDate) then
-    Begin
-      BegDate := DTBegPicker.Date;
-      DetailBtn.Enabled := True;
-      DetailBtn.Default := True;
-    end
-  else
-      DetailBtn.Enabled := False;
-end;
-
-procedure TKassaSumForm.DTEndPickerChange(Sender: TObject);
-begin
-    EndDate := DTEndPicker.Date;
+    DTBegPicker.Date := BegKassaPicker.Date;
+    DTEndPicker.Date := EndKassaPicker.Date;
 end;
 
 function TKassaSumForm.CheckDate(BegDate, EndDate: variant): Boolean;
 begin
-    if BegDate <= EndDate then
+    if BegKassaPicker.Date <= EndKassaPicker.Date then
       Result := True
     else
       Result := False;
@@ -367,11 +317,11 @@ end;
 
 procedure TKassaSumForm.RefreshBtnClick(Sender: TObject);
 begin
-       if CheckDate(BegDate, EndDate) then
+       if CheckDate(BegKassaPicker.Date, EndKassaPicker.Date) then
           Begin
               TotalSummSet.Active := False;
-              TotalSummSet.CommandText := Format(SSQLGetOperCashBox, [FormatDateTime('yyyy-mm-dd', BegDate),
-                                                                      FormatDateTime('yyyy-mm-dd', EndDate)]);
+              TotalSummSet.CommandText := Format(SSQLGetOperCashBox, [FormatDateTime('yyyy-mm-dd', BegKassaPicker.Date),
+                                                                      FormatDateTime('yyyy-mm-dd', EndKassaPicker.Date)]);
               TotalSummSet.Active := True;
           end
         else
@@ -393,11 +343,11 @@ end;
 
 procedure TKassaSumForm.RefreshDetailBtnClick(Sender: TObject);
 begin
-        if CheckDate(BegDate, EndDate) then
+        if CheckDate(BegKassaPicker.Date, EndKassaPicker.Date) then
           Begin
               ReestrHeadDoc.Active := False;
-              ReestrHeadDoc.CommandText := Format(SSQLGetHeaderDocCashBox, [FormatDateTime('yyyy-mm-dd', BegDate),
-                                                                            FormatDateTime('yyyy-mm-dd', EndDate)]);
+              ReestrHeadDoc.CommandText := Format(SSQLGetHeaderDocCashBox, [FormatDateTime('yyyy-mm-dd', BegKassaPicker.Date),
+                                                                            FormatDateTime('yyyy-mm-dd', EndKassaPicker.Date)]);
               ReestrHeadDoc.Active := True;
               DetailReestrBar();
           end

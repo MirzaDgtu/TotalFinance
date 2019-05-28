@@ -7377,11 +7377,8 @@ begin
               Begin
                   PageControl.TabIndex := 0;
 
-                  BegDate := Now();
-                  EndDate := BegDate + 1;
-
-                  BegKassaPicker.Date := BegDate;
-                  EndKassaPicker.Date := EndDate;
+                  BegKassaPicker.Date := Now();
+                  EndKassaPicker.Date := BegKassaPicker.Date + 1;
 
                   AppData.GetSumCashBox.Active := False;
                   AppData.GetSumCashBox.Active := True;

@@ -7402,8 +7402,7 @@ begin
           end;
       end
   else
-      MessageBox(Handle, PChar('Модуль Касса недоступен. Обратитесь к администратору'), PChar('Касса'), MB_OK+MB_ICONINFORMATION);
-
+      MessageBox(Handle, PChar('Модуль Касса недоступен. Обратитесь к администратору'), PChar('Касса'), MB_OK+MB_ICONINFORMATION); 
 end;
 
 end.

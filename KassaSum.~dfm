@@ -20,7 +20,7 @@ object KassaSumForm: TKassaSumForm
     Top = 0
     Width = 714
     Height = 421
-    ActivePage = TabSh1
+    ActivePage = TabSh2
     Align = alClient
     TabOrder = 0
     OnChange = PageControlChange
@@ -281,7 +281,6 @@ object KassaSumForm: TKassaSumForm
           Date = 43458.667541053240000000
           Time = 43458.667541053240000000
           TabOrder = 0
-          OnChange = BegKassaPickerChange
         end
         object EndKassaPicker: TDateTimePicker
           Left = 142
@@ -291,7 +290,6 @@ object KassaSumForm: TKassaSumForm
           Date = 43458.667541053240000000
           Time = 43458.667541053240000000
           TabOrder = 1
-          OnChange = EndKassaPickerChange
         end
         object GetSumBtn: TBitBtn
           Left = 242
@@ -604,7 +602,6 @@ object KassaSumForm: TKassaSumForm
           Date = 43458.667541053240000000
           Time = 43458.667541053240000000
           TabOrder = 0
-          OnChange = DTBegPickerChange
         end
         object DTEndPicker: TDateTimePicker
           Left = 142
@@ -614,7 +611,6 @@ object KassaSumForm: TKassaSumForm
           Date = 43458.667541053240000000
           Time = 43458.667541053240000000
           TabOrder = 1
-          OnChange = DTEndPickerChange
         end
         object DetailBtn: TBitBtn
           Left = 242

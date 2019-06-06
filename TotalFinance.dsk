@@ -1,36 +1,31 @@
 [Closed Files]
-File_0=SourceModule,'D:\Projects\TotalFinance\Module.pas',0,1,1,1,1,0,0
-File_1=SourceModule,'D:\Projects\TotalFinance\Expenses.pas',0,1,1360,10,1379,1,0
-File_2=SourceModule,'D:\Projects\TotalFinance\AccessNaznachenie.pas',0,1,1,1,1,1,0
-File_3=SourceModule,'D:\Projects\TotalFinance\Access.pas',0,1,73,7,94,1,0
-File_4=SourceModule,'D:\Projects\TotalFinance\Range.pas',0,1,190,1,1,1,0
-File_5=SourceModule,'D:\Projects\TotalFinance\Rigth.pas',0,1,7,5,49,1,0
-File_6=SourceModule,'D:\Projects\TotalFinance\ModuleData.pas',0,1,1,10,2,1,0
-File_7=SourceModule,'D:\Projects\TotalFinance\KassaSum.pas',0,1,658,71,608,1,0
-File_8=SourceModule,'c:\program files (x86)\borland\delphi7\Source\Vcl\Forms.pas',0,1,2544,1,2562,0,0
-File_9=SourceModule,'D:\Projects\TotalFinance\CreateDoc.pas',0,1,31,3,567,1,0
+File_0=SourceModule,'c:\program files (x86)\borland\delphi7\Source\Vcl\ADODB.pas',0,1,1559,58,1582,0,0
+File_1=SourceModule,'D:\Projects\TotalFinance\Shipment.pas',0,1,47,21,402,1,0
+File_2=SourceModule,'D:\Projects\TotalFinance\PercentOfTerminal.pas',0,1,427,3,445,1,0
+File_3=SourceModule,'D:\Projects\TotalFinance\TaxToZp.pas',0,1,29,4,200,1,0
+File_4=SourceModule,'D:\Projects\TotalFinance\ZpAup.pas',0,1,433,31,537,1,0
+File_5=SourceModule,'D:\Projects\TotalFinance\Module.pas',0,1,1,1,1,0,0
+File_6=SourceModule,'D:\Projects\TotalFinance\Expenses.pas',0,1,1360,10,1379,1,0
+File_7=SourceModule,'D:\Projects\TotalFinance\AccessNaznachenie.pas',0,1,1,1,1,1,0
+File_8=SourceModule,'D:\Projects\TotalFinance\Access.pas',0,1,73,7,94,1,0
+File_9=SourceModule,'D:\Projects\TotalFinance\Range.pas',0,1,190,1,1,1,0
 
 [Modules]
-Module0=D:\Projects\TotalFinance\ZpAup.pas
-Module1=D:\Projects\TotalFinance\Main.pas
-Module2=D:\Projects\TotalFinance\sConst.pas
-Module3=D:\Projects\TotalFinance\Globals.pas
+Module0=D:\Projects\TotalFinance\Main.pas
+Module1=D:\Projects\TotalFinance\Offs.pas
+Module2=D:\Projects\TotalFinance\Globals.pas
+Module3=D:\Projects\TotalFinance\sConst.pas
 Count=4
 EditWindowCount=1
-
-[D:\Projects\TotalFinance\ZpAup.pas]
-ModuleType=SourceModule
-FormState=1
-FormOnTop=0
 
 [D:\Projects\TotalFinance\Main.pas]
 ModuleType=SourceModule
 FormState=1
 FormOnTop=0
 
-[D:\Projects\TotalFinance\sConst.pas]
+[D:\Projects\TotalFinance\Offs.pas]
 ModuleType=SourceModule
-FormState=0
+FormState=1
 FormOnTop=0
 
 [D:\Projects\TotalFinance\Globals.pas]
@@ -38,7 +33,8 @@ ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[D:\Projects\TotalFinance\ModuleData.pas]
+[D:\Projects\TotalFinance\sConst.pas]
+ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
@@ -50,9 +46,13 @@ FormOnTop=0
 FormState=0
 FormOnTop=0
 
+[D:\Projects\TotalFinance\ModuleData.pas]
+FormState=0
+FormOnTop=0
+
 [EditWindow0]
 ViewCount=4
-CurrentView=1
+CurrentView=0
 View0=0
 View1=1
 View2=2
@@ -62,8 +62,8 @@ MessageView=MessageView@EditWindow0
 Create=1
 Visible=1
 State=0
-Left=317
-Top=209
+Left=295
+Top=110
 Width=1330
 Height=850
 MaxLeft=-1
@@ -80,16 +80,16 @@ BottomPanelData=0000040000000000220500000000000002790000000000000001000000000000
 
 [View0]
 Module=D:\Projects\TotalFinance\Main.pas
-CursorX=45
-CursorY=2561
-TopLine=2566
+CursorX=84
+CursorY=6238
+TopLine=6231
 LeftCol=1
 
 [View1]
-Module=D:\Projects\TotalFinance\ZpAup.pas
-CursorX=83
-CursorY=277
-TopLine=271
+Module=D:\Projects\TotalFinance\Offs.pas
+CursorX=1
+CursorY=123
+TopLine=105
 LeftCol=1
 
 [View2]
@@ -141,8 +141,8 @@ Left=0
 Top=6
 Width=1920
 Height=122
-MaxLeft=-1
-MaxTop=-1
+MaxLeft=-8
+MaxTop=-8
 MaxWidth=1936
 MaxHeight=122
 ClientWidth=1920
@@ -227,7 +227,7 @@ LRDockWidth=190
 Dockable=1
 SplitPos=123
 ArrangeBy=Name
-SelectedItem=OnClose
+SelectedItem=Caption
 ExpandedItems=Anchors,AutoCompleteOptions,BevelEdges,Constraints,ExecuteOptions,FileType,Font,Font.Style,Images,Options,SaveFormatBasic,StyleEx,Title.Font,TitleFont,TitleFont.Style,WebDispatch
 HiddenCategories=
 

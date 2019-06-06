@@ -43,7 +43,6 @@ type
     procedure AddBtnClick(Sender: TObject);
     procedure DeleteBtnClick(Sender: TObject);
     procedure SavePopClick(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
     procedure PrintBtnClick(Sender: TObject);
     procedure SaveNoPopClick(Sender: TObject);
   private
@@ -394,13 +393,13 @@ begin
                                     if Pos('=', Cells[Col, Row]) <> 0 then
                                        ShipmentStringGrid.Cells[Col, Row] :=  CalcValueCellsVB(ShipmentStringGrid.Cells[Col, Row]);
                                   except
-                                    MessageBox(Handle, PChar('¬ведены некорректные данные!'), PChar(ShipmentFormy.Caption), MB_ICONERROR+MB_OK);
+                                    MessageBox(Handle, PChar('¬ведены некорректные данные!'), PChar(ShipmentForm.Caption), MB_ICONERROR+MB_OK);
                                   end;
                                 end;
                            end;
                          end;
               else
-              Key := chr(0);
+                  Key := chr(0);
              end;
           end;
     end;
@@ -422,11 +421,13 @@ begin
       Begin
 
         SuppliersCombo.ItemIndex :=  SuppliersCombo.Items.IndexOf(ShipmentStringGrid.Cells[ACol, ARow]);
+        
         R:= ShipmentStringGrid.CellRect(ACol, ARow);
         R.Left  := R.Left + ShipmentStringGrid.Left;
         R.Right := R.Right + ShipmentStringGrid.Left;
         R.Top   := R.Top + ShipmentStringGrid.Top;
         R.Bottom := R.Bottom + ShipmentStringGrid.Top;
+
         SuppliersCombo.Left := R.Left +1;
         SuppliersCombo.Top  := R.Top + 1;
         SuppliersCombo.Width := (R.Right + 1) - R.Left;
@@ -463,18 +464,7 @@ end;
 
 procedure TShipmentForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
-var
-    i: integer;
 begin
-  for i := 0 to ShipmentStringGrid.ColCount - 1 do
-    Begin
-      ShipmentStringGrid.Cols[i].Clear;
-    end;
-
-  for i := 0 to ShipmentStringGrid.RowCount - 1 do
-    Begin
-      ShipmentStringGrid.Rows[i].Clear;
-    end;
 
    case TypeShipment of
       TAB_ShipmentVostok: Begin
@@ -791,11 +781,6 @@ Begin
 end;
 
 
-procedure TShipmentForm.FormActivate(Sender: TObject);
-begin
-  GetSuppliers();
-end;
-
 procedure TShipmentForm.PrintBtnClick(Sender: TObject);
 begin
   case TypeShipment of
@@ -824,12 +809,12 @@ function TShipmentForm.CalcValueCellsVB(StringCalc: string): string;
 var
     msc: Variant;
 begin
+      msc := CreateOleObject('MSScriptControl.ScriptControl');
 
   try
-      msc := CreateOleObject('MSScriptControl.ScriptControl');
       msc.Language := 'VBScript';
       Result := msc.Eval(Copy(StringReplace(StringCalc, ',', '.', [rfReplaceAll, rfIgnoreCase]), 2, Length(StringCalc)));
-  except
+  finally
       FreeAndNil(msc);
   end;
 end;

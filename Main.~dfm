@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 330
-  Top = 218
+  Left = 497
+  Top = 247
   Width = 1312
   Height = 599
   AlphaBlend = True
@@ -6740,9 +6740,8 @@ object MainForm: TMainForm
       Caption = '&'#1057#1086#1079#1076#1072#1090#1100
     end
     object CorrShipmentOtherPop: TMenuItem
-      Action = CorrShipmentVostokAction
+      Action = CorrShipmentOtherAction
       Caption = '&'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1090#1100
-      ImageIndex = 4
     end
     object ViewShipmentOtherPop: TMenuItem
       Action = ViewShipmentOtherAction

@@ -5360,238 +5360,62 @@ end;
 procedure TMainForm.ShipmentVostokActionExecute(Sender: TObject);
 var
     i: integer;
+    ShipmentF: TShipmentForm;
 begin
-    TypeSaveShipment := g_CreateDoc;
-    TypeShipment := TAB_ShipmentVostok;
-    ShipmentForm.SettingShipmentForm(TAB_ShipmentVostok, g_CreateDoc);
+    ShipmentF := TShipmentForm.Create(MainForm);
 
-    AppData.Organiz.Active := False;
-    AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
-    AppData.Organiz.Active := True;
+    try
+        TypeSaveShipment := g_CreateDoc;
+        TypeShipment := TAB_ShipmentVostok;
+        ShipmentF.SettingShipmentForm(TAB_ShipmentVostok, g_CreateDoc);
 
-    AppData.Organiz.First;
-     with ShipmentForm.ShipmentStringGrid do
-      Begin
-        RowCount := AppData.Organiz.RecordCount+1;
-        while not AppData.Organiz.Eof do
-         Begin
-          For i := 1 to RowCount-1 do
-           Begin
-              Cells[0,i] := IntToStr(i);
-              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-              AppData.Organiz.Next;
-           end;
-         end;
-      end;
+        AppData.Organiz.Active := False;
+        AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
+        AppData.Organiz.Active := True;
 
-  with  ShipmentForm.Bar do
-    Begin
-      Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
-      Panels[1].Text := 'Сумма (нал): ' + '0';
-      Panels[2].Text := 'Сумма (безнал): ' + '0';
-    end;          
+        AppData.Organiz.First;
+         with ShipmentF.ShipmentStringGrid do
+          Begin
+            RowCount := AppData.Organiz.RecordCount+1;
+            while not AppData.Organiz.Eof do
+             Begin
+              For i := 1 to RowCount-1 do
+               Begin
+                  Cells[0,i] := IntToStr(i);
+                  Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+                  Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+                  Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+                  AppData.Organiz.Next;
+               end;
+             end;
+          end;
 
-  ShipmentForm.ShowModal();
+      with  ShipmentF.Bar do
+        Begin
+          Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
+          Panels[1].Text := 'Сумма (нал): ' + '0';
+          Panels[2].Text := 'Сумма (безнал): ' + '0';
+        end;
+      ShipmentF.ShowModal();
+
+    finally
+        FreeAndNil(ShipmentF);
+    end;
 end;
 
 procedure TMainForm.CorrShipmentVostokActionExecute(Sender: TObject);
 var
     i, RecordCountShipmentDetail: integer;
     Sum_Nal, Sum_Not_Nal: real;
+    ShipmentF: TShipmentForm;
 begin
-    if not (ReestrShipmentVostok.IsEmpty) then
-       Begin
-          AppData.ShipmentDetail.Active := False;
-          AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentVostok.FieldByName('UNICUM_NUM').AsInteger]);
-          AppData.ShipmentDetail.Active := True;
+   ShipmentF := TShipmentForm.Create(MainForm);
 
-         if AppData.ShipmentDetail.FieldByName('StatusDoc').AsString = '*' then
-            Begin
-              MessageBox(Handle, PChar('Документ: ' + AppData.ShipmentDetail.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
-              Exit;
-            end
-         else
-          Begin
-              AppData.Users.Locate('Login', g_User, [loCaseInsensitive, loPartialKey]);
-              if (AppData.Users.FieldByName('Admin').AsString <> '*') and (AppData.ShipmentDetail.FieldByName('OTMETKA').AsString = '*') then
-                  Begin
-                    MessageBox(Handle, PChar('Документ № ' + AppData.ShipmentDetail.FieldByName('NUMDOC').AsString + ' отмечен.' + #13#10 + 'Корректировка невозможна. Обратитесь к администратору'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
-                    Exit;
-                  end
-              else
-                  Begin
-
-                    TypeSaveShipment := g_CorrDoc;
-                    TypeShipment := TAB_ShipmentVostok;
-                    ShipmentForm.SettingShipmentForm(TAB_ShipmentVostok, g_CorrDoc);
-
-                    Sum_Nal     := 0;
-                    Sum_Not_Nal := 0;
-
-                    with AppData do
-                      Begin
-                         AdoCmd.CommandText := Format(SSQLUpdateShipmentStatusCorrDoc, [ReestrShipmentVostok.FieldByName('UNICUM_NUM').AsInteger, 1]);
-                         AdoCmd.Execute;
-                      end;
-
-                    RecordCountShipmentDetail := AppData.ShipmentDetail.RecordCount+1;
-
-                    with ShipmentForm do
-                      Begin
-                         NumDocEdit.Text := ReestrShipmentVostok.FieldByName('NUMDOC').AsString;
-                         ShipmentPicker.Date := DateOf(ReestrShipmentVostok.FieldByName('DATE_P_POR').AsDateTime);
-                         PrimechEdit.Text := ReestrShipmentVostok.FieldByName('PRIMECH').AsString;
-                         ShipmentStringGrid.RowCount := RecordCountShipmentDetail;
-                      end;
-
-                    AppData.ShipmentDetail.First;
-                    while not  AppData.ShipmentDetail.Eof do
-                    Begin
-                      for i:= 1 to ShipmentForm.ShipmentStringGrid.RowCount-1 do
-                      Begin
-                       with ShipmentForm.ShipmentStringGrid  do
-                        begin
-                          Cells[0,i] := IntToStr(AppData.ShipmentDetail.FieldByName('NUM_PREDM').AsInteger);
-                          Cells[1,i] := AppData.ShipmentDetail.FieldByName('UID_SHOP').AsString;
-                          Cells[2,i] := AppData.ShipmentDetail.FieldByName('NAME').AsString;
-                          Cells[3,i] := AppData.ShipmentDetail.FieldByName('ADRESS').AsString;
-                          Cells[4,i] := AppData.ShipmentDetail.FieldByName('SUM_NAL').AsString;
-                          Cells[5,i] := AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsString;
-                          Cells[6,i] := AppData.ShipmentDetail.FieldByName('SUPPLIER').AsString;
-                          Cells[7,i] := AppData.ShipmentDetail.FieldByName('PRIMECH').AsString;
-                          Sum_Nal     := Sum_Nal + AppData.ShipmentDetail.FieldByName('SUM_NAL').AsFloat;
-                          Sum_Not_Nal :=  Sum_Not_Nal + AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsFloat;
-                          AppData.ShipmentDetail.Next;
-                        end;
-                      end;
-                    end;
-
-                    with  ShipmentForm.Bar do
-                    Begin
-                      Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ShipmentDetail.RecordCount);
-                      Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
-                      Panels[2].Text := 'Сумма (безнал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
-                    end;
-              ShipmentForm.ShowModal();
-          end;
-        end;
-       end
-    else
-                    Exit;
-end;
-
-procedure TMainForm.ViewShipmentVostokActionExecute(Sender: TObject);
-var
-    i, RecordCountShipmentDetail: integer;
-    Sum_Nal, Sum_Not_Nal: real;
-begin
-
-  if not (ReestrShipmentVostok.IsEmpty) then
-      Begin
-          AppData.ShipmentDetail.Active := False;
-          AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentVostok.FieldByName('UNICUM_NUM').AsInteger]);
-          AppData.ShipmentDetail.Active := True;
-
-              TypeSaveShipment := g_Preview;
-              ShipmentForm.SettingShipmentForm(TAB_ShipmentVostok, g_Preview);
-
-              Sum_Nal     := 0;
-              Sum_Not_Nal := 0;
-
-              RecordCountShipmentDetail := AppData.ShipmentDetail.RecordCount+1;
-
-              with ShipmentForm do
-                Begin
-                   NumDocEdit.Text := ReestrShipmentVostok.FieldByName('NUMDOC').AsString;
-                   ShipmentPicker.Date := DateOf(ReestrShipmentVostok.FieldByName('DATE_P_POR').AsDateTime);
-                   PrimechEdit.Text := ReestrShipmentVostok.FieldByName('PRIMECH').AsString;
-                   ShipmentStringGrid.RowCount := RecordCountShipmentDetail;
-                end;
-
-              AppData.ShipmentDetail.First;
-              while not  AppData.ShipmentDetail.Eof do
-              Begin
-                for i:= 1 to ShipmentForm.ShipmentStringGrid.RowCount-1 do
-                Begin
-                 with ShipmentForm.ShipmentStringGrid  do
-                  begin
-                    Cells[0,i] := IntToStr(AppData.ShipmentDetail.FieldByName('NUM_PREDM').AsInteger);
-                    Cells[1,i] := AppData.ShipmentDetail.FieldByName('UID_SHOP').AsString;
-                    Cells[2,i] := AppData.ShipmentDetail.FieldByName('NAME').AsString;
-                    Cells[3,i] := AppData.ShipmentDetail.FieldByName('ADRESS').AsString;
-                    Cells[4,i] := FormatFloat('#,###,###.###', AppData.ShipmentDetail.FieldByName('SUM_NAL').AsFloat);
-                    Cells[5,i] := FormatFloat('#,###,###.###', AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsFloat);
-                    Cells[6,i] := AppData.ShipmentDetail.FieldByName('SUPPLIER').AsString;
-                    Cells[7,i] := AppData.ShipmentDetail.FieldByName('PRIMECH').AsString;
-                    Sum_Nal     := Sum_Nal + AppData.ShipmentDetail.FieldByName('SUM_NAL').AsFloat;
-                    Sum_Not_Nal :=  Sum_Not_Nal + AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsFloat;
-                    AppData.ShipmentDetail.Next;
-                  end;
-                end;
-              end;
-
-              with  ShipmentForm.Bar do
-              Begin
-                Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ShipmentDetail.RecordCount);
-                Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
-                Panels[2].Text := 'Сумма (безнал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
-              end;
-            ShipmentForm.ShowModal();
-      end
-  else
-            Exit;
-end;
-
-procedure TMainForm.ShipmentOtherActionExecute(Sender: TObject);
-var
-    i: integer;
-begin
-  TypeSaveShipment := g_CreateDoc;
-  TypeShipment := TAB_ShipmentOther;
-  ShipmentForm.SettingShipmentForm(TAB_ShipmentOther, g_CreateDoc);
-
-  AppData.Organiz.Active := False;
-  AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
-  AppData.Organiz.Active := True;
-
-    AppData.Organiz.First;
-     with ShipmentForm.ShipmentStringGrid do
-      Begin
-        RowCount := AppData.Organiz.RecordCount+1;
-        while not AppData.Organiz.Eof do
-         Begin
-          For i := 1 to RowCount-1 do
+   try
+        if not (ReestrShipmentVostok.IsEmpty) then
            Begin
-              Cells[0,i] := IntToStr(i);
-              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-              AppData.Organiz.Next;
-           end;
-         end;
-      end;
-
-  with  ShipmentForm.Bar do
-    Begin
-      Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
-      Panels[1].Text := 'Сумма (нал): ' + '0';
-      Panels[2].Text := 'Сумма (безнал): ' + '0';
-    end;          
-
-  ShipmentForm.ShowModal();
-end;
-
-procedure TMainForm.CorrShipmentOtherActionExecute(Sender: TObject);
-var                                        
-    i, RecordCountShipmentDetail: integer;
-    Sum_Nal, Sum_Not_Nal: real;
-begin
-    if not (ReestrShipmentOther.IsEmpty) then
-        Begin
               AppData.ShipmentDetail.Active := False;
-              AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentOther.FieldByName('UNICUM_NUM').AsInteger]);
+              AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentVostok.FieldByName('UNICUM_NUM').AsInteger]);
               AppData.ShipmentDetail.Active := True;
 
              if AppData.ShipmentDetail.FieldByName('StatusDoc').AsString = '*' then
@@ -5609,35 +5433,36 @@ begin
                       end
                   else
                       Begin
+
                         TypeSaveShipment := g_CorrDoc;
-                        TypeShipment := TAB_ShipmentOther;
-                        ShipmentForm.SettingShipmentForm(TAB_ShipmentOther, g_CorrDoc);
+                        TypeShipment := TAB_ShipmentVostok;
+                        ShipmentF.SettingShipmentForm(TAB_ShipmentVostok, g_CorrDoc);
 
                         Sum_Nal     := 0;
                         Sum_Not_Nal := 0;
 
                         with AppData do
                           Begin
-                             AdoCmd.CommandText := Format(SSQLUpdateShipmentStatusCorrDoc, [ReestrShipmentOther.FieldByName('UNICUM_NUM').AsInteger, 1]);
+                             AdoCmd.CommandText := Format(SSQLUpdateShipmentStatusCorrDoc, [ReestrShipmentVostok.FieldByName('UNICUM_NUM').AsInteger, 1]);
                              AdoCmd.Execute;
                           end;
 
                         RecordCountShipmentDetail := AppData.ShipmentDetail.RecordCount+1;
 
-                        with ShipmentForm do
+                        with ShipmentF do
                           Begin
-                             NumDocEdit.Text := ReestrShipmentOther.FieldByName('NUMDOC').AsString;
-                             ShipmentPicker.Date := DateOf(ReestrShipmentOther.FieldByName('DATE_P_POR').AsDateTime);
-                             PrimechEdit.Text := ReestrShipmentOther.FieldByName('PRIMECH').AsString;
+                             NumDocEdit.Text := ReestrShipmentVostok.FieldByName('NUMDOC').AsString;
+                             ShipmentPicker.Date := DateOf(ReestrShipmentVostok.FieldByName('DATE_P_POR').AsDateTime);
+                             PrimechEdit.Text := ReestrShipmentVostok.FieldByName('PRIMECH').AsString;
                              ShipmentStringGrid.RowCount := RecordCountShipmentDetail;
                           end;
 
                         AppData.ShipmentDetail.First;
                         while not  AppData.ShipmentDetail.Eof do
                         Begin
-                          for i:= 1 to ShipmentForm.ShipmentStringGrid.RowCount-1 do
+                          for i:= 1 to ShipmentF.ShipmentStringGrid.RowCount-1 do
                           Begin
-                           with ShipmentForm.ShipmentStringGrid  do
+                           with ShipmentF.ShipmentStringGrid  do
                             begin
                               Cells[0,i] := IntToStr(AppData.ShipmentDetail.FieldByName('NUM_PREDM').AsInteger);
                               Cells[1,i] := AppData.ShipmentDetail.FieldByName('UID_SHOP').AsString;
@@ -5654,18 +5479,228 @@ begin
                           end;
                         end;
 
-                        with  ShipmentForm.Bar do
+                        with  ShipmentF.Bar do
                         Begin
                           Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ShipmentDetail.RecordCount);
                           Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
                           Panels[2].Text := 'Сумма (безнал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
                         end;
-                  ShipmentForm.ShowModal();
+                  ShipmentF.ShowModal();
               end;
             end;
-        end
-    else
-                  Exit;
+           end
+        else
+                        Exit;
+   finally
+        FreeAndNil(ShipmentF);
+   end;
+end;
+
+procedure TMainForm.ViewShipmentVostokActionExecute(Sender: TObject);
+var
+    i, RecordCountShipmentDetail: integer;
+    Sum_Nal, Sum_Not_Nal: real;
+    ShipmentF: TShipmentForm;
+begin
+
+  ShipmentF := TShipmentForm.Create(MainForm);
+  
+  try
+      if not (ReestrShipmentVostok.IsEmpty) then
+          Begin
+              AppData.ShipmentDetail.Active := False;
+              AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentVostok.FieldByName('UNICUM_NUM').AsInteger]);
+              AppData.ShipmentDetail.Active := True;
+
+                  TypeSaveShipment := g_Preview;
+                  ShipmentF.SettingShipmentForm(TAB_ShipmentVostok, g_Preview);
+
+                  Sum_Nal     := 0;
+                  Sum_Not_Nal := 0;
+
+                  RecordCountShipmentDetail := AppData.ShipmentDetail.RecordCount+1;
+
+                  with ShipmentF do
+                    Begin
+                       NumDocEdit.Text := ReestrShipmentVostok.FieldByName('NUMDOC').AsString;
+                       ShipmentPicker.Date := DateOf(ReestrShipmentVostok.FieldByName('DATE_P_POR').AsDateTime);
+                       PrimechEdit.Text := ReestrShipmentVostok.FieldByName('PRIMECH').AsString;
+                       ShipmentStringGrid.RowCount := RecordCountShipmentDetail;
+                    end;
+
+                  AppData.ShipmentDetail.First;
+                  while not  AppData.ShipmentDetail.Eof do
+                  Begin
+                    for i:= 1 to ShipmentF.ShipmentStringGrid.RowCount-1 do
+                    Begin
+                     with ShipmentF.ShipmentStringGrid  do
+                      begin
+                        Cells[0,i] := IntToStr(AppData.ShipmentDetail.FieldByName('NUM_PREDM').AsInteger);
+                        Cells[1,i] := AppData.ShipmentDetail.FieldByName('UID_SHOP').AsString;
+                        Cells[2,i] := AppData.ShipmentDetail.FieldByName('NAME').AsString;
+                        Cells[3,i] := AppData.ShipmentDetail.FieldByName('ADRESS').AsString;
+                        Cells[4,i] := FormatFloat('#,###,###.###', AppData.ShipmentDetail.FieldByName('SUM_NAL').AsFloat);
+                        Cells[5,i] := FormatFloat('#,###,###.###', AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsFloat);
+                        Cells[6,i] := AppData.ShipmentDetail.FieldByName('SUPPLIER').AsString;
+                        Cells[7,i] := AppData.ShipmentDetail.FieldByName('PRIMECH').AsString;
+                        Sum_Nal     := Sum_Nal + AppData.ShipmentDetail.FieldByName('SUM_NAL').AsFloat;
+                        Sum_Not_Nal :=  Sum_Not_Nal + AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsFloat;
+                        AppData.ShipmentDetail.Next;
+                      end;
+                    end;
+                  end;
+
+                  with  ShipmentF.Bar do
+                  Begin
+                    Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ShipmentDetail.RecordCount);
+                    Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
+                    Panels[2].Text := 'Сумма (безнал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
+                  end;
+                ShipmentF.ShowModal();
+          end
+      else
+                Exit;
+  finally
+        FreeAndNil(ShipmentF);
+  end;
+end;
+
+procedure TMainForm.ShipmentOtherActionExecute(Sender: TObject);
+var
+    i: integer;
+    ShipmentF: TShipmentForm;
+begin
+  ShipmentF := TShipmentForm.Create(MainForm);
+
+  try
+        TypeSaveShipment := g_CreateDoc;
+        TypeShipment := TAB_ShipmentOther;
+        ShipmentF.SettingShipmentForm(TAB_ShipmentOther, g_CreateDoc);
+
+        AppData.Organiz.Active := False;
+        AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
+        AppData.Organiz.Active := True;
+
+          AppData.Organiz.First;
+           with ShipmentF.ShipmentStringGrid do
+            Begin
+              RowCount := AppData.Organiz.RecordCount+1;
+              while not AppData.Organiz.Eof do
+               Begin
+                For i := 1 to RowCount-1 do
+                 Begin
+                    Cells[0,i] := IntToStr(i);
+                    Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+                    Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+                    Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+                    AppData.Organiz.Next;
+                 end;
+               end;
+            end;
+
+        with  ShipmentF.Bar do
+          Begin
+            Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
+            Panels[1].Text := 'Сумма (нал): ' + '0';
+            Panels[2].Text := 'Сумма (безнал): ' + '0';
+          end;
+
+        ShipmentF.ShowModal();
+  finally
+       FreeAndNil(ShipmentF);
+  end;
+end;
+
+procedure TMainForm.CorrShipmentOtherActionExecute(Sender: TObject);
+var
+    i, RecordCountShipmentDetail: integer;
+    Sum_Nal, Sum_Not_Nal: real;
+    ShipmentF: TShipmentForm;
+begin
+    ShipmentF := TShipmentForm.Create(MainForm);
+
+    try
+        if not (ReestrShipmentOther.IsEmpty) then
+            Begin
+                  AppData.ShipmentDetail.Active := False;
+                  AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentOther.FieldByName('UNICUM_NUM').AsInteger]);
+                  AppData.ShipmentDetail.Active := True;
+
+                 if AppData.ShipmentDetail.FieldByName('StatusDoc').AsString = '*' then
+                    Begin
+                      MessageBox(Handle, PChar('Документ: ' + AppData.ShipmentDetail.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
+                      Exit;
+                    end
+                 else
+                  Begin
+                      AppData.Users.Locate('Login', g_User, [loCaseInsensitive, loPartialKey]);
+                      if (AppData.Users.FieldByName('Admin').AsString <> '*') and (AppData.ShipmentDetail.FieldByName('OTMETKA').AsString = '*') then
+                          Begin
+                            MessageBox(Handle, PChar('Документ № ' + AppData.ShipmentDetail.FieldByName('NUMDOC').AsString + ' отмечен.' + #13#10 + 'Корректировка невозможна. Обратитесь к администратору'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
+                            Exit;
+                          end
+                      else
+                          Begin
+                            TypeSaveShipment := g_CorrDoc;
+                            TypeShipment := TAB_ShipmentOther;
+                            ShipmentF.SettingShipmentForm(TAB_ShipmentOther, g_CorrDoc);
+
+                            Sum_Nal     := 0;
+                            Sum_Not_Nal := 0;
+
+                            with AppData do
+                              Begin
+                                 AdoCmd.CommandText := Format(SSQLUpdateShipmentStatusCorrDoc, [ReestrShipmentOther.FieldByName('UNICUM_NUM').AsInteger, 1]);
+                                 AdoCmd.Execute;
+                              end;
+
+                            RecordCountShipmentDetail := AppData.ShipmentDetail.RecordCount+1;
+
+                            with ShipmentF do
+                              Begin
+                                 NumDocEdit.Text := ReestrShipmentOther.FieldByName('NUMDOC').AsString;
+                                 ShipmentPicker.Date := DateOf(ReestrShipmentOther.FieldByName('DATE_P_POR').AsDateTime);
+                                 PrimechEdit.Text := ReestrShipmentOther.FieldByName('PRIMECH').AsString;
+                                 ShipmentStringGrid.RowCount := RecordCountShipmentDetail;
+                              end;
+
+                            AppData.ShipmentDetail.First;
+                            while not  AppData.ShipmentDetail.Eof do
+                            Begin
+                              for i:= 1 to ShipmentF.ShipmentStringGrid.RowCount-1 do
+                              Begin
+                               with ShipmentF.ShipmentStringGrid  do
+                                begin
+                                  Cells[0,i] := IntToStr(AppData.ShipmentDetail.FieldByName('NUM_PREDM').AsInteger);
+                                  Cells[1,i] := AppData.ShipmentDetail.FieldByName('UID_SHOP').AsString;
+                                  Cells[2,i] := AppData.ShipmentDetail.FieldByName('NAME').AsString;
+                                  Cells[3,i] := AppData.ShipmentDetail.FieldByName('ADRESS').AsString;
+                                  Cells[4,i] := AppData.ShipmentDetail.FieldByName('SUM_NAL').AsString;
+                                  Cells[5,i] := AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsString;
+                                  Cells[6,i] := AppData.ShipmentDetail.FieldByName('SUPPLIER').AsString;
+                                  Cells[7,i] := AppData.ShipmentDetail.FieldByName('PRIMECH').AsString;
+                                  Sum_Nal     := Sum_Nal + AppData.ShipmentDetail.FieldByName('SUM_NAL').AsFloat;
+                                  Sum_Not_Nal :=  Sum_Not_Nal + AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsFloat;
+                                  AppData.ShipmentDetail.Next;
+                                end;
+                              end;
+                            end;
+
+                            with  ShipmentF.Bar do
+                            Begin
+                              Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ShipmentDetail.RecordCount);
+                              Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
+                              Panels[2].Text := 'Сумма (безнал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
+                            end;
+                      ShipmentF.ShowModal();
+                  end;
+                end;
+            end
+        else
+                      Exit;
+    finally
+        FreeAndNil(ShipmentF);
+    end;
 end;
 
 
@@ -5673,61 +5708,67 @@ procedure TMainForm.ViewShipmentOtherActionExecute(Sender: TObject);
 var
     i, RecordCountShipmentDetail: integer;
     Sum_Nal, Sum_Not_Nal: real;
+    ShipmentF: TShipmentForm;
 begin
+   ShipmentF := TShipmentForm.Create(MainForm);
 
-   if not (ReestrShipmentOther.IsEmpty) then
-      Begin
-          AppData.ShipmentDetail.Active := False;
-          AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentOther.FieldByName('UNICUM_NUM').AsInteger]);
-          AppData.ShipmentDetail.Active := True;
+   try
+       if not (ReestrShipmentOther.IsEmpty) then
+          Begin
+              AppData.ShipmentDetail.Active := False;
+              AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentOther.FieldByName('UNICUM_NUM').AsInteger]);
+              AppData.ShipmentDetail.Active := True;
 
-              TypeSaveShipment := g_Preview;
-              ShipmentForm.SettingShipmentForm(TAB_ShipmentOther, g_Preview);
-              Sum_Nal     := 0;
-              Sum_Not_Nal := 0;
+                  TypeSaveShipment := g_Preview;
+                  ShipmentF.SettingShipmentForm(TAB_ShipmentOther, g_Preview);
+                  Sum_Nal     := 0;
+                  Sum_Not_Nal := 0;
 
-              RecordCountShipmentDetail := AppData.ShipmentDetail.RecordCount+1;
+                  RecordCountShipmentDetail := AppData.ShipmentDetail.RecordCount+1;
 
-              with ShipmentForm do
-                Begin
-                   NumDocEdit.Text := ReestrShipmentOther.FieldByName('NUMDOC').AsString;
-                   ShipmentPicker.Date := DateOf(ReestrShipmentOther.FieldByName('DATE_P_POR').AsDateTime);
-                   PrimechEdit.Text := ReestrShipmentOther.FieldByName('PRIMECH').AsString;
-                   ShipmentStringGrid.RowCount := RecordCountShipmentDetail;
-                end;
+                  with ShipmentF do
+                    Begin
+                       NumDocEdit.Text := ReestrShipmentOther.FieldByName('NUMDOC').AsString;
+                       ShipmentPicker.Date := DateOf(ReestrShipmentOther.FieldByName('DATE_P_POR').AsDateTime);
+                       PrimechEdit.Text := ReestrShipmentOther.FieldByName('PRIMECH').AsString;
+                       ShipmentStringGrid.RowCount := RecordCountShipmentDetail;
+                    end;
 
-              AppData.ShipmentDetail.First;
-              while not  AppData.ShipmentDetail.Eof do
-              Begin
-                for i:= 1 to ShipmentForm.ShipmentStringGrid.RowCount-1 do
-                Begin
-                 with ShipmentForm.ShipmentStringGrid  do
-                  begin
-                    Cells[0,i] := IntToStr(AppData.ShipmentDetail.FieldByName('NUM_PREDM').AsInteger);
-                    Cells[1,i] := AppData.ShipmentDetail.FieldByName('UID_SHOP').AsString;
-                    Cells[2,i] := AppData.ShipmentDetail.FieldByName('NAME').AsString;
-                    Cells[3,i] := AppData.ShipmentDetail.FieldByName('ADRESS').AsString;
-                    Cells[4,i] := FormatFloat('#,###,###.###', AppData.ShipmentDetail.FieldByName('SUM_NAL').AsFloat);
-                    Cells[5,i] := FormatFloat('#,###,###.###', AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsFloat);
-                    Cells[6,i] := AppData.ShipmentDetail.FieldByName('SUPPLIER').AsString;
-                    Cells[7,i] := AppData.ShipmentDetail.FieldByName('PRIMECH').AsString;
-                    Sum_Nal     := Sum_Nal + AppData.ShipmentDetail.FieldByName('SUM_NAL').AsFloat;
-                    Sum_Not_Nal :=  Sum_Not_Nal + AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsFloat;
-                    AppData.ShipmentDetail.Next;
+                  AppData.ShipmentDetail.First;
+                  while not  AppData.ShipmentDetail.Eof do
+                  Begin
+                    for i:= 1 to ShipmentF.ShipmentStringGrid.RowCount-1 do
+                    Begin
+                     with ShipmentF.ShipmentStringGrid  do
+                      begin
+                        Cells[0,i] := IntToStr(AppData.ShipmentDetail.FieldByName('NUM_PREDM').AsInteger);
+                        Cells[1,i] := AppData.ShipmentDetail.FieldByName('UID_SHOP').AsString;
+                        Cells[2,i] := AppData.ShipmentDetail.FieldByName('NAME').AsString;
+                        Cells[3,i] := AppData.ShipmentDetail.FieldByName('ADRESS').AsString;
+                        Cells[4,i] := FormatFloat('#,###,###.###', AppData.ShipmentDetail.FieldByName('SUM_NAL').AsFloat);
+                        Cells[5,i] := FormatFloat('#,###,###.###', AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsFloat);
+                        Cells[6,i] := AppData.ShipmentDetail.FieldByName('SUPPLIER').AsString;
+                        Cells[7,i] := AppData.ShipmentDetail.FieldByName('PRIMECH').AsString;
+                        Sum_Nal     := Sum_Nal + AppData.ShipmentDetail.FieldByName('SUM_NAL').AsFloat;
+                        Sum_Not_Nal :=  Sum_Not_Nal + AppData.ShipmentDetail.FieldByName('SUM_NOT_NAL').AsFloat;
+                        AppData.ShipmentDetail.Next;
+                      end;
+                    end;
                   end;
-                end;
-              end;
 
-              with  ShipmentForm.Bar do
-              Begin
-                Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ShipmentDetail.RecordCount);
-                Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
-                Panels[2].Text := 'Сумма (безнал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
-              end;
-            ShipmentForm.ShowModal();
-      end
-   else
-            Exit;
+                  with  ShipmentF.Bar do
+                  Begin
+                    Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ShipmentDetail.RecordCount);
+                    Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
+                    Panels[2].Text := 'Сумма (безнал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
+                  end;
+                ShipmentF.ShowModal();
+          end
+       else
+                Exit;
+   finally
+        FreeAndNil(ShipmentF);
+   end;
 end;
 
 procedure TMainForm.RefreshShipmentVostokPopClick(Sender: TObject);
@@ -6023,40 +6064,47 @@ end;
 procedure TMainForm.OffsActionExecute(Sender: TObject);
 var
     i: integer;
+    OffsF: TOffsForm;
 begin
-      AppData.Organiz.Active := False;
-      AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
-      AppData.Organiz.Active := True;
+    OffsF := TOffsForm.Create(MainForm);
 
-      TypeOffs := TAB_Offs;
-      TypeSaveOffs  := g_CreateDoc;
-      OffsForm.SettingOffsForm(TAB_Offs, g_CreateDoc);
+    try
+          AppData.Organiz.Active := False;
+          AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
+          AppData.Organiz.Active := True;
 
-    AppData.Organiz.First;
-     with OffsForm.OffsStringGrid do
-      Begin
-        RowCount := AppData.Organiz.RecordCount+1;
-        while not AppData.Organiz.Eof do
-         Begin
-          For i := 1 to RowCount-1 do
-           Begin
-              Cells[0,i] := IntToStr(i);
-              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-              AppData.Organiz.Next;
-           end;
-         end;
-      end;
+          TypeOffs := TAB_Offs;
+          TypeSaveOffs  := g_CreateDoc;
+          OffsF.SettingOffsForm(TAB_Offs, g_CreateDoc);
 
-      with  OffsForm.Bar do
-        Begin
-          Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
-          Panels[1].Text := 'Сумма (нал): ' + '0';
-          Panels[2].Text := 'Сумма (безнал): ' + '0';
-        end;
+        AppData.Organiz.First;
+         with OffsF.OffsStringGrid do
+          Begin
+            RowCount := AppData.Organiz.RecordCount+1;
+            while not AppData.Organiz.Eof do
+             Begin
+              For i := 1 to RowCount-1 do
+               Begin
+                  Cells[0,i] := IntToStr(i);
+                  Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+                  Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+                  Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+                  AppData.Organiz.Next;
+               end;
+             end;
+          end;
 
-      OffsForm.ShowModal();
+          with  OffsF.Bar do
+            Begin
+              Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
+              Panels[1].Text := 'Сумма (нал): ' + '0';
+              Panels[2].Text := 'Сумма (безнал): ' + '0';
+            end;
+
+          OffsF.ShowModal();
+    finally
+          FreeAndNil(OffsF);
+    end;
 end;
 
 procedure TMainForm.CorrOffsActionExecute(Sender: TObject);
@@ -6064,87 +6112,93 @@ var
     i, RecordCountDetail: integer;
     Sum_Nal: real;
     Year, Month, Day, Mes: Word;
+    OffsF: TOffsForm;
+
 begin
+    OffsF := TOffsForm.Create(MainForm);
 
-   if not (ReestrOffs.IsEmpty) then
-     Begin
-        Sum_Nal := 0;
-        TypeOffs := TAB_Offs;
-        TypeSaveOffs  := g_CorrDoc;
-        OffsForm.SettingOffsForm(TAB_Offs, g_CorrDoc);
+   try
+       if not (ReestrOffs.IsEmpty) then
+         Begin
+            Sum_Nal := 0;
+            TypeOffs := TAB_Offs;
+            TypeSaveOffs  := g_CorrDoc;
+            OffsF.SettingOffsForm(TAB_Offs, g_CorrDoc);
 
-        AppData.GetDetailOffs.Active := False;
-        AppData.GetDetailOffs.CommandText := Format(SSQLGetOffsDetail, [MainForm.ReestrOffs.FieldByName('UNICUM_NUM').AsInteger]);
-        AppData.GetDetailOffs.Active := True;
+            AppData.GetDetailOffs.Active := False;
+            AppData.GetDetailOffs.CommandText := Format(SSQLGetOffsDetail, [MainForm.ReestrOffs.FieldByName('UNICUM_NUM').AsInteger]);
+            AppData.GetDetailOffs.Active := True;
 
 
-        if AppData.GetDetailOffs.FieldByName('StatusDoc').AsString = '*' then
-           begin
-              MessageBox(Handle, PChar('Документ: ' + AppData.GetDetailOffs.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
-              Exit;
-           end
-        else
-          Begin
-            AppData.Users.Locate('Login', g_User, [loCaseInsensitive, loPartialKey]);
-              if (AppData.Users.FieldByName('Admin').AsString <> '*') and (AppData.GetDetailOffs.FieldByName('OTMETKA').AsString = '*') then
-                  Begin
-                    MessageBox(Handle, PChar('Документ № ' + AppData.GetDetailOffs.FieldByName('NUMDOC').AsString + ' отмечен.' + #13#10 + 'Корректировка невозможна. Обратитесь к администратору'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
-                    Exit;
-                  end
-              else
-                  Begin
-                    with AppData do
-                     Begin
-                        AdoCmd.CommandText := Format(SSQLUpdateOffsStatusCorrDoc, [GetDetailOffs.FieldByName('UNICUM_NUM').AsInteger, 1]);
-                        AdoCmd.Execute;
-                      end;
-
-                    RecordCountDetail := AppData.GetDetailOffs.RecordCount+1;
-                    DecodeDate(ReestrOffs.FieldByName('DATE_P_POR').AsDateTime, Year, Month, Day);
-
-                     with OffsForm do
+            if AppData.GetDetailOffs.FieldByName('StatusDoc').AsString = '*' then
+               begin
+                  MessageBox(Handle, PChar('Документ: ' + AppData.GetDetailOffs.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
+                  Exit;
+               end
+            else
+              Begin
+                AppData.Users.Locate('Login', g_User, [loCaseInsensitive, loPartialKey]);
+                  if (AppData.Users.FieldByName('Admin').AsString <> '*') and (AppData.GetDetailOffs.FieldByName('OTMETKA').AsString = '*') then
                       Begin
-                        OffsStringGrid.RowCount := RecordCountDetail;
-                        NumDocEdit.Text := ReestrOffs.FieldByName('NUMDOC').AsString;
-                        MonthCombo.ItemIndex := Month;
-                        YearSpinEdit.Value := Year;
-                        DatePicker.Date := AppData.GetDetailOffs.FieldByName('DATE_P_POR').AsDateTime;
-                        PrimechEdit.Text :=  ReestrOffs.FieldByName('PRIMECH').AsString;
-                      end;
-
-                      AppData.GetDetailOffs.First;
-                      while not  AppData.GetDetailOffs.Eof do
+                        MessageBox(Handle, PChar('Документ № ' + AppData.GetDetailOffs.FieldByName('NUMDOC').AsString + ' отмечен.' + #13#10 + 'Корректировка невозможна. Обратитесь к администратору'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
+                        Exit;
+                      end
+                  else
                       Begin
-                        for i:= 1 to OffsForm.OffsStringGrid.RowCount -1 do
-                        Begin
-                          OffsForm.OffsStringGrid.Cells[0,i] := IntToStr(i);
-                          OffsForm.OffsStringGrid.Cells[0,0] := '№';
-                         with OffsForm.OffsStringGrid  do
-                          begin
-                           // Cells[0,i] := AppData.GetDetailOffs.FieldByName('NUM_PREDM').AsString;
-                            Cells[1,i] := AppData.GetDetailOffs.FieldByName('UID_SHOP').AsString;
-                            Cells[2,i] := AppData.GetDetailOffs.FieldByName('NAME').AsString;
-                            Cells[3,i] := AppData.GetDetailOffs.FieldByName('ADRESS').AsString;
-                            Cells[4,i] := AppData.GetDetailOffs.FieldByName('SUM_NAL').AsString;
-                            Cells[5,i] := AppData.GetDetailOffs.FieldByName('PRIMECH').AsString;
-                            Sum_Nal    := Sum_Nal + AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat;
-                            AppData.GetDetailOffs.Next;
+                        with AppData do
+                         Begin
+                            AdoCmd.CommandText := Format(SSQLUpdateOffsStatusCorrDoc, [GetDetailOffs.FieldByName('UNICUM_NUM').AsInteger, 1]);
+                            AdoCmd.Execute;
                           end;
+
+                        RecordCountDetail := AppData.GetDetailOffs.RecordCount+1;
+                        DecodeDate(ReestrOffs.FieldByName('DATE_P_POR').AsDateTime, Year, Month, Day);
+
+                         with OffsF do
+                          Begin
+                            OffsStringGrid.RowCount := RecordCountDetail;
+                            NumDocEdit.Text := ReestrOffs.FieldByName('NUMDOC').AsString;
+                            MonthCombo.ItemIndex := Month;
+                            YearSpinEdit.Value := Year;
+                            DatePicker.Date := AppData.GetDetailOffs.FieldByName('DATE_P_POR').AsDateTime;
+                            PrimechEdit.Text :=  ReestrOffs.FieldByName('PRIMECH').AsString;
+                          end;
+
+                          AppData.GetDetailOffs.First;
+                          while not  AppData.GetDetailOffs.Eof do
+                          Begin
+                            for i:= 1 to OffsF.OffsStringGrid.RowCount -1 do
+                            Begin
+                              OffsF.OffsStringGrid.Cells[0,i] := IntToStr(i);
+                              OffsF.OffsStringGrid.Cells[0,0] := '№';
+                             with OffsF.OffsStringGrid  do
+                              begin
+                                Cells[1,i] := AppData.GetDetailOffs.FieldByName('UID_SHOP').AsString;
+                                Cells[2,i] := AppData.GetDetailOffs.FieldByName('NAME').AsString;
+                                Cells[3,i] := AppData.GetDetailOffs.FieldByName('ADRESS').AsString;
+                                Cells[4,i] := AppData.GetDetailOffs.FieldByName('SUM_NAL').AsString;
+                                Cells[5,i] := AppData.GetDetailOffs.FieldByName('PRIMECH').AsString;
+                                Sum_Nal    := Sum_Nal + AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat;
+                                AppData.GetDetailOffs.Next;
+                              end;
+                            end;
+                          end;
+
+                          with  OffsF.Bar do
+                          Begin
+                            Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetDetailOffs.RecordCount);
+                            Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
+                            Panels[2].Text := EmptyStr;
+                          end;
+                        OffsF.ShowModal();
                         end;
                       end;
-
-                      with  OffsForm.Bar do
-                      Begin
-                        Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetDetailOffs.RecordCount);
-                        Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
-                        Panels[2].Text := EmptyStr;
-                      end;
-                    OffsForm.ShowModal();
-                    end;
-                  end;
-     end
-   else
-                        Exit;
+         end
+       else
+                       Exit;
+   finally
+        FreeAndNil(OffsF);
+   end;
 end;
 
 procedure TMainForm.ViewOffsActionExecute(Sender: TObject);
@@ -6152,65 +6206,71 @@ var
     i, RecordCountDetail: integer;
     Sum_Nal: real;
     Year, Month, Day, Mes: Word;
+    OffsF: TOffsForm;
+
 begin
+    OffsF := TOffsForm.Create(MainForm);
 
-    if not (ReestrOffs.IsEmpty) then
-        Begin
-          Sum_Nal := 0;
+    try
+        if not (ReestrOffs.IsEmpty) then
+            Begin
+              Sum_Nal := 0;
 
-          TypeOffs := TAB_Offs;
-          TypeSaveOffs  := g_Preview;
-          OffsForm.SettingOffsForm(TAB_Offs, g_Preview);
+              TypeOffs := TAB_Offs;
+              TypeSaveOffs  := g_Preview;
+              OffsF.SettingOffsForm(TAB_Offs, g_Preview);
 
-          AppData.GetDetailOffs.Active := False;
-          AppData.GetDetailOffs.CommandText := Format( SSQLGetOffsDetail, [MainForm.ReestrOffs.FieldByName('UNICUM_NUM').AsInteger]);
-          AppData.GetDetailOffs.Active := True;
+              AppData.GetDetailOffs.Active := False;
+              AppData.GetDetailOffs.CommandText := Format( SSQLGetOffsDetail, [MainForm.ReestrOffs.FieldByName('UNICUM_NUM').AsInteger]);
+              AppData.GetDetailOffs.Active := True;
 
 
-                  RecordCountDetail := AppData.GetDetailOffs.RecordCount+1;
-                  DecodeDate(ReestrOffs.FieldByName('DATE_P_POR').AsDateTime, Year, Month, Day);
+                      RecordCountDetail := AppData.GetDetailOffs.RecordCount+1;
+                      DecodeDate(ReestrOffs.FieldByName('DATE_P_POR').AsDateTime, Year, Month, Day);
 
-                   with OffsForm do
-                    Begin
-                      OffsStringGrid.RowCount := RecordCountDetail;
-                      NumDocEdit.Text := ReestrOffs.FieldByName('NUMDOC').AsString;
-                      MonthCombo.ItemIndex := Month;
-                      DatePicker.Date := AppData.GetDetailOffs.FieldByName('DATE_P_POR').AsDateTime;
-                      YearSpinEdit.Value := Year;
-                      PrimechEdit.Text :=  ReestrOffs.FieldByName('PRIMECH').AsString;
-                    end;
+                       with OffsF do
+                        Begin
+                          OffsStringGrid.RowCount := RecordCountDetail;
+                          NumDocEdit.Text := ReestrOffs.FieldByName('NUMDOC').AsString;
+                          MonthCombo.ItemIndex := Month;
+                          DatePicker.Date := AppData.GetDetailOffs.FieldByName('DATE_P_POR').AsDateTime;
+                          YearSpinEdit.Value := Year;
+                          PrimechEdit.Text :=  ReestrOffs.FieldByName('PRIMECH').AsString;
+                        end;
 
-                    AppData.GetDetailOffs.First;
-                    while not  AppData.GetDetailOffs.Eof do
-                    Begin
-                      for i:= 1 to OffsForm.OffsStringGrid.RowCount -1 do
-                      Begin
-                        OffsForm.OffsStringGrid.Cells[0,i] := IntToStr(i);
-                        OffsForm.OffsStringGrid.Cells[0,0] := '№';
-                         with OffsForm.OffsStringGrid  do
-                          begin
-                           // Cells[0,i] := AppData.GetDetailOffs.FieldByName('NUM_PREDM').AsString;
-                            Cells[1,i] := AppData.GetDetailOffs.FieldByName('UID_SHOP').AsString;
-                            Cells[2,i] := AppData.GetDetailOffs.FieldByName('NAME').AsString;
-                            Cells[3,i] := AppData.GetDetailOffs.FieldByName('ADRESS').AsString;
-                            Cells[4,i] := FormatFloat('#,###,###.###', AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat);
-                            Cells[5,i] := AppData.GetDetailOffs.FieldByName('PRIMECH').AsString;
-                            Sum_Nal     := Sum_Nal + AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat;
-                            AppData.GetDetailOffs.Next;
+                        AppData.GetDetailOffs.First;
+                        while not  AppData.GetDetailOffs.Eof do
+                        Begin
+                          for i:= 1 to OffsF.OffsStringGrid.RowCount -1 do
+                          Begin
+                            OffsF.OffsStringGrid.Cells[0,i] := IntToStr(i);
+                            OffsF.OffsStringGrid.Cells[0,0] := '№';
+                             with OffsF.OffsStringGrid  do
+                              begin
+                                Cells[1,i] := AppData.GetDetailOffs.FieldByName('UID_SHOP').AsString;
+                                Cells[2,i] := AppData.GetDetailOffs.FieldByName('NAME').AsString;
+                                Cells[3,i] := AppData.GetDetailOffs.FieldByName('ADRESS').AsString;
+                                Cells[4,i] := FormatFloat('#,###,###.###', AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat);
+                                Cells[5,i] := AppData.GetDetailOffs.FieldByName('PRIMECH').AsString;
+                                Sum_Nal     := Sum_Nal + AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat;
+                                AppData.GetDetailOffs.Next;
+                              end;
                           end;
-                      end;
-                    end;
+                        end;
 
-                    with  OffsForm.Bar do
-                    Begin
-                      Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetDetailOffs.RecordCount);
-                      Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
-                      Panels[2].Text := EmptyStr;
-                    end;
-              OffsForm.ShowModal();
-        end
-    else
-              Exit;
+                        with  OffsF.Bar do
+                        Begin
+                          Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetDetailOffs.RecordCount);
+                          Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
+                          Panels[2].Text := EmptyStr;
+                        end;
+                  OffsF.ShowModal();
+            end
+        else
+                  Exit;
+    finally
+            FreeAndNil(OffsF);
+    end;
 end;
 
 procedure TMainForm.DeleteOffsActionExecute(Sender: TObject);

@@ -13,7 +13,6 @@ object ShipmentForm: TShipmentForm
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
-  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96

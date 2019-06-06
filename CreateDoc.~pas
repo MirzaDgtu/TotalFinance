@@ -18,11 +18,11 @@ type
     Label2: TLabel;
     NumDocEdit: TEdit;
     PopupGridMenu: TPopupMenu;
-    N1: TMenuItem;
+    DeletePop: TMenuItem;
     PopupSaveMenu: TPopupMenu;
-    N2: TMenuItem;
-    N3: TMenuItem;
-    N4: TMenuItem;
+    SavePop: TMenuItem;
+    SaveNoPop: TMenuItem;
+    AddPop: TMenuItem;
     AddBtn: TBitBtn;
     DeleteBtn: TBitBtn;
     PrintBtn: TBitBtn;
@@ -33,8 +33,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure DetailStringGridKeyPress(Sender: TObject; var Key: Char);
     procedure N1Click(Sender: TObject);
-    procedure N2Click(Sender: TObject);
-    procedure N3Click(Sender: TObject);
+    procedure SavePopClick(Sender: TObject);
+    procedure SaveNoPopClick(Sender: TObject);
     procedure DetailStringGridSelectCell(Sender: TObject; ACol,
       ARow: Integer; var CanSelect: Boolean);
     procedure AddBtnClick(Sender: TObject);
@@ -52,17 +52,17 @@ type
     procedure  SaveNewIncomeDoc;
     procedure  SaveCorrIncomeDoc;
     function   CalcValueCellsVB(StringCalc: string): string;
-    procedure SetNewSumNalDoc(const Value: real);
-    procedure SetOldSumNalDoc(const Value: real);
-    procedure SetSumNalCashBox(const Value: real);
+    procedure  SetNewSumNalDoc(const Value: real);
+    procedure  SetOldSumNalDoc(const Value: real);
+    procedure  SetSumNalCashBox(const Value: real);
 
   public
     { Public declarations }
     
      procedure DetailStringGridSetting(TypeIncomeSetting:integer);
-     property SumNalCashBox: real read FSumNalCashBox write SetSumNalCashBox;
-     property OldSumNalDoc: real read FOldSumNalDoc write SetOldSumNalDoc;
-     property NewSumNalDoc: real read FNewSumNalDoc write SetNewSumNalDoc;
+     property  SumNalCashBox: real read FSumNalCashBox write SetSumNalCashBox;
+     property  OldSumNalDoc:  real read FOldSumNalDoc  write SetOldSumNalDoc;
+     property  NewSumNalDoc:  real read FNewSumNalDoc  write SetNewSumNalDoc;
   end;
 
 var
@@ -92,22 +92,9 @@ end;
 
 procedure TCreateDocumentForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
-var
-    i: integer;
 begin
-  for i := 0 to DetailStringGrid.ColCount - 1 do
-    Begin
-      DetailStringGrid.Cols[i].Clear;
-    end;
-
-  for i := 0 to DetailStringGrid.RowCount - 1 do
-    Begin
-      DetailStringGrid.Rows[i].Clear;
-    end;
-  PrimechEdit.Text := EmptyStr;
-
-  AppData.AdoCmd.CommandText := Format(SSQLUpdateIncStatusCorrDoc, [MainForm.ReestrIncome.FieldByName('UNICUM_NUM').AsInteger, 0]);
-  AppData.AdoCmd.Execute;
+    AppData.AdoCmd.CommandText := Format(SSQLUpdateIncStatusCorrDoc, [MainForm.ReestrIncome.FieldByName('UNICUM_NUM').AsInteger, 0]);
+    AppData.AdoCmd.Execute;
 end;
 
 procedure TCreateDocumentForm.DetailStringGridKeyPress(Sender: TObject;
@@ -189,7 +176,7 @@ begin
   end;
 end;
 
-procedure TCreateDocumentForm.N2Click(Sender: TObject);
+procedure TCreateDocumentForm.SavePopClick(Sender: TObject);
 var
     Str: String;
 begin
@@ -241,9 +228,9 @@ begin
   Close();
 end;
 
-procedure TCreateDocumentForm.N3Click(Sender: TObject);
+procedure TCreateDocumentForm.SaveNoPopClick(Sender: TObject);
 begin
-  Close();
+    Close();
 end;
 
 procedure TCreateDocumentForm.DetailStringGridSelectCell(Sender: TObject;
@@ -260,9 +247,9 @@ end;
 
 procedure TCreateDocumentForm.AddBtnClick(Sender: TObject);
 begin
-  fl_ShopInDoc := 1;
-  ShopForm.SettingShopForm(1);
-  ShopForm.ShowModal();
+    fl_ShopInDoc := 1;
+    ShopForm.SettingShopForm(1);
+    ShopForm.ShowModal();
 end;
 
 // Сохранение нового документа (Выручка)
@@ -417,12 +404,12 @@ begin
                PrimechEdit.Enabled := True;
 
                // Использование PopupSaveMenu
-               N2.Enabled := True;
-               N3.Enabled := True;
+               SavePop.Enabled := True;
+               SaveNoPop.Enabled := True;
 
                // Использование PopupGridMenu
-               N1.Enabled := True;
-               N4.Enabled := True;
+               AddPop.Enabled := True;
+               DeletePop.Enabled := True;
 
 
               DetailStringGrid.Options := DetailStringGrid.Options + [goEditing];
@@ -459,12 +446,12 @@ begin
                PrimechEdit.Enabled := True;
 
                // Использование PopupSaveMenu
-               N2.Enabled := True;
-               N3.Enabled := True;
+               SavePop.Enabled := True;
+               SaveNoPop.Enabled := True;
 
                // Использование PopupGridMenu
-               N1.Enabled := True;
-               N4.Enabled := True;
+               AddPop.Enabled := True;
+               DeletePop.Enabled := True;
 
               DetailStringGrid.Options := DetailStringGrid.Options + [goEditing];
             end;
@@ -499,13 +486,13 @@ begin
                 PrimechEdit.Enabled := False;
 
                 // Использование PopupSaveMenu
-                N2.Enabled := False;
-                N3.Enabled := False;
+                SavePop.Enabled := False;
+                SaveNoPop.Enabled := False;
                 PrintBtn.Enabled := True;
 
                 // Использование PopupGridMenu
-                N1.Enabled := False;
-                N4.Enabled := False;
+                AddPop.Enabled := False;
+                DeletePop.Enabled := False;
 
                 DetailStringGrid.Options := DetailStringGrid.Options - [goEditing];
               end;

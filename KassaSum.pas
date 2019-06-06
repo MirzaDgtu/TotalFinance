@@ -605,8 +605,7 @@ if not (ReestrHeadDoc.IsEmpty) then
              MonthCombo.ItemIndex := Month;
              MonthCombo.Visible := True;
              YearSpinEdit.Visible := False;
-             ExpenseStringGrid.RowCount := RecordCountExpenceDetail;
-
+             ExpenseStringGrid.RowCount := RecordCountExpenceDetail;  
           end;
 
 

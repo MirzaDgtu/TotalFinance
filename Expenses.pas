@@ -152,36 +152,36 @@ var
 begin
       If ExpenseStringGrid.Row <> 0 then
        Begin
-        DeleteRow(ExpenseStringGrid, ExpenseStringGrid.Row);
-        For i:= 1 to ExpenseStringGrid.RowCount do
-          ExpenseStringGrid.Cells[0,i] := IntToStr(i);
-        ExpenseStringGrid.Cells[0,0] := 'NN';
+          DeleteRow(ExpenseStringGrid, ExpenseStringGrid.Row);
+          For i:= 1 to ExpenseStringGrid.RowCount do
+            ExpenseStringGrid.Cells[0,i] := IntToStr(i);
+          ExpenseStringGrid.Cells[0,0] := 'NN';
        end
       else
-        Exit;
+          Exit;
 end;
 
 procedure TExpenseForm.SaveExpenseBtnClick(Sender: TObject);
 begin
-  PopupSaveMenu.Popup(SaveExpenseBtn.ClientOrigin.X, SaveExpenseBtn.ClientOrigin.Y);
+    PopupSaveMenu.Popup(SaveExpenseBtn.ClientOrigin.X, SaveExpenseBtn.ClientOrigin.Y);
 end;
 
 procedure TExpenseForm.FormCreate(Sender: TObject);
 begin
-  ExpenseStringGrid.DefaultRowHeight := NaznachenieCombo.Height;
-  YearSpinEdit.Value := CurrentYear;
+    ExpenseStringGrid.DefaultRowHeight := NaznachenieCombo.Height;
+    YearSpinEdit.Value := CurrentYear;
 end;
 
 procedure TExpenseForm.NaznachenieComboChange(Sender: TObject);
 begin
-  ExpenseStringGrid.Cells[ExpenseStringGrid.Col, ExpenseStringGrid.Row] := NaznachenieCombo.Items[NaznachenieCombo.ItemIndex];
-  NaznachenieCombo.Visible := False;
+    ExpenseStringGrid.Cells[ExpenseStringGrid.Col, ExpenseStringGrid.Row] := NaznachenieCombo.Items[NaznachenieCombo.ItemIndex];
+    NaznachenieCombo.Visible := False;
 end;
 
 procedure TExpenseForm.NaznachenieComboExit(Sender: TObject);
 begin
-  ExpenseStringGrid.Cells[ExpenseStringGrid.Col, ExpenseStringGrid.Row] := NaznachenieCombo.Items[NaznachenieCombo.ItemIndex];
-  NaznachenieCombo.Visible := False;
+    ExpenseStringGrid.Cells[ExpenseStringGrid.Col, ExpenseStringGrid.Row] := NaznachenieCombo.Items[NaznachenieCombo.ItemIndex];
+    NaznachenieCombo.Visible := False;
 end;
 
 procedure TExpenseForm.ExpenseStringGridSelectCell(Sender: TObject; ACol,
@@ -199,7 +199,6 @@ begin
 
     if ((ACol = 6) and (ARow <> 0)) then
       Begin
-
         NaznachenieCombo.ItemIndex :=  NaznachenieCombo.Items.IndexOf(ExpenseStringGrid.Cells[ACol, ARow]);
         R:= ExpenseStringGrid.CellRect(ACol, ARow);
         R.Left  := R.Left + ExpenseStringGrid.Left;
@@ -566,9 +565,9 @@ end;
 
 procedure TExpenseForm.AddBtnClick(Sender: TObject);
 begin
-  fl_ShopInDoc := 2;
-  ShopForm.SettingShopForm(1);
-  ShopForm.ShowModal();
+    fl_ShopInDoc := 2;
+    ShopForm.SettingShopForm(1);
+    ShopForm.ShowModal();
 end;
 
 
@@ -1201,7 +1200,7 @@ begin
 
 procedure TExpenseForm.SaveNoPopClick(Sender: TObject);
 begin
-  Close();
+    Close();
 end;
 
 procedure TExpenseForm.SavePopClick(Sender: TObject);
@@ -1372,12 +1371,12 @@ function TExpenseForm.CalcValueCellsVB(StringCalc: string): string;
 var
     msc: Variant;
 begin
+  msc := CreateOleObject('MSScriptControl.ScriptControl');
 
   try
-      msc := CreateOleObject('MSScriptControl.ScriptControl');
       msc.Language := 'VBScript';
       Result := msc.Eval(Copy(StringReplace(StringCalc, ',', '.', [rfReplaceAll, rfIgnoreCase]), 2, Length(StringCalc)));
-  except
+  finally
       FreeAndNil(msc);
   end;
 end;

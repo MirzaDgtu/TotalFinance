@@ -1,6 +1,6 @@
 object AccessForm: TAccessForm
-  Left = 1108
-  Top = 256
+  Left = 892
+  Top = 260
   Width = 409
   Height = 401
   BorderStyle = bsSizeToolWin

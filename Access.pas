@@ -46,14 +46,14 @@ uses ModuleData, Main, User, Module, sConst, Rigth, AccessNaznachenie;
 
 procedure TAccessForm.ExitBtnClick(Sender: TObject);
 begin
-  Close();
+   Close();
 end;
 
 procedure TAccessForm.RefreshBtnClick(Sender: TObject);
 begin
-  AppData.User.Active := False;
-  AppData.User.CommandText := Format(SSQLGetUser, [0]);
-  AppData.User.Active := True;
+    AppData.User.Active := False;
+    AppData.User.CommandText := Format(SSQLGetUser, [0]);
+    AppData.User.Active := True;
 end;
 
 procedure TAccessForm.FindBtnClick(Sender: TObject);

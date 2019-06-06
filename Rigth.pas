@@ -43,15 +43,16 @@ procedure TRigthForm.ApplyBtnClick(Sender: TObject);
 var
     Str: string;
 begin
-Screen.Cursor := crSQLWait;
-Str := RigthUserSetAccessMode.AsString;
-RigthUserSetMode.AsInteger := RigthUserGrid.Columns[2].PickList.IndexOf(Str);
-RigthUserAccess.Active := False;
-RigthUserAccess.CommandText := Format(SSQLUpdModuleUserAccess, [AppData.User.FieldByName('UID').AsInteger,
-                                                                RigthUserSet.FieldByName('UID').AsInteger,
-                                                                RigthUserSetMode.AsInteger]);
-RigthUserAccess.Active := True;
-Screen.Cursor :=  crDefault;
+    Screen.Cursor := crSQLWait;
+    Str := RigthUserSetAccessMode.AsString;
+    RigthUserSetMode.AsInteger := RigthUserGrid.Columns[2].PickList.IndexOf(Str);
+    
+    RigthUserAccess.Active := False;
+    RigthUserAccess.CommandText := Format(SSQLUpdModuleUserAccess, [AppData.User.FieldByName('UID').AsInteger,
+                                                                    RigthUserSet.FieldByName('UID').AsInteger,
+                                                                    RigthUserSetMode.AsInteger]);
+    RigthUserAccess.Active := True;
+    Screen.Cursor :=  crDefault;
 end;
 
 procedure TRigthForm.CancelBtnClick(Sender: TObject);

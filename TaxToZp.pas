@@ -197,8 +197,7 @@ begin
 
                    end;
    end;
-
-
+   
    For i := 0 to TaxZpStringGrid.RowCount - 1 do
          TaxZpStringGrid.RowHeights[i] := 20;
 
@@ -278,7 +277,6 @@ end;
 procedure TTaxToZpForm.TaxZpStringGridSelectCell(Sender: TObject; ACol,
   ARow: Integer; var CanSelect: Boolean);
 begin
-
  if TypeSaveTaxToZp <> g_Preview then
    Begin
      If ACol in [4,5] then
@@ -286,16 +284,16 @@ begin
      else
       TaxZpStringGrid.Options := TaxZpStringGrid.Options  - [goEditing];
    end
-   else
+ else
       TaxZpStringGrid.Options := TaxZpStringGrid.Options  - [goEditing];
 
 end;
 
 procedure TTaxToZpForm.AddBtnClick(Sender: TObject);
 begin
-  fl_ShopInDoc := 4;
-  ShopForm.SettingShopForm(1);
-  ShopForm.ShowModal();
+    fl_ShopInDoc := 4;
+    ShopForm.SettingShopForm(1);
+    ShopForm.ShowModal();
 end;
 
 procedure TTaxToZpForm.SaveNewTaxToZpDoc;
@@ -417,9 +415,6 @@ begin
      g_CreateDoc: SaveNewTaxToZpDoc();
      g_CorrDoc:   SaveCorrTaxToZpDoc();
   end;
-  
-  PrimechEdit.Text := EmptyStr;
-  NumDocEdit.Text  := EmptyStr;
 
   MessageBox(Handle,PChar('Расходный документ успешно сохранен!'),PChar('Расходный документ'), MB_ICONINFORMATION+MB_OK);
   MainForm.Tabs.TabIndex := TAB_TaxToZp;
@@ -436,20 +431,7 @@ end;
 
 procedure TTaxToZpForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
-var
-    i: integer;
 begin
-
-   for i := 0 to TaxZpStringGrid.ColCount - 1 do
-    Begin
-      TaxZpStringGrid.Cols[i].Clear;
-    end;
-
-  for i := 0 to TaxZpStringGrid.RowCount - 1 do
-    Begin
-      TaxZpStringGrid.Rows[i].Clear;
-    end;
-
     if TypeSaveTaxToZp = g_CorrDoc then
       Begin
         AppData.AdoCmd.CommandText := Format(SSQLUpdateZpAupStatusCorrDoc, [Appdata.GetTaxToZpDetail.FieldByName('UNICUM_NUM').AsInteger, 0]);
@@ -459,20 +441,19 @@ end;
 
 procedure TTaxToZpForm.PrintBtnClick(Sender: TObject);
 begin
-  AppData.Report.Template := STaxToZpTotalDoc;
-  AppData.Report.Run;
+    AppData.Report.Template := STaxToZpTotalDoc;
+    AppData.Report.Run;
 end;
 
 function TTaxToZpForm.CalcValueCellsVB(StringCalc: string): string;
 var
     msc: Variant;
 begin
-
+  msc := CreateOleObject('MSScriptControl.ScriptControl');  
   try
-      msc := CreateOleObject('MSScriptControl.ScriptControl');
       msc.Language := 'VBScript';
       Result := msc.Eval(Copy(StringReplace(StringCalc, ',', '.', [rfReplaceAll, rfIgnoreCase]), 2, Length(StringCalc)));
-  except
+  finally
       FreeAndNil(msc);
   end;
 

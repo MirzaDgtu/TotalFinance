@@ -48,11 +48,7 @@ begin
   Application.CreateForm(TNaznachenieDialog, NaznachenieDialog);
   Application.CreateForm(TModuleForm, ModuleForm);
   Application.CreateForm(TRigthForm, RigthForm);
-  Application.CreateForm(TZpAupForm, ZpAupForm);
   Application.CreateForm(TAccessNaznachenieForm, AccessNaznachenieForm);
-  Application.CreateForm(TTaxToZpForm, TaxToZpForm);
-  Application.CreateForm(TPercentOfTerminalForm, PercentOfTerminalForm);
-  Application.CreateForm(TShipmentForm, ShipmentForm);
   Application.CreateForm(TPublicUtilitiesForm, PublicUtilitiesForm);
   Application.CreateForm(TRangeForm, RangeForm);
   Application.CreateForm(TStateBuhForm, StateBuhForm);

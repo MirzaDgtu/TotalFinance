@@ -927,7 +927,7 @@ var
 begin
     IncomeF := TCreateDocumentForm.Create(MainForm);
     try
-         AppData.Organiz.Active := False;
+        AppData.Organiz.Active := False;
         AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
         AppData.Organiz.Active := True;
 
@@ -948,11 +948,11 @@ begin
            Begin
             For i := 1 to RowCount-1 do
              Begin
-              Cells[0,i] := IntToStr(i);
-              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-              AppData.Organiz.Next;
+                Cells[0,i] := IntToStr(i);
+                Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+                Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+                Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+                AppData.Organiz.Next;
              end;
            end;
         end;
@@ -995,8 +995,8 @@ case Tabs.TabIndex of
 end;
  Dataset.DisableControls;
  Try
-  Dataset.Active := False;
-  Dataset.Active := True;
+    Dataset.Active := False;
+    Dataset.Active := True;
  finally
   Dataset.EnableControls;
   Screen.Cursor := crDefault;
@@ -1107,55 +1107,43 @@ begin
 
   if Tabs.TabIndex in AccessM  then
   begin
-   IncomeGrid.Visible := Tabs.TabIndex = TAB_Income;
-   ExpenseGrid.Visible := Tabs.TabIndex = TAB_Expense;
-   ExpenseZPGrid.Visible := Tabs.TabIndex = TAB_ExpenseZP;
-   ExpenseOtherGrid.Visible := Tabs.TabIndex = TAB_ExpenseOther;
-   ZpAupGrid.Visible := Tabs.TabIndex = TAB_ZpAup;
-   TaxToZpGrid.Visible := Tabs.TabIndex = TAB_TaxToZp;
-   PercentOfTerminalGrid.Visible := Tabs.TabIndex = TAB_PercentOfTerminal;
-   ShipmentVostokGrid.Visible := Tabs.TabIndex = TAB_ShipmentVostok;
-   ShipmentOtherGrid.Visible := Tabs.TabIndex = TAB_ShipmentOther;
-   OffsGrid.Visible := Tabs.TabIndex = TAB_Offs;
-   PublicUtilitiesGrid.Visible := Tabs.TabIndex = TAB_PublicUtilities;
-   ReturnGrid.Visible := Tabs.TabIndex = TAB_Return;
-   ENVDGrid.Visible := Tabs.TabIndex = TAB_ENVD;
-   IncomeCashGrid.Visible := Tabs.TabIndex = TAB_IncomeCash;
+     IncomeGrid.Visible := Tabs.TabIndex = TAB_Income;
+     ExpenseGrid.Visible := Tabs.TabIndex = TAB_Expense;
+     ExpenseZPGrid.Visible := Tabs.TabIndex = TAB_ExpenseZP;
+     ExpenseOtherGrid.Visible := Tabs.TabIndex = TAB_ExpenseOther;
+     ZpAupGrid.Visible := Tabs.TabIndex = TAB_ZpAup;
+     TaxToZpGrid.Visible := Tabs.TabIndex = TAB_TaxToZp;
+     PercentOfTerminalGrid.Visible := Tabs.TabIndex = TAB_PercentOfTerminal;
+     ShipmentVostokGrid.Visible := Tabs.TabIndex = TAB_ShipmentVostok;
+     ShipmentOtherGrid.Visible := Tabs.TabIndex = TAB_ShipmentOther;
+     OffsGrid.Visible := Tabs.TabIndex = TAB_Offs;
+     PublicUtilitiesGrid.Visible := Tabs.TabIndex = TAB_PublicUtilities;
+     ReturnGrid.Visible := Tabs.TabIndex = TAB_Return;
+     ENVDGrid.Visible := Tabs.TabIndex = TAB_ENVD;
+     IncomeCashGrid.Visible := Tabs.TabIndex = TAB_IncomeCash;
 
-   OpenSales();
+     OpenSales();
 
-    if f_GetDate = 0 then
-       IncomeDifference(DBeg, DEnd)
-    else
-       IncomeDifference(RangeForm.BeginPicker.Date, RangeForm.EndPicker.Date);
+      if f_GetDate = 0 then
+         IncomeDifference(DBeg, DEnd)
+      else
+         IncomeDifference(RangeForm.BeginPicker.Date, RangeForm.EndPicker.Date);
 
-   AppData.UserAccess.Locate('MODULE_UID', IntToStr(Tabs.TabIndex), [loCaseInsensitive, loPartialKey]);
-   i_AccessMode := AppData.UserAccess.FieldByName('Mode').AsInteger;
-   AccessIncomeMode(Tabs.TabIndex, i_AccessMode);
+     AppData.UserAccess.Locate('MODULE_UID', IntToStr(Tabs.TabIndex), [loCaseInsensitive, loPartialKey]);
+     i_AccessMode := AppData.UserAccess.FieldByName('Mode').AsInteger;
+     AccessIncomeMode(Tabs.TabIndex, i_AccessMode);
   end
   else
   Begin
- {   if Idx <> 99 then
-    begin
-      Tabs.TabIndex := Idx ;
-    end
-    else
-    begin  }
       for i:= 0 to 255 do
         if i in AccessM then
         Begin
           Tabs.TabIndex := i;
-          //if Idx <> 99 then
             QMessage := MessageBox(Handle, PChar('У вас нет прав на просмотр данный вкладки! Обратитесь к администратору'),PChar('Ограничение доступа'), MB_ICONINFORMATION+MB_OK);
-            //Exit;
             Break;
         end;
-    //end;
 
   end;
-
-  //Idx := Tabs.TabIndex;
-
 end;
 
 procedure TMainForm.DeleteDocumnActionExecute(Sender: TObject);
@@ -1345,10 +1333,10 @@ end;
 
 procedure TMainForm.RefreshIncomePopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrIncome.Active := False;
-  ReestrIncome.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrIncome.Active := False;
+    ReestrIncome.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.FindBtnClick(Sender: TObject);
@@ -1439,21 +1427,21 @@ procedure TMainForm.FindEditChange(Sender: TObject);
 begin
   If FindEdit.Text = EmptyStr then
     Begin
-      FindBtn.Default := False;
-      ReestrIncome.Filtered  := False;
-      ReestrExpense.Filtered := False;
-      ReestrExpenseZP.Filtered := False;
-      ReestrExpenseOther.Filtered := False;
-      ReestrZpAup.Filtered := False;
-      ReestrTaxToZp.Filtered := False;
-      ReestrPercentOfTerminal.Filtered := False;
-      ReestrShipmentVostok.Filtered := False;
-      ReestrShipmentOther.Filtered := False;
-      ReestrOffs.Filtered := False;
-      ReestrPublicUtilities.Filtered := False;
+        FindBtn.Default := False;
+        ReestrIncome.Filtered  := False;
+        ReestrExpense.Filtered := False;
+        ReestrExpenseZP.Filtered := False;
+        ReestrExpenseOther.Filtered := False;
+        ReestrZpAup.Filtered := False;
+        ReestrTaxToZp.Filtered := False;
+        ReestrPercentOfTerminal.Filtered := False;
+        ReestrShipmentVostok.Filtered := False;
+        ReestrShipmentOther.Filtered := False;
+        ReestrOffs.Filtered := False;
+        ReestrPublicUtilities.Filtered := False;
     end
   else
-     FindBtn.Default := True;
+        FindBtn.Default := True;
 end;
 
 procedure TMainForm.CorrIncomActionExecute(Sender: TObject);
@@ -1639,10 +1627,10 @@ end;
 
 procedure TMainForm.PrintIncomeReestrPopClick(Sender: TObject);
 begin
-  ReestrIncome.DisableControls;
-  Report.Template := SIncomeReestr;
-  Report.Run;
-  ReestrIncome.EnableControls;
+    ReestrIncome.DisableControls;
+    Report.Template := SIncomeReestr;
+    Report.Run;
+    ReestrIncome.EnableControls;
 end;
 
 procedure TMainForm.IncomeGridTitleClick(Column: TColumn);
@@ -1881,18 +1869,18 @@ end;
 
 procedure TMainForm.PrintExpenseReestrPopClick(Sender: TObject);
 begin
-  ReestrExpense.DisableControls;
-  Report.Template := SExpenseReestr;
-  Report.Run;
-  ReestrExpense.First;
-  ReestrExpense.EnableControls;
+    ReestrExpense.DisableControls;
+    Report.Template := SExpenseReestr;
+    Report.Run;
+    ReestrExpense.First;
+    ReestrExpense.EnableControls;
 end;
 
 procedure TMainForm.PrintExpenseDocPopClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_Expense;
-  AppData.Report.Template := SExpenseTotalDoc;
-  AppData.Report.Run;
+    fl_TypeReport := TAB_Expense;
+    AppData.Report.Template := SExpenseTotalDoc;
+    AppData.Report.Run;
 end;
 
 procedure TMainForm.ExpenseOtherActionExecute(Sender: TObject);
@@ -1936,19 +1924,19 @@ end;
 
 procedure TMainForm.ReportExpPopupClick(Sender: TObject);
 begin
-  TypeReport := TAB_Expense;
-  ReportForm.Caption := 'Отчет по магазинам -> Расходы -> За месяц';
-  ReportForm.ShowModal();
+    TypeReport := TAB_Expense;
+    ReportForm.Caption := 'Отчет по магазинам -> Расходы -> За месяц';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.PrintExpenseZpReestrPopClick(Sender: TObject);
 begin
-  Report.Template := EmptyStr;
-  ReestrExpenseZP.DisableControls;
-  Report.Template := SExpenseReestrZp;
-  ReestrExpenseZP.First;
-  Report.Run;
-  ReestrExpenseZP.EnableControls;
+    Report.Template := EmptyStr;
+    ReestrExpenseZP.DisableControls;
+    Report.Template := SExpenseReestrZp;
+    ReestrExpenseZP.First;
+    Report.Run;
+    ReestrExpenseZP.EnableControls;
 end;
 
 function TMainForm.GetBegDate: variant;
@@ -1971,30 +1959,30 @@ end;
 
 procedure TMainForm.PrintExpenseZpDocPopClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_ExpenseZP;
-  AppData.Report.Template := SExpenseTotalDocZp;
-  AppData.Report.Run;
+    fl_TypeReport := TAB_ExpenseZP;
+    AppData.Report.Template := SExpenseTotalDocZp;
+    AppData.Report.Run;
 end;
 
 procedure TMainForm.RefreshExpensePopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrExpense.Active := False;
-  ReestrExpense.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrExpense.Active := False;
+    ReestrExpense.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.RefreshExpenseZpPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrExpenseZP.Active := False;
-  ReestrExpenseZP.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrExpenseZP.Active := False;
+    ReestrExpenseZP.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 function TMainForm.GetDatePor: variant;
 begin
-  Result := AppData.ExpenceDetail.FieldByName('DATE_P_POR').AsString;
+    Result := AppData.ExpenceDetail.FieldByName('DATE_P_POR').AsString;
 end;
 
 procedure TMainForm.BarCalc(TabIndex: integer);
@@ -2340,13 +2328,16 @@ begin
 
                       RecordCountExpenceDetail := AppData.CorrExpenceDoc.RecordCount+1;
 
-                      ExpenseForm.Caption := 'Корректировка документа';
-                      ExpenseForm.NumDocEdit.Text := ReestrExpenseOther.FieldByName('NUMDOC').AsString;
-                      ExpenseForm.ExpencePicker.Date := ReestrExpenseOther.FieldByName('DATE_P_POR').AsDateTime;
-                      ExpenseForm.PrimechEdit.Text := ReestrExpenseOther.FieldByName('PRIMECH').AsString;
-                      ExpenseForm.MonthCombo.Visible := False;
-                      ExpenseForm.YearSpinEdit.Visible := False;
-                      ExpenseForm.ExpenseStringGrid.RowCount := RecordCountExpenceDetail;
+                      with ExpenseForm do
+                          Begin
+                              Caption := 'Корректировка документа';
+                              NumDocEdit.Text := ReestrExpenseOther.FieldByName('NUMDOC').AsString;
+                              ExpencePicker.Date := ReestrExpenseOther.FieldByName('DATE_P_POR').AsDateTime;
+                              PrimechEdit.Text := ReestrExpenseOther.FieldByName('PRIMECH').AsString;
+                              MonthCombo.Visible := False;
+                              YearSpinEdit.Visible := False;
+                              ExpenseStringGrid.RowCount := RecordCountExpenceDetail;
+                          end;
 
                       AppData.CorrExpenceDoc.First;
                       while not  AppData.CorrExpenceDoc.Eof do
@@ -2394,7 +2385,6 @@ begin
    if not (ReestrExpenseOther.IsEmpty) then
     Begin
        Appdata.CorrExpenceDoc.Active := False;
-       Appdata.CorrExpenceDoc.CommandText := EmptyStr;
        Appdata.CorrExpenceDoc.CommandText := Format(SSQLGetExpenceDetail, [MainForm.ReestrExpenseOther.FieldByName('UNICUM_NUM').AsInteger]);
        Appdata.CorrExpenceDoc.Active := True;
 
@@ -2427,47 +2417,53 @@ end;
 
 procedure TMainForm.RefreshExpenseOtherPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrExpenseOther.Active := False;
-  ReestrExpenseOther.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrExpenseOther.Active := False;
+    ReestrExpenseOther.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.ZpAupActionExecute(Sender: TObject);
 var
     i:integer;
+    ZpAupF: TZpAupForm;
 begin
+  ZpAupF := TZpAupForm.Create(MainForm);
 
+   try
       TypeSaveZpAup := g_CreateDoc;
       AppData.Organiz.Active := False;
       AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
       AppData.Organiz.Active := True;
 
-      ZpAupForm.ZpAupStringGridSetting(g_CreateDoc);
+      ZpAupF.ZpAupStringGridSetting(g_CreateDoc);
 
       AppData.Organiz.First;
-       with ZpAupForm.ZpAupStringGrid do
+       with ZpAupF.ZpAupStringGrid do
         Begin
           RowCount := AppData.Organiz.RecordCount + 1;
           while not AppData.Organiz.Eof do
            Begin
             For i := 1 to RowCount do
              Begin
-              Cells[0,i] := IntToStr(i);
-              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-              AppData.Organiz.Next;
+                Cells[0,i] := IntToStr(i);
+                Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+                Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+                Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+                AppData.Organiz.Next;
              end;
            end;
         end;
-       with  ZpAupForm.Bar do
+       with  ZpAupF.Bar do
           Begin
-            Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
-            Panels[1].Text := 'Сумма (нал): ' + '0';
-            Panels[2].Text := 'Сумма (безнал): ' + '0';
+              Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
+              Panels[1].Text := 'Сумма (нал): ' + '0';
+              Panels[2].Text := 'Сумма (безнал): ' + '0';
           end;
-        ZpAupForm.ShowModal();
+        ZpAupF.ShowModal();
+   finally
+       FreeAndNil(ZpAupF);
+   end;
 
 end;
 
@@ -2513,88 +2509,94 @@ procedure TMainForm.CorrZpAupActionExecute(Sender: TObject);
 var
     i, RecordCountZpAupDetail: integer;
     Sum_Nal, Sum_Not_Nal: real;
+    ZpAupF: TZpAupForm;
 begin
+   ZpAupF := TZpAupForm.Create(MainForm);
 
-if not (ReestrZpAup.IsEmpty) then
-    Begin
-        AppData.ZpAupDetail.Active := False;
-        AppData.ZpAupDetail.CommandText := Format(SSQLGetZpAupDocDetail, [ReestrZpAup.FieldByName('UNICUM_NUM').AsInteger]);
-        AppData.ZpAupDetail.Active := True;
-
-        if AppData.ZpAupDetail.FieldByName('StatusDoc').AsString = '*' then
+   try
+      if not (ReestrZpAup.IsEmpty) then
           Begin
-            MessageBox(Handle, PChar('Документ: ' + Appdata.ZpAupDetail.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
-            Exit;
-          end
-        else
-        Begin
-                 AppData.Users.Locate('Login', g_User, [loCaseInsensitive, loPartialKey]);
-              if (AppData.Users.FieldByName('Admin').AsString <> '*') and (AppData.ZpAupDetail.FieldByName('OTMETKA').AsString = '*') then
-                  Begin
-                    MessageBox(Handle, PChar('Документ № ' + AppData.ZpAupDetail.FieldByName('NUMDOC').AsString + ' отмечен.' + #13#10 + 'Корректировка невозможна. Обратитесь к администратору'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
-                    Exit;
-                  end
+              AppData.ZpAupDetail.Active := False;
+              AppData.ZpAupDetail.CommandText := Format(SSQLGetZpAupDocDetail, [ReestrZpAup.FieldByName('UNICUM_NUM').AsInteger]);
+              AppData.ZpAupDetail.Active := True;
+
+              if AppData.ZpAupDetail.FieldByName('StatusDoc').AsString = '*' then
+                Begin
+                  MessageBox(Handle, PChar('Документ: ' + Appdata.ZpAupDetail.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
+                  Exit;
+                end
               else
-                  Begin
-                      Sum_Nal     := 0;
-                      Sum_Not_Nal := 0;
-                      TypeSaveZpAup := g_CorrDoc;
-                      ZpAupForm.ZpAupStringGridSetting(g_CorrDoc);
-
-                      AppData.AdoCmd.CommandText := Format(SSQLUpdateZpAupStatusCorrDoc, [Appdata.ZpAupDetail.FieldByName('UNICUM_NUM').AsInteger, 1]);
-                      AppData.AdoCmd.Execute;
-
-                      RecordCountZpAupDetail := AppData.ZpAupDetail.RecordCount + 1;
-                      with  ZpAupForm do
-                      Begin
-                         Caption := 'Корректировка документа (ЗП АУП)';
-                         NumDocEdit.Text := ReestrZpAup.FieldByName('NUMDOC').AsString;
-                         ZpAupPicker.Date := ReestrZpAup.FieldByName('DATE_P_POR').AsDateTime;
-                         PrimechEdit.Text := ReestrZpAup.FieldByName('PRIMECH').AsString;
-                         ZpAupStringGrid.RowCount := RecordCountZpAupDetail;
-                      end;
-
-                      AppData.ZpAupDetail.First;
-                      while not  AppData.ZpAupDetail.Eof do
-                      Begin
-                       for i:= 1 to ZpAupForm.ZpAupStringGrid.RowCount-1 do
+              Begin
+                       AppData.Users.Locate('Login', g_User, [loCaseInsensitive, loPartialKey]);
+                    if (AppData.Users.FieldByName('Admin').AsString <> '*') and (AppData.ZpAupDetail.FieldByName('OTMETKA').AsString = '*') then
                         Begin
-                           with ZpAupForm.ZpAupStringGrid  do
-                            begin
-                              Cells[0,i] := IntToStr(AppData.ZpAupDetail.FieldByName('NUM_PREDM').AsInteger);
-                              Cells[1,i] := AppData.ZpAupDetail.FieldByName('UID_SHOP').AsString;
-                              Cells[2,i] := AppData.ZpAupDetail.FieldByName('NAME').AsString;
-                              Cells[3,i] := AppData.ZpAupDetail.FieldByName('ADRESS').AsString;
-                              Cells[4,i] := AppData.ZpAupDetail.FieldByName('SUM_NAL').AsString;
-                              Cells[5,i] := AppData.ZpAupDetail.FieldByName('NAZNACHENIE').AsString;
-                              Cells[6,i] := AppData.ZpAupDetail.FieldByName('PRIMECH').AsString;
+                          MessageBox(Handle, PChar('Документ № ' + AppData.ZpAupDetail.FieldByName('NUMDOC').AsString + ' отмечен.' + #13#10 + 'Корректировка невозможна. Обратитесь к администратору'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
+                          Exit;
+                        end
+                    else
+                        Begin
+                            Sum_Nal     := 0;
+                            Sum_Not_Nal := 0;
+                            TypeSaveZpAup := g_CorrDoc;
+                            ZpAupF.ZpAupStringGridSetting(g_CorrDoc);
 
-                              Sum_Nal     := Sum_Nal + AppData.ZpAupDetail.FieldByName('SUM_NAL').AsFloat;
-                              AppData.ZpAupDetail.Next;
+                            AppData.AdoCmd.CommandText := Format(SSQLUpdateZpAupStatusCorrDoc, [Appdata.ZpAupDetail.FieldByName('UNICUM_NUM').AsInteger, 1]);
+                            AppData.AdoCmd.Execute;
+
+                            RecordCountZpAupDetail := AppData.ZpAupDetail.RecordCount + 1;
+                            with  ZpAupF do
+                            Begin
+                               Caption := 'Корректировка документа (ЗП АУП)';
+                               NumDocEdit.Text := ReestrZpAup.FieldByName('NUMDOC').AsString;
+                               ZpAupPicker.Date := ReestrZpAup.FieldByName('DATE_P_POR').AsDateTime;
+                               PrimechEdit.Text := ReestrZpAup.FieldByName('PRIMECH').AsString;
+                               ZpAupStringGrid.RowCount := RecordCountZpAupDetail;
                             end;
-                        end;
-                      end;
 
-                      with  ZpAupForm.Bar do
-                      Begin
-                        Panels[0].Text := 'Магазинов: ' + FormatFloat('#,###,###.###', AppData.ZpAupDetail.RecordCount);
-                        Panels[1].Text := 'Сумма (нал): ' + FloatToStr (Sum_Nal);
-                      end;
+                            AppData.ZpAupDetail.First;
+                            while not  AppData.ZpAupDetail.Eof do
+                            Begin
+                             for i:= 1 to ZpAupF.ZpAupStringGrid.RowCount-1 do
+                              Begin
+                                 with ZpAupF.ZpAupStringGrid  do
+                                  begin
+                                    Cells[0,i] := IntToStr(AppData.ZpAupDetail.FieldByName('NUM_PREDM').AsInteger);
+                                    Cells[1,i] := AppData.ZpAupDetail.FieldByName('UID_SHOP').AsString;
+                                    Cells[2,i] := AppData.ZpAupDetail.FieldByName('NAME').AsString;
+                                    Cells[3,i] := AppData.ZpAupDetail.FieldByName('ADRESS').AsString;
+                                    Cells[4,i] := AppData.ZpAupDetail.FieldByName('SUM_NAL').AsString;
+                                    Cells[5,i] := AppData.ZpAupDetail.FieldByName('NAZNACHENIE').AsString;
+                                    Cells[6,i] := AppData.ZpAupDetail.FieldByName('PRIMECH').AsString;
 
-                    ZpAupForm.ShowModal();
-                   end;
-              end;
-       end
-    else
-            Exit;
+                                    Sum_Nal     := Sum_Nal + AppData.ZpAupDetail.FieldByName('SUM_NAL').AsFloat;
+                                    AppData.ZpAupDetail.Next;
+                                  end;
+                              end;
+                            end;
+
+                            with  ZpAupF.Bar do
+                            Begin
+                              Panels[0].Text := 'Магазинов: ' + FormatFloat('#,###,###.###', AppData.ZpAupDetail.RecordCount);
+                              Panels[1].Text := 'Сумма (нал): ' + FloatToStr (Sum_Nal);
+                            end;
+
+                          ZpAupF.ShowModal();
+                         end;
+                    end;
+             end
+          else
+                  Exit;
+   finally
+        FreeAndNil(ZpAupF);
+   end;
 end;
 
 procedure TMainForm.RefreshZpAupPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrZpAup.Active := False;
-  ReestrZpAup.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrZpAup.Active := False;
+    ReestrZpAup.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.ViewIncomeDocActionExecute(Sender: TObject);
@@ -2669,61 +2671,67 @@ procedure TMainForm.ViewZpAupActionExecute(Sender: TObject);
 var
     i, RecordCountZpAupDetail: integer;
     Sum_Nal, Sum_Not_Nal: real;
+    ZpAupF: TZpAupForm;
 begin
+  ZpAupF := TZpAupForm.Create(MainForm);
 
-  if not (ReestrZpAup.IsEmpty) then
-      Begin
-            ZpAupForm.ZpAupStringGridSetting(g_Preview);
-            TypeSaveZpAup := g_Preview;
-            Sum_Nal     := 0;
-            Sum_Not_Nal := 0;
+  try
+      if not (ReestrZpAup.IsEmpty) then
+          Begin
+                ZpAupF.ZpAupStringGridSetting(g_Preview);
+                TypeSaveZpAup := g_Preview;
+                Sum_Nal     := 0;
+                Sum_Not_Nal := 0;
 
 
-            AppData.ZpAupDetail.Active := False;
-            AppData.ZpAupDetail.CommandText := Format(SSQLGetZpAupDocDetail, [ReestrZpAup.FieldByName('UNICUM_NUM').AsInteger]);
-            AppData.ZpAupDetail.Active := True;
+                AppData.ZpAupDetail.Active := False;
+                AppData.ZpAupDetail.CommandText := Format(SSQLGetZpAupDocDetail, [ReestrZpAup.FieldByName('UNICUM_NUM').AsInteger]);
+                AppData.ZpAupDetail.Active := True;
 
-            RecordCountZpAupDetail := AppData.ZpAupDetail.RecordCount + 1;
-            with  ZpAupForm do
-            Begin
-                 Caption := 'Просмотр документа (ЗП АУП)';
-                 NumDocEdit.Text := ReestrZpAup.FieldByName('NUMDOC').AsString;
-                 ZpAupPicker.Date := ReestrZpAup.FieldByName('DATE_P_POR').AsDateTime;
-                 PrimechEdit.Text := ReestrZpAup.FieldByName('PRIMECH').AsString;
-                 ZpAupStringGrid.RowCount := RecordCountZpAupDetail;
-            end;
-
-             AppData.ZpAupDetail.First;
-            while not  AppData.ZpAupDetail.Eof do
-              Begin
-               for i:= 1 to ZpAupForm.ZpAupStringGrid.RowCount-1 do
+                RecordCountZpAupDetail := AppData.ZpAupDetail.RecordCount + 1;
+                with  ZpAupF do
                 Begin
-                   with ZpAupForm.ZpAupStringGrid  do
-                    begin
-                      Cells[0,i] := IntToStr(AppData.ZpAupDetail.FieldByName('NUM_PREDM').AsInteger);
-                      Cells[1,i] := AppData.ZpAupDetail.FieldByName('UID_SHOP').AsString;
-                      Cells[2,i] := AppData.ZpAupDetail.FieldByName('NAME').AsString;
-                      Cells[3,i] := AppData.ZpAupDetail.FieldByName('ADRESS').AsString;
-                      Cells[4,i] := FormatFloat('#,###,###.###', AppData.ZpAupDetail.FieldByName('SUM_NAL').AsFloat);
-                      Cells[5,i] := AppData.ZpAupDetail.FieldByName('NAZNACHENIE').AsString;
-                      Cells[6,i] := AppData.ZpAupDetail.FieldByName('PRIMECH').AsString;
-
-                      Sum_Nal     := Sum_Nal + AppData.ZpAupDetail.FieldByName('SUM_NAL').AsFloat;
-                      AppData.ZpAupDetail.Next;
-                    end;
+                     Caption := 'Просмотр документа (ЗП АУП)';
+                     NumDocEdit.Text := ReestrZpAup.FieldByName('NUMDOC').AsString;
+                     ZpAupPicker.Date := ReestrZpAup.FieldByName('DATE_P_POR').AsDateTime;
+                     PrimechEdit.Text := ReestrZpAup.FieldByName('PRIMECH').AsString;
+                     ZpAupStringGrid.RowCount := RecordCountZpAupDetail;
                 end;
-              end;
 
-              with  ZpAupForm.Bar do
-              Begin
-                Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ZpAupDetail.RecordCount);
-                Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
-              end;
+                AppData.ZpAupDetail.First;
+                while not  AppData.ZpAupDetail.Eof do
+                  Begin
+                   for i:= 1 to ZpAupF.ZpAupStringGrid.RowCount-1 do
+                    Begin
+                       with ZpAupF.ZpAupStringGrid  do
+                        begin
+                          Cells[0,i] := IntToStr(AppData.ZpAupDetail.FieldByName('NUM_PREDM').AsInteger);
+                          Cells[1,i] := AppData.ZpAupDetail.FieldByName('UID_SHOP').AsString;
+                          Cells[2,i] := AppData.ZpAupDetail.FieldByName('NAME').AsString;
+                          Cells[3,i] := AppData.ZpAupDetail.FieldByName('ADRESS').AsString;
+                          Cells[4,i] := FormatFloat('#,###,###.###', AppData.ZpAupDetail.FieldByName('SUM_NAL').AsFloat);
+                          Cells[5,i] := AppData.ZpAupDetail.FieldByName('NAZNACHENIE').AsString;
+                          Cells[6,i] := AppData.ZpAupDetail.FieldByName('PRIMECH').AsString;
 
-           ZpAupForm.ShowModal();
-      end
-  else
-            Exit;
+                          Sum_Nal     := Sum_Nal + AppData.ZpAupDetail.FieldByName('SUM_NAL').AsFloat;
+                          AppData.ZpAupDetail.Next;
+                        end;
+                    end;
+                  end;
+
+                  with  ZpAupF.Bar do
+                  Begin
+                      Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ZpAupDetail.RecordCount);
+                      Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
+                  end;
+
+               ZpAupF.ShowModal();
+          end
+      else
+                Exit;
+  finally
+        FreeAndNil(ZpAupF);
+  end;
 end;
 procedure TMainForm.AccessIncomeMode(i_TabIndex, ModeAccess: integer);
 begin
@@ -3239,18 +3247,20 @@ begin
 
              RecordCountExpenceDetail := AppData.ExpenceDetail.RecordCount+1;
 
-                 ExpenseForm.Caption := 'Просмотр документа';
-                 ExpenseForm.NumDocEdit.Text := ReestrExpense.FieldByName('NUMDOC').AsString;
-                 ExpenseForm.ExpencePicker.Date := ReestrExpense.FieldByName('DATE_P_POR').AsDateTime;
-                 ExpenseForm.PrimechEdit.Text := ReestrExpense.FieldByName('PRIMECH').AsString;
-                 ExpenseForm.MonthCombo.Visible := False;
-                 ExpenseForm.YearSpinEdit.Visible := False;
-                 ExpenseForm.ExpenseStringGrid.RowCount := RecordCountExpenceDetail;
+                with ExpenseForm do
+                  Begin
+                     Caption := 'Просмотр документа';
+                     NumDocEdit.Text := ReestrExpense.FieldByName('NUMDOC').AsString;
+                     ExpencePicker.Date := ReestrExpense.FieldByName('DATE_P_POR').AsDateTime;
+                     PrimechEdit.Text := ReestrExpense.FieldByName('PRIMECH').AsString;
+                     MonthCombo.Visible := False;
+                     YearSpinEdit.Visible := False;
+                     ExpenseStringGrid.RowCount := RecordCountExpenceDetail;
+                  end;
 
 
 
-
-              AppData.ExpenceDetail.First;
+            AppData.ExpenceDetail.First;
             while not  AppData.ExpenceDetail.Eof do
               Begin
                for i:= 1 to ExpenseForm.ExpenseStringGrid.RowCount-1 do
@@ -3275,9 +3285,9 @@ begin
 
               with  ExpenseForm.Bar do
               Begin
-                Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ExpenceDetail.RecordCount);
-                Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
-                Panels[2].Text := 'Сумма (безнал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
+                  Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.ExpenceDetail.RecordCount);
+                  Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
+                  Panels[2].Text := 'Сумма (безнал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
               end;
            ExpenseForm.ShowModal();
     end
@@ -3318,7 +3328,6 @@ if not (ReestrExpenseZP.IsEmpty) then
              MonthCombo.Visible := True;
              YearSpinEdit.Visible := False;
              ExpenseStringGrid.RowCount := RecordCountExpenceDetail;
-
           end;
 
 
@@ -3377,13 +3386,16 @@ begin
 
            RecordCountExpenceDetail := AppData.CorrExpenceDoc.RecordCount+1;
 
-               ExpenseForm.Caption := 'Просмотр документа';
-               ExpenseForm.NumDocEdit.Text := ReestrExpenseOther.FieldByName('NUMDOC').AsString;
-               ExpenseForm.ExpencePicker.Date := ReestrExpenseOther.FieldByName('DATE_P_POR').AsDateTime;
-               ExpenseForm.PrimechEdit.Text := ReestrExpenseOther.FieldByName('PRIMECH').AsString;
-               ExpenseForm.MonthCombo.Visible := False;
-               ExpenseForm.YearSpinEdit.Visible := False;
-               ExpenseForm.ExpenseStringGrid.RowCount := RecordCountExpenceDetail;
+             with  ExpenseForm do
+              Begin
+                 Caption := 'Просмотр документа';
+                 NumDocEdit.Text := ReestrExpenseOther.FieldByName('NUMDOC').AsString;
+                 ExpencePicker.Date := ReestrExpenseOther.FieldByName('DATE_P_POR').AsDateTime;
+                 PrimechEdit.Text := ReestrExpenseOther.FieldByName('PRIMECH').AsString;
+                 MonthCombo.Visible := False;
+                 YearSpinEdit.Visible := False;
+                 ExpenseStringGrid.RowCount := RecordCountExpenceDetail;
+              end;
 
             AppData.CorrExpenceDoc.First;
           while not  AppData.CorrExpenceDoc.Eof do
@@ -3425,30 +3437,30 @@ end;
 
 procedure TMainForm.PrintZpAupReestrPopClick(Sender: TObject);
 begin
-  ReestrZpAup.DisableControls;
-  Report.Template := SZpAupReestr;
-  Report.Run;
-  ReestrZpAup.EnableControls;
+    ReestrZpAup.DisableControls;
+    Report.Template := SZpAupReestr;
+    Report.Run;
+    ReestrZpAup.EnableControls;
 end;
 
 procedure TMainForm.PrintZpAupDocPopClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_ZpAup;
-  AppData.ZpAupDetail.Active := False;
-  AppData.ZpAupDetail.CommandText := Format(SSQLGetZpAupDocDetail, [ReestrZpAup.FieldByName('UNICUM_NUM').AsInteger]);
-  AppData.ZpAupDetail.Active := True;
-  
-  AppData.Report.Template := SZpAupTotalDoc;
-  AppData.Report.Run;
+    fl_TypeReport := TAB_ZpAup;
+    AppData.ZpAupDetail.Active := False;
+    AppData.ZpAupDetail.CommandText := Format(SSQLGetZpAupDocDetail, [ReestrZpAup.FieldByName('UNICUM_NUM').AsInteger]);
+    AppData.ZpAupDetail.Active := True;
+
+    AppData.Report.Template := SZpAupTotalDoc;
+    AppData.Report.Run;
 end;
 
 procedure TMainForm.PrintExpenseOtherReestrPopClick(Sender: TObject);
 begin
-  ReestrExpenseOther.DisableControls;
-  Report.Template := SExpenseReestrOther;
-  Report.Run;
-  ReestrExpenseOther.First;
-  ReestrExpenseOther.EnableControls;
+    ReestrExpenseOther.DisableControls;
+    Report.Template := SExpenseReestrOther;
+    Report.Run;
+    ReestrExpenseOther.First;
+    ReestrExpenseOther.EnableControls;
 end;
 
 procedure TMainForm.PrintExpenseOtherDocPopClick(Sender: TObject);
@@ -3487,11 +3499,11 @@ begin
            Begin
             For i := 1 to RowCount-1 do
              Begin
-              Cells[0,i] := IntToStr(i);
-              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-              AppData.Organiz.Next;
+                Cells[0,i] := IntToStr(i);
+                Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+                Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+                Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+                AppData.Organiz.Next;
              end;
            end;
         end;
@@ -3551,12 +3563,12 @@ begin
 
                         with IncomeCashForm do
                         begin
-                          SettingIncomeCash(g_CorrDoc);
-                          Caption := 'Корректировка документа';
-                          DetailStringGrid.RowCount := RecordCountDetail;
-                          NumDocEdit.Text := ReestrIncomeCash.FieldByName('NUMDOC').AsString;
-                          DateIncomePicker.Date := AppData.GetIncomeDetail.FieldByName('DATE_P_POR').AsDateTime;
-                          PrimechEdit.Text :=  ReestrIncomeCash.FieldByName('PRIMECH').AsString;
+                            SettingIncomeCash(g_CorrDoc);
+                            Caption := 'Корректировка документа';
+                            DetailStringGrid.RowCount := RecordCountDetail;
+                            NumDocEdit.Text := ReestrIncomeCash.FieldByName('NUMDOC').AsString;
+                            DateIncomePicker.Date := AppData.GetIncomeDetail.FieldByName('DATE_P_POR').AsDateTime;
+                            PrimechEdit.Text :=  ReestrIncomeCash.FieldByName('PRIMECH').AsString;
                         end;
 
                         AppData.GetIncomeDetail.First;
@@ -3801,117 +3813,128 @@ end;
 procedure TMainForm.TaxToZpActionExecute(Sender: TObject);
 var
     i: integer;
+    TaxF: TTaxToZpForm;
 begin
-  TypeSaveTaxToZp := g_CreateDoc;
-  TaxToZpForm.SettingTaxToZp(g_CreateDoc);
+  TaxF := TTaxToZpForm.Create(MainForm);
 
-  AppData.Organiz.Active := False;
-  AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
-  AppData.Organiz.Active := True;
+   try
+      TypeSaveTaxToZp := g_CreateDoc;
+      TaxF.SettingTaxToZp(g_CreateDoc);
 
-  AppData.Organiz.First;
-  with TaxToZpForm.TaxZpStringGrid do
-  Begin
-    RowCount := AppData.Organiz.RecordCount+1;
-    while not AppData.Organiz.Eof do
-     Begin
-      For i := 1 to RowCount-1 do
-       Begin
-        Cells[0,i] := IntToStr(i);
-        Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-        Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-        Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-        AppData.Organiz.Next;
-       end;
-     end;
-  end;
+      AppData.Organiz.Active := False;
+      AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
+      AppData.Organiz.Active := True;
 
-    with  TaxToZpForm.Bar do
-    Begin
-      Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
-      Panels[1].Text := 'Сумма (нал): ' + '0';
-      Panels[2].Text := 'Сумма (безнал): ' + '0';
-    end;
+      AppData.Organiz.First;
+      with TaxF.TaxZpStringGrid do
+      Begin
+        RowCount := AppData.Organiz.RecordCount+1;
+        while not AppData.Organiz.Eof do
+         Begin
+          For i := 1 to RowCount-1 do
+           Begin
+              Cells[0,i] := IntToStr(i);
+              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+              AppData.Organiz.Next;
+           end;
+         end;
+      end;
 
+        with  TaxF.Bar do
+        Begin
+          Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
+          Panels[1].Text := 'Сумма (нал): ' + '0';
+          Panels[2].Text := 'Сумма (безнал): ' + '0';
+        end;
 
-  TaxToZpForm.ShowModal();
+      TaxF.ShowModal();
+   finally
+        FreeAndNil(TaxF);
+   end;
 end;
 
 procedure TMainForm.CorrTaxToZpActionExecute(Sender: TObject);
 var
     i, RecordCountTaxToZpDetail: integer;
     Sum_Not_Nal: real;
+    TaxF: TTaxToZpForm;
 begin
-
-  if not (ReestrTaxToZp.IsEmpty) then
-      Begin
-        AppData.GetTaxToZpDetail.Active := False;
-        AppData.GetTaxToZpDetail.Active := True;
-
-        if AppData.GetTaxToZpDetail.FieldByName('StatusDoc').AsString = '*' then
+  TaxF := TTaxToZpForm.Create(MainForm);
+  try
+      if not (ReestrTaxToZp.IsEmpty) then
           Begin
-            MessageBox(Handle, PChar('Документ: ' + Appdata.GetTaxToZpDetail.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
-            Exit;
-          end
-        else
-        Begin
-           AppData.Users.Locate('Login', g_User, [loCaseInsensitive, loPartialKey]);
-           if (AppData.Users.FieldByName('Admin').AsString <> '*') and (AppData.GetTaxToZpDetail.FieldByName('OTMETKA').AsString = '*') then
+            AppData.GetTaxToZpDetail.Active := False;
+            AppData.GetTaxToZpDetail.Active := True;
+
+            if AppData.GetTaxToZpDetail.FieldByName('StatusDoc').AsString = '*' then
               Begin
-                MessageBox(Handle, PChar('Документ № ' + AppData.GetTaxToZpDetail.FieldByName('NUMDOC').AsString + ' отмечен.' + #13#10 + 'Корректировка невозможна. Обратитесь к администратору'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
+                MessageBox(Handle, PChar('Документ: ' + Appdata.GetTaxToZpDetail.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
                 Exit;
               end
-           else
-              Begin
-                  Sum_Not_Nal := 0;
-                  TypeSaveTaxToZp := g_CorrDoc;
-                  TaxToZpForm.SettingTaxToZp(g_CorrDoc);
-
-                  AppData.AdoCmd.CommandText := Format(SSQLUpdateZpAupStatusCorrDoc, [Appdata.GetTaxToZpDetail.FieldByName('UNICUM_NUM').AsInteger, 1]);
-                  AppData.AdoCmd.Execute;
-
-                  RecordCountTaxToZpDetail := AppData.GetTaxToZpDetail.RecordCount + 1;
-                  with  TaxToZpForm do
+            else
+            Begin
+               AppData.Users.Locate('Login', g_User, [loCaseInsensitive, loPartialKey]);
+               if (AppData.Users.FieldByName('Admin').AsString <> '*') and (AppData.GetTaxToZpDetail.FieldByName('OTMETKA').AsString = '*') then
                   Begin
-                     Caption := 'Корректировка документа (ЗП АУП)';
-                     NumDocEdit.Text := ReestrTaxToZp.FieldByName('NUMDOC').AsString;
-                     TaxZpPicker.Date := ReestrTaxToZp.FieldByName('DATE_P_POR').AsDateTime;
-                     PrimechEdit.Text := ReestrTaxToZp.FieldByName('PRIMECH').AsString;
-                     TaxZpStringGrid.RowCount := RecordCountTaxToZpDetail;
-                  end;
-
-                  AppData.GetTaxToZpDetail.First;
-                  while not  AppData.GetTaxToZpDetail.Eof do
+                    MessageBox(Handle, PChar('Документ № ' + AppData.GetTaxToZpDetail.FieldByName('NUMDOC').AsString + ' отмечен.' + #13#10 + 'Корректировка невозможна. Обратитесь к администратору'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
+                    Exit;
+                  end
+               else
                   Begin
-                   for i:= 1 to TaxToZpForm.TaxZpStringGrid.RowCount-1 do
-                    Begin
-                       with TaxToZpForm.TaxZpStringGrid do
-                        begin
-                          Cells[0,i] := IntToStr(AppData.GetTaxToZpDetail.FieldByName('NUM_PREDM').AsInteger);
-                          Cells[1,i] := AppData.GetTaxToZpDetail.FieldByName('UID_SHOP').AsString;
-                          Cells[2,i] := AppData.GetTaxToZpDetail.FieldByName('NAME').AsString;
-                          Cells[3,i] := AppData.GetTaxToZpDetail.FieldByName('ADRESS').AsString;
-                          Cells[4,i] := AppData.GetTaxToZpDetail.FieldByName('SUM_NOT_NAL').AsString;
-                          Cells[5,i] := AppData.GetTaxToZpDetail.FieldByName('PRIMECH').AsString;
+                      Sum_Not_Nal := 0;
+                      TypeSaveTaxToZp := g_CorrDoc;
+                      TaxF.SettingTaxToZp(g_CorrDoc);
 
-                          Sum_Not_Nal     := Sum_Not_Nal + AppData.GetTaxToZpDetail.FieldByName('SUM_NOT_NAL').AsFloat;
-                          AppData.GetTaxToZpDetail.Next;
+                      AppData.AdoCmd.CommandText := Format(SSQLUpdateZpAupStatusCorrDoc, [Appdata.GetTaxToZpDetail.FieldByName('UNICUM_NUM').AsInteger, 1]);
+                      AppData.AdoCmd.Execute;
+
+                      RecordCountTaxToZpDetail := AppData.GetTaxToZpDetail.RecordCount + 1;
+                      with  TaxF do
+                      Begin
+                         Caption := 'Корректировка документа (ЗП АУП)';
+                         NumDocEdit.Text := ReestrTaxToZp.FieldByName('NUMDOC').AsString;
+                         TaxZpPicker.Date := ReestrTaxToZp.FieldByName('DATE_P_POR').AsDateTime;
+                         PrimechEdit.Text := ReestrTaxToZp.FieldByName('PRIMECH').AsString;
+                         TaxZpStringGrid.RowCount := RecordCountTaxToZpDetail;
+                      end;
+
+                      AppData.GetTaxToZpDetail.First;
+                      while not  AppData.GetTaxToZpDetail.Eof do
+                      Begin
+                       for i:= 1 to TaxF.TaxZpStringGrid.RowCount-1 do
+                        Begin
+                           with TaxF.TaxZpStringGrid do
+                            begin
+                              Cells[0,i] := IntToStr(AppData.GetTaxToZpDetail.FieldByName('NUM_PREDM').AsInteger);
+                              Cells[1,i] := AppData.GetTaxToZpDetail.FieldByName('UID_SHOP').AsString;
+                              Cells[2,i] := AppData.GetTaxToZpDetail.FieldByName('NAME').AsString;
+                              Cells[3,i] := AppData.GetTaxToZpDetail.FieldByName('ADRESS').AsString;
+                              Cells[4,i] := AppData.GetTaxToZpDetail.FieldByName('SUM_NOT_NAL').AsString;
+                              Cells[5,i] := AppData.GetTaxToZpDetail.FieldByName('PRIMECH').AsString;
+
+                              Sum_Not_Nal     := Sum_Not_Nal + AppData.GetTaxToZpDetail.FieldByName('SUM_NOT_NAL').AsFloat;
+                              AppData.GetTaxToZpDetail.Next;
+                            end;
                         end;
-                    end;
-                  end;
+                      end;
 
-                  with  TaxToZpForm.Bar do
-                  Begin
-                    Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetTaxToZpDetail.RecordCount);
-                    Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
-                  end;
+                      with  TaxF.Bar do
+                      Begin
+                        Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetTaxToZpDetail.RecordCount);
+                        Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
+                      end;
 
-                TaxToZpForm.ShowModal();
+                      TaxF.ShowModal();
+               end;
            end;
-       end;
-      end
-  else
-            Exit;
+          end
+      else
+                Exit;
+  finally
+        FreeAndNil(TaxF);
+  end;
 end;
 
 procedure TMainForm.DeleteTaxToZpActionExecute(Sender: TObject);
@@ -3953,86 +3976,93 @@ end;
 
 procedure TMainForm.RefreshTaxToZpPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrTaxToZp.Active := False;
-  ReestrTaxToZp.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrTaxToZp.Active := False;
+    ReestrTaxToZp.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.PreviewTaxToZpActionExecute(Sender: TObject);
 var
     i, RecordCountTaxToZpDetail: integer;
     Sum_Not_Nal: real;
+    TaxF: TTaxToZpForm;
 begin
+  TaxF := TTaxToZpForm.Create(MainForm);
 
- if not (ReestrTaxToZp.IsEmpty) then
-    Begin
-            AppData.GetTaxToZpDetail.Active := False;
-            AppData.GetTaxToZpDetail.Active := True;
+  try
+       if not (ReestrTaxToZp.IsEmpty) then
+          Begin
+                  AppData.GetTaxToZpDetail.Active := False;
+                  AppData.GetTaxToZpDetail.Active := True;
 
-               Sum_Not_Nal := 0;
-              TaxToZpForm.SettingTaxToZp(g_Preview);
-              TypeSaveTaxToZp := g_Preview;
+                    Sum_Not_Nal := 0;
+                    TaxF.SettingTaxToZp(g_Preview);
+                    TypeSaveTaxToZp := g_Preview;
 
-              RecordCountTaxToZpDetail := AppData.GetTaxToZpDetail.RecordCount + 1;
-              with  TaxToZpForm do
-              Begin
-                 Caption := 'Корректировка документа (ЗП АУП)';
-                 NumDocEdit.Text := ReestrTaxToZp.FieldByName('NUMDOC').AsString;
-                 TaxZpPicker.Date := ReestrTaxToZp.FieldByName('DATE_P_POR').AsDateTime;
-                 PrimechEdit.Text := ReestrTaxToZp.FieldByName('PRIMECH').AsString;
-                 TaxZpStringGrid.RowCount := RecordCountTaxToZpDetail;
-              end;
-
-              AppData.GetTaxToZpDetail.First;
-              while not  AppData.GetTaxToZpDetail.Eof do
-              Begin
-               for i:= 1 to TaxToZpForm.TaxZpStringGrid.RowCount-1 do
-                Begin
-                   with TaxToZpForm.TaxZpStringGrid do
-                    begin
-                      Cells[0,i] := IntToStr(AppData.GetTaxToZpDetail.FieldByName('NUM_PREDM').AsInteger);
-                      Cells[1,i] := AppData.GetTaxToZpDetail.FieldByName('UID_SHOP').AsString;
-                      Cells[2,i] := AppData.GetTaxToZpDetail.FieldByName('NAME').AsString;
-                      Cells[3,i] := AppData.GetTaxToZpDetail.FieldByName('ADRESS').AsString;
-                      Cells[4,i] := FormatFloat('#,###,###.###', AppData.GetTaxToZpDetail.FieldByName('SUM_NOT_NAL').AsFloat);
-                      Cells[5,i] := AppData.GetTaxToZpDetail.FieldByName('PRIMECH').AsString;
-
-                      Sum_Not_Nal     := Sum_Not_Nal + AppData.GetTaxToZpDetail.FieldByName('SUM_NOT_NAL').AsFloat;
-                      AppData.GetTaxToZpDetail.Next;
+                    RecordCountTaxToZpDetail := AppData.GetTaxToZpDetail.RecordCount + 1;
+                    with  TaxF do
+                    Begin
+                       Caption := 'Корректировка документа (ЗП АУП)';
+                       NumDocEdit.Text := ReestrTaxToZp.FieldByName('NUMDOC').AsString;
+                       TaxZpPicker.Date := ReestrTaxToZp.FieldByName('DATE_P_POR').AsDateTime;
+                       PrimechEdit.Text := ReestrTaxToZp.FieldByName('PRIMECH').AsString;
+                       TaxZpStringGrid.RowCount := RecordCountTaxToZpDetail;
                     end;
-                end;
-              end;
 
-              with  TaxToZpForm.Bar do
-              Begin
-                Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetTaxToZpDetail.RecordCount);
-                Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
-              end;
+                    AppData.GetTaxToZpDetail.First;
+                    while not  AppData.GetTaxToZpDetail.Eof do
+                    Begin
+                     for i:= 1 to TaxF.TaxZpStringGrid.RowCount-1 do
+                      Begin
+                         with TaxF.TaxZpStringGrid do
+                          begin
+                            Cells[0,i] := IntToStr(AppData.GetTaxToZpDetail.FieldByName('NUM_PREDM').AsInteger);
+                            Cells[1,i] := AppData.GetTaxToZpDetail.FieldByName('UID_SHOP').AsString;
+                            Cells[2,i] := AppData.GetTaxToZpDetail.FieldByName('NAME').AsString;
+                            Cells[3,i] := AppData.GetTaxToZpDetail.FieldByName('ADRESS').AsString;
+                            Cells[4,i] := FormatFloat('#,###,###.###', AppData.GetTaxToZpDetail.FieldByName('SUM_NOT_NAL').AsFloat);
+                            Cells[5,i] := AppData.GetTaxToZpDetail.FieldByName('PRIMECH').AsString;
 
-            TaxToZpForm.ShowModal();
-    end
- else
-            Exit;
+                            Sum_Not_Nal     := Sum_Not_Nal + AppData.GetTaxToZpDetail.FieldByName('SUM_NOT_NAL').AsFloat;
+                            AppData.GetTaxToZpDetail.Next;
+                          end;
+                      end;
+                    end;
+
+                    with  TaxF.Bar do
+                    Begin
+                      Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetTaxToZpDetail.RecordCount);
+                      Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
+                    end;
+
+                  TaxF.ShowModal();
+          end
+       else
+                  Exit;
+  finally
+        FreeAndNil(TaxF);
+  end;
 end;
 
 procedure TMainForm.PrintTaxToZpReestrPopClick(Sender: TObject);
 begin
-  ReestrTaxToZp.DisableControls;
-  Report.Template := STaxToZpReestr;
-  Report.Run;
-  ReestrTaxToZp.First;
-  ReestrTaxToZp.EnableControls; 
+    ReestrTaxToZp.DisableControls;
+    Report.Template := STaxToZpReestr;
+    Report.Run;
+
+    ReestrTaxToZp.First;
+    ReestrTaxToZp.EnableControls;
 end;
 
 procedure TMainForm.PrintTaxToZpDocPopClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_TaxToZp;
-  AppData.GetTaxToZpDetail.Active := False;
-  AppData.GetTaxToZpDetail.Active := True;
+    fl_TypeReport := TAB_TaxToZp;
+    AppData.GetTaxToZpDetail.Active := False;
+    AppData.GetTaxToZpDetail.Active := True;
 
-  AppData.Report.Template := STaxToZpTotalDoc;
-  AppData.Report.Run;
+    AppData.Report.Template := STaxToZpTotalDoc;
+    AppData.Report.Run;
 end;
 
 procedure TMainForm.IncomeDifference(BegDate, EndDate: TDateTime);
@@ -4127,48 +4157,56 @@ end;
 
 procedure TMainForm.RefreshPercentOfTerminalPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrPercentOfTerminal.Active := False;
-  ReestrPercentOfTerminal.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrPercentOfTerminal.Active := False;
+    ReestrPercentOfTerminal.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.PercentOfTerminalActionExecute(Sender: TObject);
 var
     i: integer;
+    PercentF: TPercentOfTerminalForm;
 begin
-  TypeSavePercent := g_CreateDoc;
-  PercentOfTerminalForm.SettingPercentOfTerminal(g_CreateDoc);
 
-  AppData.Organiz.Active := False;
-  AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
-  AppData.Organiz.Active := True;
+  PercentF := TPercentOfTerminalForm.Create(MainForm);
 
-  AppData.Organiz.First;
-  with PercentOfTerminalForm.PercentOfTerminalStringGrid do
-  Begin
-    RowCount := AppData.Organiz.RecordCount+1;
-    while not AppData.Organiz.Eof do
-     Begin
-      For i := 1 to RowCount-1 do
-       Begin
-        Cells[0,i] := IntToStr(i);
-        Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-        Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-        Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-        AppData.Organiz.Next;
-       end;
-     end;
-  end;
+   try
+      TypeSavePercent := g_CreateDoc;
+      PercentF.SettingPercentOfTerminal(g_CreateDoc);
 
-    with  PercentOfTerminalForm.Bar do
-    Begin
-      Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
-      Panels[1].Text := 'Сумма (нал): ' + '0';
-      Panels[2].Text := 'Сумма (безнал): ' + '0';
-    end;
+      AppData.Organiz.Active := False;
+      AppData.Organiz.CommandText := Format(SSQLGetOrganiz, [0]);
+      AppData.Organiz.Active := True;
 
-  PercentOfTerminalForm.ShowModal();
+      AppData.Organiz.First;
+      with PercentF.PercentOfTerminalStringGrid do
+      Begin
+        RowCount := AppData.Organiz.RecordCount+1;
+        while not AppData.Organiz.Eof do
+         Begin
+          For i := 1 to RowCount-1 do
+           Begin
+              Cells[0,i] := IntToStr(i);
+              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+              AppData.Organiz.Next;
+           end;
+         end;
+      end;
+
+        with  PercentF.Bar do
+        Begin
+            Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.Organiz.RecordCount);
+            Panels[1].Text := 'Сумма (нал): ' + '0';
+            Panels[2].Text := 'Сумма (безнал): ' + '0';
+        end;
+
+      PercentF.ShowModal();
+   finally
+      FreeAndNil(PercentF);
+   end;
 end;
 
 procedure TMainForm.DeletePercentOfTerminalActionExecute(Sender: TObject);
@@ -4213,149 +4251,162 @@ procedure TMainForm.CorrPercentOfTerminalActionExecute(Sender: TObject);
 var
     i, RecordCountPercentOfTerminalDetail: integer;
     Sum_Not_Nal: real;
+    PercentF: TPercentOfTerminalForm;
 begin
-   if not (ReestrPercentOfTerminal.IsEmpty) then
-      Begin
-          TypeSavePercent := g_CorrDoc;
+   PercentF := TPercentOfTerminalForm.Create(MainForm);
 
-          AppData.GetPercentOfTerminalDetail.Active := False;
-          AppData.GetPercentOfTerminalDetail.Active := True;
-
-        if AppData.GetPercentOfTerminalDetail.FieldByName('StatusDoc').AsString = '*' then
+   try
+       if not (ReestrPercentOfTerminal.IsEmpty) then
           Begin
-            MessageBox(Handle, PChar('Документ: ' + Appdata.GetPercentOfTerminalDetail.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
-            Exit;
-          end
-        else
-        Begin
-           if (AppData.Users.FieldByName('Admin').AsString <> '*') and (AppData.GetPercentOfTerminalDetail.FieldByName('OTMETKA').AsString = '*') then
+              TypeSavePercent := g_CorrDoc;
+
+              AppData.GetPercentOfTerminalDetail.Active := False;
+              AppData.GetPercentOfTerminalDetail.Active := True;
+
+            if AppData.GetPercentOfTerminalDetail.FieldByName('StatusDoc').AsString = '*' then
               Begin
-                 MessageBox(Handle, PChar('Документ № ' + AppData.GetPercentOfTerminalDetail.FieldByName('NUMDOC').AsString + ' отмечен.' + #13#10 + 'Корректировка невозможна. Обратитесь к администратору'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
-                  Exit;
-               end
-           else
-               Begin
-                  Sum_Not_Nal := 0;
-                  TypeSavePercent := g_CorrDoc;
-                  PercentOfTerminalForm.SettingPercentOfTerminal(g_CorrDoc);
-
-                  AppData.AdoCmd.CommandText := Format(SSQLUpdatePercentOfTerminalStatusCorrDoc, [Appdata.GetPercentOfTerminalDetail.FieldByName('UNICUM_NUM').AsInteger, 1]);
-                  AppData.AdoCmd.Execute;
-
-                  RecordCountPercentOfTerminalDetail := AppData.GetPercentOfTerminalDetail.RecordCount + 1;
-                  with  PercentOfTerminalForm do
-                  Begin
-                     Caption := 'Корректировка документа (Коммунальные услуги)';
-                     NumDocEdit.Text := ReestrPercentOfTerminal.FieldByName('NUMDOC').AsString;
-                     PercentOfTerminalPicker.Date := ReestrPercentOfTerminal.FieldByName('DATE_P_POR').AsDateTime;
-                     PrimechEdit.Text := ReestrPercentOfTerminal.FieldByName('PRIMECH').AsString;
-                     PercentOfTerminalStringGrid.RowCount := RecordCountPercentOfTerminalDetail;
-                  end;
-
-                  AppData.GetPercentOfTerminalDetail.First;
-                  while not  AppData.GetPercentOfTerminalDetail.Eof do
-                  Begin
-                   for i:= 1 to PercentOfTerminalForm.PercentOfTerminalStringGrid.RowCount-1 do
-                    Begin
-                       with PercentOfTerminalForm.PercentOfTerminalStringGrid do
-                        begin
-                          Cells[0,i] := IntToStr(AppData.GetPercentOfTerminalDetail.FieldByName('NUM_PREDM').AsInteger);
-                          Cells[1,i] := AppData.GetPercentOfTerminalDetail.FieldByName('UID_SHOP').AsString;
-                          Cells[2,i] := AppData.GetPercentOfTerminalDetail.FieldByName('NAME').AsString;
-                          Cells[3,i] := AppData.GetPercentOfTerminalDetail.FieldByName('ADRESS').AsString;
-                          Cells[4,i] := AppData.GetPercentOfTerminalDetail.FieldByName('SUM_NOT_NAL').AsString;
-                          Cells[5,i] := AppData.GetPercentOfTerminalDetail.FieldByName('PRIMECH').AsString;
-
-                          Sum_Not_Nal     := Sum_Not_Nal + AppData.GetPercentOfTerminalDetail.FieldByName('SUM_NOT_NAL').AsFloat;
-                          AppData.GetPercentOfTerminalDetail.Next;
-                        end;
-                    end;
-                  end;
-
-                  with  PercentOfTerminalForm.Bar do
-                  Begin
-                    Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetPercentOfTerminalDetail.RecordCount);
-                    Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
-                  end;
-
-                  PercentOfTerminalForm.ShowModal();
-                end;
-             end;
-     end
-   else
+                MessageBox(Handle, PChar('Документ: ' + Appdata.GetPercentOfTerminalDetail.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
                 Exit;
+              end
+            else
+            Begin
+               if (AppData.Users.FieldByName('Admin').AsString <> '*') and (AppData.GetPercentOfTerminalDetail.FieldByName('OTMETKA').AsString = '*') then
+                  Begin
+                     MessageBox(Handle, PChar('Документ № ' + AppData.GetPercentOfTerminalDetail.FieldByName('NUMDOC').AsString + ' отмечен.' + #13#10 + 'Корректировка невозможна. Обратитесь к администратору'), PChar('Корректировка документа'), MB_ICONWARNING+MB_OK);
+                      Exit;
+                   end
+               else
+                   Begin
+                      Sum_Not_Nal := 0;
+                      TypeSavePercent := g_CorrDoc;
+                      PercentOfTerminalForm.SettingPercentOfTerminal(g_CorrDoc);
+
+                      AppData.AdoCmd.CommandText := Format(SSQLUpdatePercentOfTerminalStatusCorrDoc, [Appdata.GetPercentOfTerminalDetail.FieldByName('UNICUM_NUM').AsInteger, 1]);
+                      AppData.AdoCmd.Execute;
+
+                      RecordCountPercentOfTerminalDetail := AppData.GetPercentOfTerminalDetail.RecordCount + 1;
+                      with  PercentOfTerminalForm do
+                      Begin
+                         Caption := 'Корректировка документа (Коммунальные услуги)';
+                         NumDocEdit.Text := ReestrPercentOfTerminal.FieldByName('NUMDOC').AsString;
+                         PercentOfTerminalPicker.Date := ReestrPercentOfTerminal.FieldByName('DATE_P_POR').AsDateTime;
+                         PrimechEdit.Text := ReestrPercentOfTerminal.FieldByName('PRIMECH').AsString;
+                         PercentOfTerminalStringGrid.RowCount := RecordCountPercentOfTerminalDetail;
+                      end;
+
+                      AppData.GetPercentOfTerminalDetail.First;
+                      while not  AppData.GetPercentOfTerminalDetail.Eof do
+                      Begin
+                       for i:= 1 to PercentOfTerminalForm.PercentOfTerminalStringGrid.RowCount-1 do
+                        Begin
+                           with PercentOfTerminalForm.PercentOfTerminalStringGrid do
+                            begin
+                              Cells[0,i] := IntToStr(AppData.GetPercentOfTerminalDetail.FieldByName('NUM_PREDM').AsInteger);
+                              Cells[1,i] := AppData.GetPercentOfTerminalDetail.FieldByName('UID_SHOP').AsString;
+                              Cells[2,i] := AppData.GetPercentOfTerminalDetail.FieldByName('NAME').AsString;
+                              Cells[3,i] := AppData.GetPercentOfTerminalDetail.FieldByName('ADRESS').AsString;
+                              Cells[4,i] := AppData.GetPercentOfTerminalDetail.FieldByName('SUM_NOT_NAL').AsString;
+                              Cells[5,i] := AppData.GetPercentOfTerminalDetail.FieldByName('PRIMECH').AsString;
+
+                              Sum_Not_Nal     := Sum_Not_Nal + AppData.GetPercentOfTerminalDetail.FieldByName('SUM_NOT_NAL').AsFloat;
+                              AppData.GetPercentOfTerminalDetail.Next;
+                            end;
+                        end;
+                      end;
+
+                      with  PercentOfTerminalForm.Bar do
+                      Begin
+                        Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetPercentOfTerminalDetail.RecordCount);
+                        Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
+                      end;
+
+                      PercentOfTerminalForm.ShowModal();
+                    end;
+                 end;
+         end
+       else
+                    Exit;
+   finally
+        FreeAndNil(PercentF);
+   end;
 end;
 
 procedure TMainForm.ViewPercentOfTerminateActionExecute(Sender: TObject);
 var
     i, RecordCountPercentOfTerminalDetail: integer;
     Sum_Not_Nal: real;
+    PercentF: TPercentOfTerminalForm;
 begin
+    PercentF := TPercentOfTerminalForm.Create(MainForm);
 
-    if not (ReestrPercentOfTerminal.IsEmpty) then
-        Begin
-            AppData.GetPercentOfTerminalDetail.Active := False;
-            AppData.GetPercentOfTerminalDetail.Active := True;
-
-            Sum_Not_Nal := 0;
-            PercentOfTerminalForm.SettingPercentOfTerminal(g_Preview);
-            TypeSavePercent := g_Preview;
-
-            RecordCountPercentOfTerminalDetail := AppData.GetPercentOfTerminalDetail.RecordCount + 1;
-            with  PercentOfTerminalForm do
+    try
+        if not (ReestrPercentOfTerminal.IsEmpty) then
             Begin
-               Caption := 'Корректировка документа (ЗП АУП)';
-               NumDocEdit.Text := ReestrPercentOfTerminal.FieldByName('NUMDOC').AsString;
-               PercentOfTerminalPicker.Date := ReestrPercentOfTerminal.FieldByName('DATE_P_POR').AsDateTime;
-               PrimechEdit.Text := ReestrPercentOfTerminal.FieldByName('PRIMECH').AsString;
-               PercentOfTerminalStringGrid.RowCount := RecordCountPercentOfTerminalDetail;
-            end;
+                AppData.GetPercentOfTerminalDetail.Active := False;
+                AppData.GetPercentOfTerminalDetail.Active := True;
 
-            AppData.GetPercentOfTerminalDetail.First;
-            while not  AppData.GetPercentOfTerminalDetail.Eof do
-            Begin
-             for i:= 1 to PercentOfTerminalForm.PercentOfTerminalStringGrid.RowCount-1 do
-              Begin
-                 with PercentOfTerminalForm.PercentOfTerminalStringGrid do
-                  begin
-                    Cells[0,i] := IntToStr(AppData.GetPercentOfTerminalDetail.FieldByName('NUM_PREDM').AsInteger);
-                    Cells[1,i] := AppData.GetPercentOfTerminalDetail.FieldByName('UID_SHOP').AsString;
-                    Cells[2,i] := AppData.GetPercentOfTerminalDetail.FieldByName('NAME').AsString;
-                    Cells[3,i] := AppData.GetPercentOfTerminalDetail.FieldByName('ADRESS').AsString;
-                    Cells[4,i] := FormatFloat('#,###,###.###', AppData.GetPercentOfTerminalDetail.FieldByName('SUM_NOT_NAL').AsFloat);
-                    Cells[5,i] := AppData.GetPercentOfTerminalDetail.FieldByName('PRIMECH').AsString;
+                Sum_Not_Nal := 0;
+                PercentF.SettingPercentOfTerminal(g_Preview);
+                TypeSavePercent := g_Preview;
 
-                    Sum_Not_Nal     := Sum_Not_Nal + AppData.GetPercentOfTerminalDetail.FieldByName('SUM_NOT_NAL').AsFloat;
-                    AppData.GetPercentOfTerminalDetail.Next;
+                RecordCountPercentOfTerminalDetail := AppData.GetPercentOfTerminalDetail.RecordCount + 1;
+                with  PercentF do
+                Begin
+                   Caption := 'Корректировка документа (ЗП АУП)';
+                   NumDocEdit.Text := ReestrPercentOfTerminal.FieldByName('NUMDOC').AsString;
+                   PercentOfTerminalPicker.Date := ReestrPercentOfTerminal.FieldByName('DATE_P_POR').AsDateTime;
+                   PrimechEdit.Text := ReestrPercentOfTerminal.FieldByName('PRIMECH').AsString;
+                   PercentOfTerminalStringGrid.RowCount := RecordCountPercentOfTerminalDetail;
+                end;
+
+                AppData.GetPercentOfTerminalDetail.First;
+                while not  AppData.GetPercentOfTerminalDetail.Eof do
+                Begin
+                 for i:= 1 to PercentF.PercentOfTerminalStringGrid.RowCount-1 do
+                  Begin
+                     with PercentF.PercentOfTerminalStringGrid do
+                      begin
+                        Cells[0,i] := IntToStr(AppData.GetPercentOfTerminalDetail.FieldByName('NUM_PREDM').AsInteger);
+                        Cells[1,i] := AppData.GetPercentOfTerminalDetail.FieldByName('UID_SHOP').AsString;
+                        Cells[2,i] := AppData.GetPercentOfTerminalDetail.FieldByName('NAME').AsString;
+                        Cells[3,i] := AppData.GetPercentOfTerminalDetail.FieldByName('ADRESS').AsString;
+                        Cells[4,i] := FormatFloat('#,###,###.###', AppData.GetPercentOfTerminalDetail.FieldByName('SUM_NOT_NAL').AsFloat);
+                        Cells[5,i] := AppData.GetPercentOfTerminalDetail.FieldByName('PRIMECH').AsString;
+
+                        Sum_Not_Nal := Sum_Not_Nal + AppData.GetPercentOfTerminalDetail.FieldByName('SUM_NOT_NAL').AsFloat;
+                        AppData.GetPercentOfTerminalDetail.Next;
+                      end;
                   end;
-              end;
-            end;
+                end;
 
-            with  PercentOfTerminalForm.Bar do
-            Begin
-              Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetPercentOfTerminalDetail.RecordCount);
-              Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
-            end;
+                with  PercentF.Bar do
+                Begin
+                  Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetPercentOfTerminalDetail.RecordCount);
+                  Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Not_Nal);
+                end;
 
-          PercentOfTerminalForm.ShowModal();
-        end
-    else
-          Exit;
+              PercentF.ShowModal();
+            end
+        else
+              Exit;
+    finally
+          FreeAndNil(PercentF);
+    end;
  end;
 
 procedure TMainForm.PrintReestrPercentOfTerminalPopClick(Sender: TObject);
 begin
-  ReestrPercentOfTerminal.DisableControls;
-  Report.Template := SPercentOfTerminalReestr;
-  Report.Run;
-  ReestrPercentOfTerminal.EnableControls;
+    ReestrPercentOfTerminal.DisableControls;
+    Report.Template := SPercentOfTerminalReestr;
+    Report.Run;
+    ReestrPercentOfTerminal.EnableControls;
 end;
 
 procedure TMainForm.PrintDocPercentOfTerminalPopClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_PercentOfTerminal;
-  AppData.Report.Template := SPercentOfTerminalTotalDoc;
-  AppData.Report.Run;
+    fl_TypeReport := TAB_PercentOfTerminal;
+    AppData.Report.Template := SPercentOfTerminalTotalDoc;
+    AppData.Report.Run;
 end;
 
 procedure TMainForm.BarRange;
@@ -4388,7 +4439,7 @@ end;
 
 procedure TMainForm.ReportBtnClick(Sender: TObject);
 begin
-  PopupReportMenu.Popup(ReportBtn.ClientOrigin.X, ReportBtn.ClientOrigin.Y);
+    PopupReportMenu.Popup(ReportBtn.ClientOrigin.X, ReportBtn.ClientOrigin.Y);
 end;
 
 procedure TMainForm.ReportDayActionExecute(Sender: TObject);
@@ -4416,51 +4467,51 @@ end;
 
 procedure TMainForm.ReportIncomeMonthActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_Income;
-  ReportForm.Caption := 'Отчет по магазинам -> Выручка -> За месяц';
-  ReportForm.ShowModal();
+    TypeReport := TAB_Income;
+    ReportForm.Caption := 'Отчет по магазинам -> Выручка -> За месяц';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportIncomeCashMonthActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_IncomeCash;
-  ReportForm.Caption := 'Отчет по магазинам -> Выручка (Касса) - За месяц';
-  ReportForm.ShowModal();
+    TypeReport := TAB_IncomeCash;
+    ReportForm.Caption := 'Отчет по магазинам -> Выручка (Касса) - За месяц';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportExpenseMonthActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_Expense;
-  ReportForm.Caption := 'Отчет по магазинам -> Расходы -> За месяц';
-  ReportForm.ShowModal();
+    TypeReport := TAB_Expense;
+    ReportForm.Caption := 'Отчет по магазинам -> Расходы -> За месяц';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportExpenseZpMonthActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_ExpenseZP;
-  ReportForm.Caption := 'Отчет по магазинам -> Расходы (ЗП) -> За месяц';
-  ReportForm.ShowModal();
+    TypeReport := TAB_ExpenseZP;
+    ReportForm.Caption := 'Отчет по магазинам -> Расходы (ЗП) -> За месяц';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportExpenseOtherMonthActionExecute(Sender: TObject);
 begin
-   TypeReport := TAB_ExpenseOther;
-   ReportForm.Caption := 'Отчет по магазинам -> Расходы (прочие) -> За месяц';
-   ReportForm.ShowModal();
+     TypeReport := TAB_ExpenseOther;
+     ReportForm.Caption := 'Отчет по магазинам -> Расходы (прочие) -> За месяц';
+     ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportZpAupMonthActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_ZpAup;
-  ReportForm.Caption := 'Отчет по магазинам -> ЗП АУП -> За месяц';
-  ReportForm.ShowModal();
+    TypeReport := TAB_ZpAup;
+    ReportForm.Caption := 'Отчет по магазинам -> ЗП АУП -> За месяц';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportTaxToZpMonthActionExecute(Sender: TObject);
 begin
-    TypeReport := TAB_TaxToZp;
-    ReportForm.Caption := 'Отчет по магазинам -> Налоги по ЗП -> За месяц';
-    ReportForm.ShowModal();
+      TypeReport := TAB_TaxToZp;
+      ReportForm.Caption := 'Отчет по магазинам -> Налоги по ЗП -> За месяц';
+      ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportPercentOfTerminalMonthActionExecute(
@@ -4473,44 +4524,44 @@ end;
 
 procedure TMainForm.ReportIncomeDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_Income;
-  ReportForm.Caption := 'Отчет по магазинам -> Выручка -> За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_Income;
+    ReportForm.Caption := 'Отчет по магазинам -> Выручка -> За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportIncomeCashDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_IncomeCash;
-  ReportForm.Caption := 'Отчет по магазинам -> Выручка (Касса) - За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_IncomeCash;
+    ReportForm.Caption := 'Отчет по магазинам -> Выручка (Касса) - За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportExpenseDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_Expense;
-  ReportForm.Caption := 'Отчет по магазинам -> Расходы -> За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_Expense;
+    ReportForm.Caption := 'Отчет по магазинам -> Расходы -> За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportExpenseZpDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_ExpenseZP;
-  ReportForm.Caption := 'Отчет по магазинам -> Расходы (ЗП) -> За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_ExpenseZP;
+    ReportForm.Caption := 'Отчет по магазинам -> Расходы (ЗП) -> За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportExpenseOtherDayActionExecute(Sender: TObject);
 begin
-   TypeReport := TAB_ExpenseOther;
-   ReportForm.Caption := 'Отчет по магазинам -> Расходы (прочие) -> За дату';
-   ReportForm.ShowModal();
+     TypeReport := TAB_ExpenseOther;
+     ReportForm.Caption := 'Отчет по магазинам -> Расходы (прочие) -> За дату';
+     ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportZpAupDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_ZpAup;
-  ReportForm.Caption := 'Отчет по магазинам -> ЗП АУП -> За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_ZpAup;
+    ReportForm.Caption := 'Отчет по магазинам -> ЗП АУП -> За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportTaxToZpDayActionExecute(Sender: TObject);
@@ -5262,33 +5313,38 @@ begin
 end;
 
 procedure TMainForm.SearchBtnClick(Sender: TObject);
+var
+    SearchF: TSearchForm;
 begin
-  with TSearchForm.Create(Application) do
-    Begin
-        try
-            TypeNacl := 0;
-            Tabs.TabIndex := 0;
-            CheckShowPanel := False;
+  SearchF := TSearchForm.Create(MainForm);
 
-            AddModulsInCombo();
-            UsePicker();
-            BegPicker.Date := Now();
-            EndPicker.Date := BegPicker.Date + 1;
+    try
+      with SearchF do
+          Begin
+              TypeNacl := 0;
+              Tabs.TabIndex := 0;
+              CheckShowPanel := False;
 
-            GetShop();
-            ShowModal();
-        except
-            FreeAndNil(SearchForm);
-        end;
+              AddModulsInCombo();
+              UsePicker();
+              BegPicker.Date := Now();
+              EndPicker.Date := BegPicker.Date + 1;
+
+              GetShop();
+              ShowModal();
+          end;
+      finally
+          FreeAndNil(SearchF);
     end;
 end;
 
 procedure TMainForm.SuppliersMenuClick(Sender: TObject);
 var
     SupplierF: TSupplierForm;
-begin   
+begin
+    SupplierF := TSupplierForm.Create(MainForm);
+
     Try
-      SupplierF := TSupplierForm.Create(MainForm);
       with SupplierF do
         Begin
           SuppliersSet.Active := False;
@@ -5321,11 +5377,11 @@ begin
          Begin
           For i := 1 to RowCount-1 do
            Begin
-            Cells[0,i] := IntToStr(i);
-            Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-            Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-            Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-            AppData.Organiz.Next;
+              Cells[0,i] := IntToStr(i);
+              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+              AppData.Organiz.Next;
            end;
          end;
       end;
@@ -5376,8 +5432,8 @@ begin
 
                     with AppData do
                       Begin
-                       AdoCmd.CommandText := Format(SSQLUpdateShipmentStatusCorrDoc, [ReestrShipmentVostok.FieldByName('UNICUM_NUM').AsInteger, 1]);
-                       AdoCmd.Execute;
+                         AdoCmd.CommandText := Format(SSQLUpdateShipmentStatusCorrDoc, [ReestrShipmentVostok.FieldByName('UNICUM_NUM').AsInteger, 1]);
+                         AdoCmd.Execute;
                       end;
 
                     RecordCountShipmentDetail := AppData.ShipmentDetail.RecordCount+1;
@@ -5508,11 +5564,11 @@ begin
          Begin
           For i := 1 to RowCount-1 do
            Begin
-            Cells[0,i] := IntToStr(i);
-            Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-            Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-            Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-            AppData.Organiz.Next;
+              Cells[0,i] := IntToStr(i);
+              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+              AppData.Organiz.Next;
            end;
          end;
       end;
@@ -5562,8 +5618,8 @@ begin
 
                         with AppData do
                           Begin
-                           AdoCmd.CommandText := Format(SSQLUpdateShipmentStatusCorrDoc, [ReestrShipmentOther.FieldByName('UNICUM_NUM').AsInteger, 1]);
-                           AdoCmd.Execute;
+                             AdoCmd.CommandText := Format(SSQLUpdateShipmentStatusCorrDoc, [ReestrShipmentOther.FieldByName('UNICUM_NUM').AsInteger, 1]);
+                             AdoCmd.Execute;
                           end;
 
                         RecordCountShipmentDetail := AppData.ShipmentDetail.RecordCount+1;
@@ -5676,10 +5732,10 @@ end;
 
 procedure TMainForm.RefreshShipmentVostokPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrShipmentVostok.Active := False;
-  ReestrShipmentVostok.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrShipmentVostok.Active := False;
+    ReestrShipmentVostok.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.DeleteShipmentVostokDocActionExecute(Sender: TObject);
@@ -5899,67 +5955,69 @@ end;
 
 procedure TMainForm.PrintReestrShipmentVostokPopClick(Sender: TObject);
 begin
-  ReestrShipmentVostok.DisableControls;
-  Report.Template := SShipmentVostokReestr;
-  Report.Run;
-  ReestrShipmentVostok.First;
-  ReestrShipmentVostok.EnableControls;
+    ReestrShipmentVostok.DisableControls;
+    Report.Template := SShipmentVostokReestr;
+    Report.Run;
+
+    ReestrShipmentVostok.First;
+    ReestrShipmentVostok.EnableControls;
 end;
 
 procedure TMainForm.PrintReestrShipmentOtherPopClick(Sender: TObject);
 begin
-  ReestrShipmentOther.DisableControls;
-  Report.Template := SShipmentOtherReestr;
-  Report.Run;
-  ReestrShipmentOther.First;
-  ReestrShipmentOther.EnableControls;
+    ReestrShipmentOther.DisableControls;
+    Report.Template := SShipmentOtherReestr;
+    Report.Run;
+
+    ReestrShipmentOther.First;
+    ReestrShipmentOther.EnableControls;
 end;
 
 procedure TMainForm.PrintDocShipmentVostokPopClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_ShipmentVostok;
-  AppData.ShipmentDetail.Active := False;
-  AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentVostok.FieldByName('UNICUM_NUM').AsInteger]);
-  AppData.Report.Template := SShipmentVostokTotalDoc;
-  AppData.Report.Run;
+    fl_TypeReport := TAB_ShipmentVostok;
+    AppData.ShipmentDetail.Active := False;
+    AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentVostok.FieldByName('UNICUM_NUM').AsInteger]);
+    AppData.Report.Template := SShipmentVostokTotalDoc;
+    AppData.Report.Run;
 end;
 
 procedure TMainForm.PrintDocShipmentOtherPopClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_ShipmentOther;
-  AppData.ShipmentDetail.Active := False;
-  AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentOther.FieldByName('UNICUM_NUM').AsInteger]);
-  AppData.Report.Template := SShipmentOtherTotalDoc;
-  AppData.Report.Run;
+    fl_TypeReport := TAB_ShipmentOther;
+    AppData.ShipmentDetail.Active := False;
+    AppData.ShipmentDetail.CommandText := Format(SSQLGetShipmentDetail, [ReestrShipmentOther.FieldByName('UNICUM_NUM').AsInteger]);
+    AppData.Report.Template := SShipmentOtherTotalDoc;
+    AppData.Report.Run;
 end;
 
 procedure TMainForm.ReportShipmentVostokMonthActionExecute(
   Sender: TObject);
 begin
-  TypeReport := TAB_ShipmentVostok;
-  ReportForm.Caption := 'Отчет по магазинам -> Отгрузка(Восток) -> За месяц';
-  ReportForm.ShowModal();
+    TypeReport := TAB_ShipmentVostok;
+    ReportForm.Caption := 'Отчет по магазинам -> Отгрузка(Восток) -> За месяц';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportShipmentOtherMonthActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_ShipmentOther;
-  ReportForm.Caption := 'Отчет по магазинам -> Отгрузка(Прочие) -> За месяц';
-  ReportForm.ShowModal();
+    TypeReport := TAB_ShipmentOther;
+    ReportForm.Caption := 'Отчет по магазинам -> Отгрузка(Прочие) -> За месяц';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportShipmentVostokDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_ShipmentVostok;
-  ReportForm.Caption := 'Отчет по магазинам -> Расходы -> За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_ShipmentVostok;
+    ReportForm.Caption := 'Отчет по магазинам -> Расходы -> За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportShipmentOtherDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_ShipmentOther;
-  ReportForm.Caption := 'Отчет по магазинам -> Расходы -> За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_ShipmentOther;
+    ReportForm.Caption := 'Отчет по магазинам -> Расходы -> За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.OffsActionExecute(Sender: TObject);
@@ -5982,11 +6040,11 @@ begin
          Begin
           For i := 1 to RowCount-1 do
            Begin
-            Cells[0,i] := IntToStr(i);
-            Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-            Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-            Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-            AppData.Organiz.Next;
+              Cells[0,i] := IntToStr(i);
+              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+              AppData.Organiz.Next;
            end;
          end;
       end;
@@ -6079,7 +6137,7 @@ begin
                       Begin
                         Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetDetailOffs.RecordCount);
                         Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
-                        Panels[2].Text := '';
+                        Panels[2].Text := EmptyStr;
                       end;
                     OffsForm.ShowModal();
                     end;
@@ -6100,9 +6158,9 @@ begin
         Begin
           Sum_Nal := 0;
 
-           TypeOffs := TAB_Offs;
-           TypeSaveOffs  := g_Preview;
-           OffsForm.SettingOffsForm(TAB_Offs, g_Preview);
+          TypeOffs := TAB_Offs;
+          TypeSaveOffs  := g_Preview;
+          OffsForm.SettingOffsForm(TAB_Offs, g_Preview);
 
           AppData.GetDetailOffs.Active := False;
           AppData.GetDetailOffs.CommandText := Format( SSQLGetOffsDetail, [MainForm.ReestrOffs.FieldByName('UNICUM_NUM').AsInteger]);
@@ -6129,17 +6187,17 @@ begin
                       Begin
                         OffsForm.OffsStringGrid.Cells[0,i] := IntToStr(i);
                         OffsForm.OffsStringGrid.Cells[0,0] := '№';
-                       with OffsForm.OffsStringGrid  do
-                        begin
-                         // Cells[0,i] := AppData.GetDetailOffs.FieldByName('NUM_PREDM').AsString;
-                          Cells[1,i] := AppData.GetDetailOffs.FieldByName('UID_SHOP').AsString;
-                          Cells[2,i] := AppData.GetDetailOffs.FieldByName('NAME').AsString;
-                          Cells[3,i] := AppData.GetDetailOffs.FieldByName('ADRESS').AsString;
-                          Cells[4,i] := FormatFloat('#,###,###.###', AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat);
-                          Cells[5,i] := AppData.GetDetailOffs.FieldByName('PRIMECH').AsString;
-                          Sum_Nal     := Sum_Nal + AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat;
-                          AppData.GetDetailOffs.Next;
-                        end;
+                         with OffsForm.OffsStringGrid  do
+                          begin
+                           // Cells[0,i] := AppData.GetDetailOffs.FieldByName('NUM_PREDM').AsString;
+                            Cells[1,i] := AppData.GetDetailOffs.FieldByName('UID_SHOP').AsString;
+                            Cells[2,i] := AppData.GetDetailOffs.FieldByName('NAME').AsString;
+                            Cells[3,i] := AppData.GetDetailOffs.FieldByName('ADRESS').AsString;
+                            Cells[4,i] := FormatFloat('#,###,###.###', AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat);
+                            Cells[5,i] := AppData.GetDetailOffs.FieldByName('PRIMECH').AsString;
+                            Sum_Nal     := Sum_Nal + AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat;
+                            AppData.GetDetailOffs.Next;
+                          end;
                       end;
                     end;
 
@@ -6147,7 +6205,7 @@ begin
                     Begin
                       Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetDetailOffs.RecordCount);
                       Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
-                      Panels[2].Text := '';
+                      Panels[2].Text := EmptyStr;
                     end;
               OffsForm.ShowModal();
         end
@@ -6271,12 +6329,11 @@ end;
 
 procedure TMainForm.PrintDocOffsPopClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_Offs;
-  AppData.GetDetailOffs.Active := False;
-  AppData.GetDetailOffs.CommandText := Format(SSQLGetOffsDetail, [ReestrOffs.FieldByName('UNICUM_NUM').AsInteger]);
-  AppData.Report.Template := SOffsTotalDoc;
-  AppData.Report.Run;
-  
+    fl_TypeReport := TAB_Offs;
+    AppData.GetDetailOffs.Active := False;
+    AppData.GetDetailOffs.CommandText := Format(SSQLGetOffsDetail, [ReestrOffs.FieldByName('UNICUM_NUM').AsInteger]);
+    AppData.Report.Template := SOffsTotalDoc;
+    AppData.Report.Run;
 end;
 
 procedure TMainForm.ReturnActionExecute(Sender: TObject);
@@ -6302,11 +6359,11 @@ begin
          Begin
           For i := 1 to RowCount-1 do
            Begin
-            Cells[0,i] := IntToStr(i);
-            Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-            Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-            Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-            AppData.Organiz.Next;
+              Cells[0,i] := IntToStr(i);
+              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+              AppData.Organiz.Next;
            end;
          end;
       end;
@@ -6386,24 +6443,24 @@ begin
                               begin
                                 Cells[0,i] := IntToStr(i);
                                 Cells[0,0] := '№';
-                              for i:= 1 to OffsForm.OffsStringGrid.RowCount -1 do
-                              Begin
-                                  Cells[1,i] := AppData.GetDetailOffs.FieldByName('UID_SHOP').AsString;
-                                  Cells[2,i] := AppData.GetDetailOffs.FieldByName('NAME').AsString;
-                                  Cells[3,i] := AppData.GetDetailOffs.FieldByName('ADRESS').AsString;
-                                  Cells[4,i] := AppData.GetDetailOffs.FieldByName('SUM_NAL').AsString;
-                                  Cells[5,i] := AppData.GetDetailOffs.FieldByName('PRIMECH').AsString;
-                                  Sum_Nal    := Sum_Nal + AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat;
-                                  AppData.GetDetailOffs.Next;
-                                end;
+                                for i:= 1 to OffsForm.OffsStringGrid.RowCount -1 do
+                                Begin
+                                    Cells[1,i] := AppData.GetDetailOffs.FieldByName('UID_SHOP').AsString;
+                                    Cells[2,i] := AppData.GetDetailOffs.FieldByName('NAME').AsString;
+                                    Cells[3,i] := AppData.GetDetailOffs.FieldByName('ADRESS').AsString;
+                                    Cells[4,i] := AppData.GetDetailOffs.FieldByName('SUM_NAL').AsString;
+                                    Cells[5,i] := AppData.GetDetailOffs.FieldByName('PRIMECH').AsString;
+                                    Sum_Nal    := Sum_Nal + AppData.GetDetailOffs.FieldByName('SUM_NAL').AsFloat;
+                                    AppData.GetDetailOffs.Next;
+                                  end;
                             end;
                           end;
 
                           with  ReturnF.Bar do
                           Begin
-                            Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetDetailOffs.RecordCount);
-                            Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
-                            Panels[2].Text := EmptyStr;
+                              Panels[0].Text := 'Магазинов: ' + IntToStr(AppData.GetDetailOffs.RecordCount);
+                              Panels[1].Text := 'Сумма (нал): ' + FormatFloat('#,###,###.###', Sum_Nal);
+                              Panels[2].Text := EmptyStr;
                           end;
                           ReturnF.ShowModal();
                         end;
@@ -6498,11 +6555,11 @@ end;
 
 procedure TMainForm.PrintReturnDocPopClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_Return;
-  AppData.GetDetailOffs.Active := False;
-  AppData.GetDetailOffs.CommandText := Format(SSQLGetOffsDetail, [ReestrReturn.FieldByName('UNICUM_NUM').AsInteger]);
-  AppData.Report.Template := SReturnTotalDoc;
-  AppData.Report.Run;
+    fl_TypeReport := TAB_Return;
+    AppData.GetDetailOffs.Active := False;
+    AppData.GetDetailOffs.CommandText := Format(SSQLGetOffsDetail, [ReestrReturn.FieldByName('UNICUM_NUM').AsInteger]);
+    AppData.Report.Template := SReturnTotalDoc;
+    AppData.Report.Run;
 end;
 
 procedure TMainForm.ReturnGridDrawColumnCell(Sender: TObject;
@@ -6612,46 +6669,46 @@ end;
 
 procedure TMainForm.ReportOffsMonthActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_Offs;
-  ReportForm.Caption := 'Отчет по магазинам -> Списание -> За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_Offs;
+    ReportForm.Caption := 'Отчет по магазинам -> Списание -> За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportReturnMonthActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_Return;
-  ReportForm.Caption := 'Отчет по магазинам -> Возврат -> За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_Return;
+    ReportForm.Caption := 'Отчет по магазинам -> Возврат -> За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportOffsDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_Offs;
-  ReportForm.Caption := 'Отчет по магазинам -> Списание -> За день';
-  ReportForm.ShowModal();
+    TypeReport := TAB_Offs;
+    ReportForm.Caption := 'Отчет по магазинам -> Списание -> За день';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportReturnDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_Return;
-  ReportForm.Caption := 'Отчет по магазинам -> Возврат -> За день';
-  ReportForm.ShowModal();
+    TypeReport := TAB_Return;
+    ReportForm.Caption := 'Отчет по магазинам -> Возврат -> За день';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.RefreshReturnPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrReturn.Active := False;
-  ReestrReturn.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrReturn.Active := False;
+    ReestrReturn.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.RefreshOffsPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrOffs.Active := False;
-  ReestrOffs.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrOffs.Active := False;
+    ReestrOffs.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 
@@ -6679,11 +6736,11 @@ begin
            Begin
             For i := 1 to RowCount-1 do
              Begin
-              Cells[0,i] := IntToStr(i);
-              Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-              Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-              Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-              AppData.Organiz.Next;
+                Cells[0,i] := IntToStr(i);
+                Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+                Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+                Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+                AppData.Organiz.Next;
              end;
            end;
         end;
@@ -6808,9 +6865,9 @@ begin
           Begin
               Sum_Nal := 0;
 
-               TypeOffs := TAB_ENVD;
-               TypeSaveOffs  := g_Preview;
-               EnvdF.SettingOffsForm(TAB_ENVD, g_Preview);
+              TypeOffs := TAB_ENVD;
+              TypeSaveOffs  := g_Preview;
+              EnvdF.SettingOffsForm(TAB_ENVD, g_Preview);
 
               AppData.GetDetailOffs.Active := False;
               AppData.GetDetailOffs.CommandText := Format( SSQLGetOffsDetail, [ReestrENVD.FieldByName('UNICUM_NUM').AsInteger]);
@@ -6960,24 +7017,24 @@ end;
 
 procedure TMainForm.RefreshEnvdPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrENVD.Active := False;
-  ReestrENVD.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrENVD.Active := False;
+    ReestrENVD.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.ReportEnvdDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_ENVD;
-  ReportForm.Caption := 'Отчет по магазинам -> ЕНВД -> За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_ENVD;
+    ReportForm.Caption := 'Отчет по магазинам -> ЕНВД -> За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportEnvdMonthActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_ENVD;
-  ReportForm.Caption := 'Отчет по магазинам -> ЕНВД -> За месяц';
-  ReportForm.ShowModal();
+    TypeReport := TAB_ENVD;
+    ReportForm.Caption := 'Отчет по магазинам -> ЕНВД -> За месяц';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.PrintReestrEnvdPopClick(Sender: TObject);
@@ -6987,27 +7044,27 @@ begin
     Report.Run;
     ReestrENVD.First;
     ReestrENVD.EnableControls;
-
 end;
 
 procedure TMainForm.PrintDocEnvdPopClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_ENVD;
-  AppData.GetDetailOffs.Active := False;
-  AppData.GetDetailOffs.CommandText := Format(SSQLGetOffsDetail, [ReestrENVD.FieldByName('UNICUM_NUM').AsInteger]);
-  AppData.Report.Template := SEnvdTotalDoc;
-  AppData.Report.Run;  
+    fl_TypeReport := TAB_ENVD;
+    AppData.GetDetailOffs.Active := False;
+    AppData.GetDetailOffs.CommandText := Format(SSQLGetOffsDetail, [ReestrENVD.FieldByName('UNICUM_NUM').AsInteger]);
+    AppData.Report.Template := SEnvdTotalDoc;
+    AppData.Report.Run;
 end;
 
 procedure TMainForm.TypeEnergyMenuClick(Sender: TObject);
+  var
+      TypeEnergyF: TTypeEnergyForm;
 begin
-  with TTypeEnergyForm.Create(Application) do
-    Begin
-        try
-          ShowModal();
-        except
-          FreeAndNil(TypeEnergyForm);
-        end;
+  TypeEnergyF := TTypeEnergyForm.Create(MainForm);
+
+    try
+      TypeEnergyF.ShowModal();
+    finally
+      FreeAndNil(TypeEnergyF);
     end;
 
 end;
@@ -7027,11 +7084,11 @@ begin
      Begin
       For i := 1 to RowCount-1 do
        Begin
-        Cells[0,i] := IntToStr(i);
-        Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
-        Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
-        Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
-        AppData.Organiz.Next;
+          Cells[0,i] := IntToStr(i);
+          Cells[1,i] := AppData.Organiz.FieldByName('UID').AsString;
+          Cells[2,i] := AppData.Organiz.FieldByName('Name').AsString;
+          Cells[3,i] := AppData.Organiz.FieldByName('Adress').AsString;
+          AppData.Organiz.Next;
        end;
      end;
   end;
@@ -7059,8 +7116,8 @@ begin
 
        if AppData.GetPublicUtilitiesDetail.FieldByName('StatusDoc').AsString = '*' then
           Begin
-            MessageBox(Handle, PChar('Документ: ' + AppData.GetPublicUtilitiesDetail.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Удаление документа'), MB_ICONWARNING+MB_OK);
-            Exit;
+             MessageBox(Handle, PChar('Документ: ' + AppData.GetPublicUtilitiesDetail.FieldByName('NUMDOC').AsString + ' занят другим пользователем!'), PChar('Удаление документа'), MB_ICONWARNING+MB_OK);
+             Exit;
           end
        else
           Begin
@@ -7075,7 +7132,7 @@ begin
                 ReestrPublicUtilities.Active := False;
                 ReestrPublicUtilities.Active := True;
                 BarCalc(TAB_PublicUtilities);
-          end
+              end
           else
                 Exit;
           end;
@@ -7222,18 +7279,18 @@ end;
 
 procedure TMainForm.RefreshPublicUtilitiesPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrPublicUtilities.Active := False;
-  ReestrPublicUtilities.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrPublicUtilities.Active := False;
+    ReestrPublicUtilities.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.RefreshShipmentOtherPopClick(Sender: TObject);
 begin
-  Screen.Cursor := crSQLWait;
-  ReestrShipmentOther.Active := False;
-  ReestrShipmentOther.Active := True;
-  Screen.Cursor := crDefault;
+    Screen.Cursor := crSQLWait;
+    ReestrShipmentOther.Active := False;
+    ReestrShipmentOther.Active := True;
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMainForm.CheckOtmetkaPublicUtilitiesActionExecute(
@@ -7316,49 +7373,51 @@ end;
 
 procedure TMainForm.PrintDocPublicUtilitiesClick(Sender: TObject);
 begin
-  fl_TypeReport := TAB_PublicUtilities;
-   AppData.GetPublicUtilitiesDetail.Active := False;
-   AppData.GetPublicUtilitiesDetail.CommandText := Format(SSQLGetPublicUtilitiesDetail, [ReestrPublicUtilities.FieldByName('UNICUM_NUM').AsInteger]);
-   AppData.Report.Template := SPublicUtilitiesTotalDoc;
-   AppData.Report.Run;
+    fl_TypeReport := TAB_PublicUtilities;
+     AppData.GetPublicUtilitiesDetail.Active := False;
+     AppData.GetPublicUtilitiesDetail.CommandText := Format(SSQLGetPublicUtilitiesDetail, [ReestrPublicUtilities.FieldByName('UNICUM_NUM').AsInteger]);
+     AppData.Report.Template := SPublicUtilitiesTotalDoc;
+     AppData.Report.Run;
 end;
 
 procedure TMainForm.ReportPublicUtilitiesDayActionExecute(Sender: TObject);
 begin
-  TypeReport := TAB_PublicUtilities;
-  ReportForm.Caption := 'Отчет по магазинам -> Коммунальные услуги -> За дату';
-  ReportForm.ShowModal();
+    TypeReport := TAB_PublicUtilities;
+    ReportForm.Caption := 'Отчет по магазинам -> Коммунальные услуги -> За дату';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.ReportPublicUtilitiesMonthActionExecute(
   Sender: TObject);
 begin
-  TypeReport := TAB_PublicUtilities;
-  ReportForm.Caption := 'Отчет по магазинам -> Коммунальные услуги -> За месяц';
-  ReportForm.ShowModal();
+    TypeReport := TAB_PublicUtilities;
+    ReportForm.Caption := 'Отчет по магазинам -> Коммунальные услуги -> За месяц';
+    ReportForm.ShowModal();
 end;
 
 procedure TMainForm.StateMenuClick(Sender: TObject);
+var
+    StateBuhF: TStateBuhForm;
 begin
-   with TStateBuhForm.Create(Application) do
-    Begin
+   StateBuhF := TStateBuhForm.Create(MainForm);
+
       try
-         ShowModal();
-      except
-         FreeAndNil(StateBuhForm);
+         StateBuhF.ShowModal();
+      finally
+         FreeAndNil(StateBuhF);
       end;
-    end;    
 end;
 
 procedure TMainForm.DownloadBtnClick(Sender: TObject);
+var
+    DownloadFileF: TDownloadFileForm;
 begin
-  with TDownloadFileForm.Create(Application) do
-    Begin
-      try
-          ShowModal();
-      except
-         FreeAndNil(DownloadFileForm);
-      end;
+  DownloadFileF := TDownloadFileForm.Create(MainForm);
+
+    try
+        DownloadFileF.ShowModal();
+    finally
+       FreeAndNil(DownloadFileF);
     end;
 end;
 
@@ -7377,11 +7436,8 @@ begin
               Begin
                   PageControl.TabIndex := 0;
 
-                  BegDate := Now();
-                  EndDate := BegDate + 1;
-
-                  BegKassaPicker.Date := BegDate;
-                  EndKassaPicker.Date := EndDate;
+                  BegKassaPicker.Date := Now();
+                  EndKassaPicker.Date := BegKassaPicker.Date + 1;
 
                   AppData.GetSumCashBox.Active := False;
                   AppData.GetSumCashBox.Active := True;

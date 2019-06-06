@@ -25,11 +25,11 @@ type
     DeleteRowBtn: TBitBtn;
     NaznachenieZpAup: TADODataSet;
     PopupZpAupMenu: TPopupMenu;
-    L1: TMenuItem;
-    N1: TMenuItem;
+    AddPop: TMenuItem;
+    DeletePop: TMenuItem;
     SaveZpAupPopup: TPopupMenu;
-    N2: TMenuItem;
-    N3: TMenuItem;
+    SavePop: TMenuItem;
+    SaveNoPop: TMenuItem;
     PrintBtn: TBitBtn;
     procedure DeleteRowBtnClick(Sender: TObject);
     procedure NaznachenieComboChange(Sender: TObject);
@@ -38,7 +38,7 @@ type
       ARow: Integer; var CanSelect: Boolean);
     procedure NaznachenieZpAupBeforeOpen(DataSet: TDataSet);
     procedure SaveBtnClick(Sender: TObject);
-    procedure N2Click(Sender: TObject);
+    procedure SavePopClick(Sender: TObject);
     procedure ZpAupStringGridKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure AddBtnClick(Sender: TObject);
@@ -171,7 +171,7 @@ begin
   SaveZpAupPopup.Popup(SaveBtn.ClientOrigin.X, SaveBtn.ClientOrigin.Y);
 end;
 
-procedure TZpAupForm.N2Click(Sender: TObject);
+procedure TZpAupForm.SavePopClick(Sender: TObject);
 begin
   case TypeSaveZpAup of
       g_CreateDoc: SaveNewZpAUPDoc();
@@ -385,8 +385,8 @@ begin
                           ZpAupStringGrid.DefaultRowHeight := NaznachenieCombo.Height;
                           NaznachenieCombo.Visible := False;
                           Caption := 'Создание документа (ЗП АУП)';
-                          ZpAupForm.NumDocEdit.Text := EmptyStr;
-                          ZpAupForm.PrimechEdit.Text := EmptyStr;
+                          NumDocEdit.Text := EmptyStr;
+                          PrimechEdit.Text := EmptyStr;
 
                           // Использование кнопок
                           SaveBtn.Enabled := True;
@@ -399,12 +399,12 @@ begin
                           PrintBtn.Enabled := False;
 
                           // Использование PopupZpAupMenu
-                          L1.Enabled := True;
-                          N1.Enabled := True;
+                          AddPop.Enabled := True;
+                          DeletePop.Enabled := True;
 
                           // Использование SaveZpAupPopup
-                          N2.Enabled := True;
-                          N3.Enabled := True;
+                          SavePop.Enabled := True;
+                          SaveNoPop.Enabled := True;
                       end;
 
        // Корректировка
@@ -444,12 +444,12 @@ begin
                         PrintBtn.Enabled := True;
 
                         // Использование PopupZpAupMenu
-                        L1.Enabled := True;
-                        N1.Enabled := True;
+                        AddPop.Enabled := True;
+                        DeletePop.Enabled := True;
 
                         // Использование SaveZpAupPopup
-                        N2.Enabled := True;
-                        N3.Enabled := True;
+                        SavePop.Enabled := True;
+                        SaveNoPop.Enabled := True;
                     end;
 
        // Просмотр
@@ -489,12 +489,12 @@ begin
                         PrintBtn.Enabled := True;
 
                         // Использование PopupZpAupMenu
-                        L1.Enabled := False;
-                        N1.Enabled := False;
+                        AddPop.Enabled := False;
+                        DeletePop.Enabled := False;
 
                         // Использование SaveZpAupPopup
-                        N2.Enabled := False;
-                        N3.Enabled := False;
+                        SavePop.Enabled := False;
+                        SaveNoPop.Enabled := False;
                     end;
 
 
@@ -503,34 +503,22 @@ begin
 end;
 
 procedure TZpAupForm.FormClose(Sender: TObject; var Action: TCloseAction);
-var
-    i: integer;
 begin
-  for i := 0 to ZpAupStringGrid.ColCount - 1 do
-    Begin
-      ZpAupStringGrid.Cols[i].Clear;
-    end;
-
-  for i := 0 to ZpAupStringGrid.RowCount - 1 do
-    Begin
-      ZpAupStringGrid.Rows[i].Clear;
-    end;
-
     AppData.AdoCmd.CommandText := Format(SSQLUpdateZpAupStatusCorrDoc, [MainForm.ReestrZpAup.FieldByName('UNICUM_NUM').AsInteger, 0]);
     AppData.AdoCmd.Execute;
 end;
 
 procedure TZpAupForm.AddBtnClick(Sender: TObject);
 begin
-  fl_ShopInDoc:= 3;
-  ShopForm.SettingShopForm(1);
-  ShopForm.ShowModal();
+    fl_ShopInDoc:= 3;
+    ShopForm.SettingShopForm(1);
+    ShopForm.ShowModal();
 end;
 
 procedure TZpAupForm.PrintBtnClick(Sender: TObject);
 begin
-    AppData.Report.Template := SZpAupTotalDoc;
-    AppData.Report.Run;
+      AppData.Report.Template := SZpAupTotalDoc;
+      AppData.Report.Run;
 end;
 
 function TZpAupForm.CalcValueCellsVB(StringCalc: string): string;
@@ -541,7 +529,7 @@ begin
       msc := CreateOleObject('MSScriptControl.ScriptControl');
       msc.Language := 'VBScript';
       Result := msc.Eval(Copy(StringReplace(StringCalc, ',', '.', [rfReplaceAll, rfIgnoreCase]), 2, Length(StringCalc)));
-  except
+  finally
       FreeAndNil(msc);
   end;
 end;

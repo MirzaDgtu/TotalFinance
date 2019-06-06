@@ -338,12 +338,12 @@ object ZpAupForm: TZpAupForm
     Images = MainForm.ImageList
     Left = 360
     Top = 168
-    object L1: TMenuItem
+    object AddPop: TMenuItem
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 15
       ShortCut = 45
     end
-    object N1: TMenuItem
+    object DeletePop: TMenuItem
       Caption = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 14
       ShortCut = 16430
@@ -354,12 +354,12 @@ object ZpAupForm: TZpAupForm
     Images = MainForm.ImageList
     Left = 472
     Top = 168
-    object N2: TMenuItem
+    object SavePop: TMenuItem
       Caption = '&'#1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1080' '#1079#1072#1088#1077#1075#1080#1089#1090#1088#1080#1088#1086#1074#1072#1090#1100
       ImageIndex = 16
-      OnClick = N2Click
+      OnClick = SavePopClick
     end
-    object N3: TMenuItem
+    object SaveNoPop: TMenuItem
       Caption = '&'#1053#1077' '#1089#1086#1093#1088#1072#1085#1103#1090#1100
       ImageIndex = 17
     end

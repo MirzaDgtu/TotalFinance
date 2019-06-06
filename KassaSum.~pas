@@ -108,6 +108,9 @@ type
     procedure PreviewExpensesZp(Unicum_Num: integer);
     procedure PreviewExpensesOther(Unicum_Num: integer);
 
+    function GetBegDate: variant;
+    function GetEndDate: variant;
+
   public
     { Public declarations }
 
@@ -116,8 +119,8 @@ type
     property Sum_Nal_Actuale: real read FSum_Nal_Actuale write SetSum_Nal_Actuale;
 
   published
-    //property BDate: variant read ;
-   // property EDate: variant read ;
+    property BegDate: variant read GetBegDate;
+    property EndDate: variant read GetEndDate;
 
   end;
 
@@ -662,5 +665,21 @@ begin
     Preview(ReestrHeadDoc.FieldByName('UNICUM_NUM').AsInteger, type_Doc);
 end;
 
+
+function TKassaSumForm.GetBegDate: variant;
+begin
+  if PageControl.ActivePage = TabSh1 then
+      Result := BegKassaPicker.Date
+  else
+      Result := EndKassaPicker.Date;
+end;
+
+function TKassaSumForm.GetEndDate: variant;
+begin
+  if PageControl.ActivePage = TabSh1 then
+      Result := DTBegPicker.Date
+  else
+      Result := DTEndPicker.Date;
+end;
 
 end.
